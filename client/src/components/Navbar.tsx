@@ -53,7 +53,7 @@ export default function Navbar() {
               variant="navbar"
               className="transition-transform duration-300 group-hover:scale-110 drop-shadow-sm"
             />
-            <span className="font-[Amiri] text-lg font-bold text-[#7cc89a] group-hover:text-white transition-colors tracking-wide">
+            <span className="kharij-brand-text">
               خارج النص
             </span>
           </button>
@@ -81,7 +81,7 @@ export default function Navbar() {
             aria-label="خارج النص"
           >
             <KharijLogo size={30} variant="navbar" />
-            <span className="font-[Amiri] text-base font-bold text-[#7cc89a]">خارج النص</span>
+            <span className="kharij-brand-text kharij-brand-text--sm">خارج النص</span>
           </button>
         </div>
 
