@@ -85,8 +85,7 @@ export default function HeroSection() {
               className="font-[Cairo] text-base md:text-lg text-white/60 max-w-lg mb-8 leading-relaxed"
               style={{ animation: "heroFadeUp 0.6s ease 0.45s both" }}
             >
-              كاتب منتظم في الصحف و المجلات الخليجية و العربية.
-              يكتب في السياسة والاقتصاد والرياضة والشؤون الاجتماعية بأسلوب تحليلي ساخر مميز.
+              إعلامي و كاتب في الصحف و المجلات الخليجية و العربية. يكتب في السياسة والاقتصاد والشؤون الاجتماعية بأسلوب تحليلي ساخر.
             </p>
 
             {/* Social Links */}
