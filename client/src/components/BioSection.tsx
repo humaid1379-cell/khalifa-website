@@ -2,9 +2,9 @@
  * Design: Green Ink Press — Editorial newspaper style
  * Bio: CV-style timeline with warm background, newspaper-inspired dividers
  * Uses bio-section image as decorative element
- * Animated with framer-motion
+ * CSS IntersectionObserver animations — no framer-motion
  */
-import { motion } from "framer-motion";
+import AnimatedSection from "./AnimatedSection";
 
 const BIO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7bAYv5QYZcia9BxhPhwv4f/bio-section-HoSNDkUUiaPXJoPEHGLXPP.webp";
 
@@ -48,13 +48,7 @@ export default function BioSection() {
     <section id="bio" className="py-20 md:py-28 bg-[#f7f5f2]">
       <div className="container">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
+        <AnimatedSection className="text-center mb-16">
           <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#0d3b1f] mb-4">
             السيرة الذاتية
           </h2>
@@ -62,17 +56,11 @@ export default function BioSection() {
           <p className="font-[Cairo] text-[#4a6b5a] max-w-2xl mx-auto leading-relaxed">
             مسيرة مهنية حافلة بالإنجازات في عالم الصحافة والكتابة
           </p>
-        </motion.div>
+        </AnimatedSection>
 
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
           {/* Left: Image + Achievements */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:w-5/12"
-          >
+          <AnimatedSection direction="right" delay={200} className="lg:w-5/12">
             {/* Bio Image */}
             <div className="rounded-xl overflow-hidden shadow-lg mb-8">
               <img
@@ -99,7 +87,7 @@ export default function BioSection() {
                 ))}
               </ul>
             </div>
-          </motion.div>
+          </AnimatedSection>
 
           {/* Right: Timeline */}
           <div className="lg:w-7/12">
@@ -108,12 +96,10 @@ export default function BioSection() {
               <div className="absolute top-0 bottom-0 right-[19px] w-0.5 bg-[#d4edda]" />
 
               {timeline.map((item, i) => (
-                <motion.div
+                <AnimatedSection
                   key={i}
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-30px" }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  direction="left"
+                  delay={i * 100}
                   className="relative flex gap-6 mb-10 last:mb-0"
                 >
                   {/* Dot */}
@@ -135,7 +121,7 @@ export default function BioSection() {
                       {item.description}
                     </p>
                   </div>
-                </motion.div>
+                </AnimatedSection>
               ))}
             </div>
           </div>

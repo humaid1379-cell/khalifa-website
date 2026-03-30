@@ -1,10 +1,10 @@
 /*
  * Design: Green Ink Press — Editorial newspaper style
  * Contact: Clean section with social links, WhatsApp, email, Instagram
- * Animated with framer-motion
+ * CSS IntersectionObserver animations — no framer-motion
  */
 import { Instagram, MessageCircle, Mail, Send } from "lucide-react";
-import { motion } from "framer-motion";
+import AnimatedSection from "./AnimatedSection";
 
 const contactMethods = [
   {
@@ -38,13 +38,7 @@ export default function ContactSection() {
     <section id="contact" className="py-20 md:py-28 bg-[#f7f5f2]">
       <div className="container">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-14"
-        >
+        <AnimatedSection className="text-center mb-14">
           <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#0d3b1f] mb-4">
             تواصل معي
           </h2>
@@ -52,48 +46,39 @@ export default function ContactSection() {
           <p className="font-[Cairo] text-[#4a6b5a] max-w-2xl mx-auto leading-relaxed">
             يسعدني التواصل معكم عبر أي من القنوات التالية
           </p>
-        </motion.div>
+        </AnimatedSection>
 
         {/* Contact Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
           {contactMethods.map((method, i) => (
-            <motion.a
-              key={method.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              href={method.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`bg-white rounded-xl p-6 text-center shadow-sm border border-[#e8f0ec] ${method.bgHover} transition-all duration-300 hover:shadow-md hover:-translate-y-1 group`}
-            >
-              {/* Icon */}
-              <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${method.color} flex items-center justify-center mx-auto mb-4 shadow-md`}>
-                <method.icon size={24} className="text-white" />
-              </div>
+            <AnimatedSection key={method.label} delay={i * 100}>
+              <a
+                href={method.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`block bg-white rounded-xl p-6 text-center shadow-sm border border-[#e8f0ec] ${method.bgHover} transition-all duration-300 hover:shadow-md hover:-translate-y-1 group`}
+              >
+                {/* Icon */}
+                <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${method.color} flex items-center justify-center mx-auto mb-4 shadow-md`}>
+                  <method.icon size={24} className="text-white" />
+                </div>
 
-              {/* Label */}
-              <h3 className="font-[Amiri] text-lg font-bold text-[#0d3b1f] mb-2">
-                {method.label}
-              </h3>
+                {/* Label */}
+                <h3 className="font-[Amiri] text-lg font-bold text-[#0d3b1f] mb-2">
+                  {method.label}
+                </h3>
 
-              {/* Value */}
-              <p className="font-[Cairo] text-sm text-[#4a6b5a]" dir="ltr">
-                {method.value}
-              </p>
-            </motion.a>
+                {/* Value */}
+                <p className="font-[Cairo] text-sm text-[#4a6b5a]" dir="ltr">
+                  {method.value}
+                </p>
+              </a>
+            </AnimatedSection>
           ))}
         </div>
 
         {/* WhatsApp CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-center mt-12"
-        >
+        <AnimatedSection delay={300} className="text-center mt-12">
           <p className="font-[Cairo] text-[#4a6b5a] text-sm mb-4">
             للاشتراك في المقال الأسبوعي عبر واتساب
           </p>
@@ -106,7 +91,7 @@ export default function ContactSection() {
             <Send size={16} />
             <span>اشترك الآن</span>
           </a>
-        </motion.div>
+        </AnimatedSection>
       </div>
     </section>
   );

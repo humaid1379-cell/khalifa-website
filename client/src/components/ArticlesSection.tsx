@@ -2,12 +2,12 @@
  * Design: Green Ink Press — Editorial newspaper style
  * Articles: Searchable, filterable archive with card layout
  * Pagination, category filters, year filters
- * Modal for full article view with framer-motion animations
+ * Modal for full article view — CSS transitions, no framer-motion
  */
-import { useState, useMemo, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Search, X, Calendar, Tag, ChevronLeft, ChevronRight } from "lucide-react";
 import { articles, categories, years, type Article } from "@/data/articles";
+import AnimatedSection from "./AnimatedSection";
 
 const ARTICLES_PER_PAGE = 6;
 
@@ -54,6 +54,18 @@ export default function ArticlesSection() {
     });
   };
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (selectedArticle) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedArticle]);
+
   return (
     <section
       id="articles"
@@ -69,13 +81,7 @@ export default function ArticlesSection() {
 
       <div className="container relative z-10">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
+        <AnimatedSection className="text-center mb-12">
           <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#0d3b1f] mb-4">
             أرشيف المقالات
           </h2>
@@ -83,16 +89,10 @@ export default function ArticlesSection() {
           <p className="font-[Cairo] text-[#4a6b5a] max-w-2xl mx-auto leading-relaxed">
             مجموعة من المقالات والآراء المنشورة على مدار السنوات
           </p>
-        </motion.div>
+        </AnimatedSection>
 
         {/* Search & Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-[#d4edda] mb-10"
-        >
+        <AnimatedSection delay={100} className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-[#d4edda] mb-10">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search */}
             <div className="flex-1 relative">
@@ -163,52 +163,49 @@ export default function ArticlesSection() {
           <div className="mt-3 font-[Tajawal] text-xs text-[#7aa88e]">
             {filteredArticles.length} مقال
           </div>
-        </motion.div>
+        </AnimatedSection>
 
         {/* Articles Grid */}
         {paginatedArticles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
             {paginatedArticles.map((article, i) => (
-              <motion.button
-                key={article.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
-                onClick={() => setSelectedArticle(article)}
-                className="text-right bg-white rounded-xl overflow-hidden shadow-sm border border-[#e8f0ec] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
-              >
-                {/* Category bar */}
-                <div className="h-1 bg-[#2e7d4a] group-hover:bg-[#1b6b3a] transition-colors" />
+              <AnimatedSection key={article.id} delay={i * 60}>
+                <button
+                  onClick={() => setSelectedArticle(article)}
+                  className="w-full text-right bg-white rounded-xl overflow-hidden shadow-sm border border-[#e8f0ec] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                >
+                  {/* Category bar */}
+                  <div className="h-1 bg-[#2e7d4a] group-hover:bg-[#1b6b3a] transition-colors" />
 
-                <div className="p-5 md:p-6">
-                  {/* Category & Date */}
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-[Tajawal] text-xs bg-[#e8f5e9] text-[#1b6b3a] px-2.5 py-1 rounded-full">
-                      {article.category}
-                    </span>
-                    <span className="font-[Tajawal] text-xs text-[#7aa88e]">
-                      {formatDate(article.date)}
-                    </span>
+                  <div className="p-5 md:p-6">
+                    {/* Category & Date */}
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-[Tajawal] text-xs bg-[#e8f5e9] text-[#1b6b3a] px-2.5 py-1 rounded-full">
+                        {article.category}
+                      </span>
+                      <span className="font-[Tajawal] text-xs text-[#7aa88e]">
+                        {formatDate(article.date)}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-[Amiri] text-lg font-bold text-[#0d3b1f] mb-3 leading-relaxed group-hover:text-[#1b6b3a] transition-colors line-clamp-2">
+                      {article.title}
+                    </h3>
+
+                    {/* Excerpt */}
+                    <p className="font-[Cairo] text-sm text-[#4a6b5a] leading-relaxed line-clamp-3">
+                      {article.excerpt}
+                    </p>
+
+                    {/* Read more */}
+                    <div className="mt-4 font-[Cairo] text-sm text-[#2e7d4a] group-hover:text-[#1b6b3a] flex items-center gap-1">
+                      <span>اقرأ المزيد</span>
+                      <ChevronLeft size={14} />
+                    </div>
                   </div>
-
-                  {/* Title */}
-                  <h3 className="font-[Amiri] text-lg font-bold text-[#0d3b1f] mb-3 leading-relaxed group-hover:text-[#1b6b3a] transition-colors line-clamp-2">
-                    {article.title}
-                  </h3>
-
-                  {/* Excerpt */}
-                  <p className="font-[Cairo] text-sm text-[#4a6b5a] leading-relaxed line-clamp-3">
-                    {article.excerpt}
-                  </p>
-
-                  {/* Read more */}
-                  <div className="mt-4 font-[Cairo] text-sm text-[#2e7d4a] group-hover:text-[#1b6b3a] flex items-center gap-1">
-                    <span>اقرأ المزيد</span>
-                    <ChevronLeft size={14} />
-                  </div>
-                </div>
-              </motion.button>
+                </button>
+              </AnimatedSection>
             ))}
           </div>
         ) : (
@@ -255,15 +252,13 @@ export default function ArticlesSection() {
         )}
       </div>
 
-      {/* Article Modal */}
-      <AnimatePresence>
-        {selectedArticle && (
-          <ArticleModal
-            article={selectedArticle}
-            onClose={() => setSelectedArticle(null)}
-          />
-        )}
-      </AnimatePresence>
+      {/* Article Modal — CSS transition, no framer-motion */}
+      {selectedArticle && (
+        <ArticleModal
+          article={selectedArticle}
+          onClose={() => setSelectedArticle(null)}
+        />
+      )}
     </section>
   );
 }
@@ -275,6 +270,21 @@ function ArticleModal({
   article: Article;
   onClose: () => void;
 }) {
+  const [visible, setVisible] = useState(false);
+  const innerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Trigger entrance animation after mount
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setVisible(true));
+    });
+  }, []);
+
+  const handleClose = () => {
+    setVisible(false);
+    setTimeout(onClose, 250);
+  };
+
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString("ar-AE", {
@@ -285,26 +295,29 @@ function ArticleModal({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-      onClick={onClose}
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      style={{
+        backgroundColor: visible ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0)",
+        backdropFilter: visible ? "blur(4px)" : "blur(0px)",
+        transition: "background-color 0.25s ease, backdrop-filter 0.25s ease",
+      }}
+      onClick={handleClose}
     >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
+      <div
+        ref={innerRef}
         className="bg-white rounded-2xl w-full max-w-3xl max-h-[85vh] overflow-hidden shadow-2xl"
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? "scale(1) translateY(0)" : "scale(0.95) translateY(20px)",
+          transition: "opacity 0.3s ease, transform 0.3s ease",
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="bg-[#0d3b1f] p-6 relative">
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
             aria-label="إغلاق"
           >
@@ -348,7 +361,7 @@ function ArticleModal({
             </div>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }

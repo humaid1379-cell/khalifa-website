@@ -221,6 +221,29 @@ html {
   overflow: hidden;
 }
 
+/* Hero entrance keyframes */
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Selection color */
 ::selection {
   background: oklch(0.40 0.11 150 / 0.3);
