@@ -24,23 +24,14 @@ export default function PodcastSection() {
       <div className="container relative z-10">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-10">
-          <p className="font-[Cairo] text-xs uppercase tracking-[0.25em] text-white/40 mb-6">البودكاست</p>
-
-          {/* Logo centred, larger in podcast context */}
-          <div className="flex justify-center mb-5">
+             {/* Unified logo brand mark — text + icon as one SVG */}
+          <div className="flex justify-center mb-6">
             <KharijLogo
-              size={80}
               variant="podcast"
-              className="drop-shadow-lg"
+              className="drop-shadow-xl"
             />
           </div>
-
-          {/* Podcast name */}
-          <h2 className="font-[Amiri] text-4xl md:text-5xl font-bold text-white mb-4 tracking-wide">
-            خارج النص
-          </h2>
-
-          <div className="divider-double mx-auto mt-4" />
+          <div className="divider-double mx-auto mt-2" />
         </AnimatedSection>
 
         {/* Coming Soon Text */}

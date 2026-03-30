@@ -45,17 +45,13 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-2">
           <button
             onClick={() => handleClick("#podcast")}
-            className="flex items-center gap-2.5 group transition-all duration-300"
+            className="flex items-center group transition-all duration-300"
             aria-label="خارج النص - البودكاست"
           >
             <KharijLogo
-              size={40}
               variant="navbar"
-              className="transition-transform duration-300 group-hover:scale-110 drop-shadow-sm"
+              className="transition-transform duration-300 group-hover:scale-105 drop-shadow-sm"
             />
-            <span className="kharij-brand-text">
-              خارج النص
-            </span>
           </button>
         </div>
 
@@ -77,11 +73,10 @@ export default function Navbar() {
         <div className="md:hidden flex items-center gap-1.5">
           <button
             onClick={() => handleClick("#podcast")}
-            className="flex items-center gap-1.5"
+            className="flex items-center"
             aria-label="خارج النص"
           >
-            <KharijLogo size={30} variant="navbar" />
-            <span className="kharij-brand-text kharij-brand-text--sm">خارج النص</span>
+            <KharijLogo variant="navbar" />
           </button>
         </div>
 
