@@ -5,7 +5,6 @@
  */
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
-import KharijLogo from "./KharijLogo";
 
 const navLinks = [
   { label: "الرئيسية", href: "#hero" },
@@ -41,18 +40,14 @@ export default function Navbar() {
     >
       <div className="container flex items-center justify-between h-16 md:h-20">
 
-        {/* Podcast Name + Logo — upper left (RTL: visually upper right) */}
-        <div className="hidden md:flex items-center gap-2">
+        {/* Podcast Name — text only, black, upper left (RTL: visually upper right) */}
+        <div className="hidden md:flex items-center">
           <button
             onClick={() => handleClick("#podcast")}
-            className="flex items-center gap-2 group transition-all duration-300"
+            className="group transition-all duration-300"
             aria-label="خارج النص - البودكاست"
           >
-            <KharijLogo
-              variant="navbar"
-              className="transition-transform duration-300 group-hover:scale-105 drop-shadow-sm"
-            />
-            <span className="font-[Amiri] text-lg font-bold text-white">
+            <span className="font-[Amiri] text-lg font-bold text-black">
               خارج النص
             </span>
           </button>
@@ -72,15 +67,13 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Mobile: podcast logo + name */}
-        <div className="md:hidden flex items-center gap-1.5">
+        {/* Mobile: podcast name text only */}
+        <div className="md:hidden flex items-center">
           <button
             onClick={() => handleClick("#podcast")}
-            className="flex items-center gap-1.5"
             aria-label="خارج النص"
           >
-            <KharijLogo variant="navbar" />
-            <span className="font-[Amiri] text-base font-bold text-white">خارج النص</span>
+            <span className="font-[Amiri] text-base font-bold text-black">خارج النص</span>
           </button>
         </div>
 

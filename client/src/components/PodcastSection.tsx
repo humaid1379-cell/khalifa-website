@@ -1,9 +1,8 @@
 /*
  * Design: Green Ink Press — Editorial newspaper style
- * Podcast: Minimal "Coming Soon" section with centered text and artistic logo
+ * Podcast: Minimal "Coming Soon" section — text only, no icon
  */
 import AnimatedSection from "./AnimatedSection";
-import KharijLogo from "./KharijLogo";
 
 const PODCAST_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7bAYv5QYZcia9BxhPhwv4f/podcast-bg-cByCNKiME5YQwrWoiXAypU.webp";
 
@@ -24,14 +23,11 @@ export default function PodcastSection() {
       <div className="container relative z-10">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-10">
-             {/* Unified logo brand mark — text + icon as one SVG */}
-          <div className="flex justify-center mb-6">
-            <KharijLogo
-              variant="podcast"
-              className="drop-shadow-xl"
-            />
-          </div>
-          <div className="divider-double mx-auto mt-2" />
+          <p className="font-[Cairo] text-xs uppercase tracking-[0.25em] text-white/40 mb-4">البودكاست</p>
+          <h2 className="font-[Amiri] text-4xl md:text-5xl font-bold text-white mb-4">
+            خارج النص
+          </h2>
+          <div className="divider-double mx-auto mt-4" />
         </AnimatedSection>
 
         {/* Coming Soon Text */}
