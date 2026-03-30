@@ -64,21 +64,19 @@ export default function HeroSection() {
 
             {/* Name */}
             <h1
-              className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6"
+              className="font-[Amiri] text-2xl md:text-3xl lg:text-4xl font-bold text-white/80 leading-tight mb-4"
               style={{ animation: "heroFadeUp 0.7s ease 0.2s both" }}
             >
-              خليفة جمعة
-              <br />
-              <span className="text-[#7cc89a]">الرميثي</span>
+              خليفة جمعة الرميثي
             </h1>
 
             {/* Slogan */}
             <div
-              className="mb-5"
+              className="mb-6"
               style={{ animation: "heroFadeUp 0.6s ease 0.35s both" }}
             >
-              <p className="font-[Amiri] text-xl md:text-2xl text-[#a8e6c0] italic leading-relaxed">
-                "الواقع ليس كما تقرآه"
+              <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#7cc89a] leading-tight">
+                الواقع ليس كما تقرآه
               </p>
             </div>
 
@@ -97,7 +95,7 @@ export default function HeroSection() {
               style={{ animation: "heroFadeUp 0.6s ease 0.5s both" }}
             >
               <a
-                href="https://instagram.com"
+                href="https://instagram.com/kjalromaithi"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 bg-[#2e7d4a] hover:bg-[#3a9d5e] text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-[Cairo] text-sm"
