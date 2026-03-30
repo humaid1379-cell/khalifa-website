@@ -72,10 +72,20 @@ export default function HeroSection() {
               <span className="text-[#7cc89a]">الرميثي</span>
             </h1>
 
+            {/* Slogan */}
+            <div
+              className="mb-5"
+              style={{ animation: "heroFadeUp 0.6s ease 0.35s both" }}
+            >
+              <p className="font-[Amiri] text-xl md:text-2xl text-[#a8e6c0] italic leading-relaxed">
+                “الواقع ليس كما تقرآه وتشاهده”
+              </p>
+            </div>
+
             {/* Tagline */}
             <p
-              className="font-[Cairo] text-lg md:text-xl text-white/70 max-w-lg mb-8 leading-relaxed"
-              style={{ animation: "heroFadeUp 0.6s ease 0.4s both" }}
+              className="font-[Cairo] text-base md:text-lg text-white/60 max-w-lg mb-8 leading-relaxed"
+              style={{ animation: "heroFadeUp 0.6s ease 0.45s both" }}
             >
               كاتب منتظم في الصحف و المجلات الخليجية و العربية.
               يكتب في السياسة والاقتصاد والرياضة والشؤون الاجتماعية بأسلوب تحليلي ساخر مميز.
