@@ -41,63 +41,63 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Custom green palette */
-  --color-green-50: oklch(0.97 0.02 150);
-  --color-green-100: oklch(0.94 0.04 150);
-  --color-green-200: oklch(0.88 0.07 150);
-  --color-green-300: oklch(0.78 0.11 150);
-  --color-green-400: oklch(0.68 0.14 150);
-  --color-green-500: oklch(0.55 0.14 150);
-  --color-green-600: oklch(0.48 0.13 150);
-  --color-green-700: oklch(0.40 0.11 150);
-  --color-green-800: oklch(0.33 0.09 150);
-  --color-green-900: oklch(0.25 0.07 150);
-  --color-green-950: oklch(0.18 0.05 150);
-
-  --color-gold: oklch(0.72 0.10 80);
-  --color-gold-light: oklch(0.82 0.08 80);
-  --color-sand: oklch(0.96 0.01 80);
-  --color-sand-dark: oklch(0.93 0.02 80);
-
-  --font-amiri: 'Amiri', serif;
-  --font-cairo: 'Cairo', sans-serif;
+  /* Custom green palette — rgb() values for full Safari/iOS compatibility */
+  --color-green-50:  rgb(240, 250, 244);
+  --color-green-100: rgb(220, 243, 229);
+  --color-green-200: rgb(187, 230, 205);
+  --color-green-300: rgb(134, 207, 165);
+  --color-green-400: rgb(86,  180, 124);
+  --color-green-500: rgb(46,  150, 90);
+  --color-green-600: rgb(34,  120, 70);
+  --color-green-700: rgb(22,  93,  52);
+  --color-green-800: rgb(15,  70,  38);
+  --color-green-900: rgb(10,  52,  27);
+  --color-green-950: rgb(6,   35,  17);
+  --color-gold:       rgb(184, 148, 60);
+  --color-gold-light: rgb(210, 180, 100);
+  --color-sand:       rgb(248, 245, 238);
+  --color-sand-dark:  rgb(238, 234, 222);
+  --font-amiri:   'Amiri', serif;
+  --font-cairo:   'Cairo', sans-serif;
   --font-tajawal: 'Tajawal', sans-serif;
 }
 
 :root {
-  --primary: oklch(0.33 0.09 150);
-  --primary-foreground: oklch(0.97 0.02 150);
-  --sidebar-primary: oklch(0.40 0.11 150);
-  --sidebar-primary-foreground: oklch(0.97 0.02 150);
-  --chart-1: oklch(0.78 0.11 150);
-  --chart-2: oklch(0.55 0.14 150);
-  --chart-3: oklch(0.48 0.13 150);
-  --chart-4: oklch(0.40 0.11 150);
-  --chart-5: oklch(0.33 0.09 150);
+  /* Primary = deep forest green */
+  --primary:            rgb(15,  70,  38);
+  --primary-foreground: rgb(240, 250, 244);
+  --sidebar-primary:    rgb(22,  93,  52);
+  --sidebar-primary-foreground: rgb(240, 250, 244);
+  --chart-1: rgb(134, 207, 165);
+  --chart-2: rgb(46,  150, 90);
+  --chart-3: rgb(34,  120, 70);
+  --chart-4: rgb(22,  93,  52);
+  --chart-5: rgb(15,  70,  38);
   --radius: 0.5rem;
-  --background: oklch(0.97 0.005 80);
-  --foreground: oklch(0.18 0.05 150);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.05 150);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.05 150);
-  --secondary: oklch(0.94 0.02 150);
-  --secondary-foreground: oklch(0.33 0.09 150);
-  --muted: oklch(0.94 0.01 80);
-  --muted-foreground: oklch(0.50 0.03 150);
-  --accent: oklch(0.94 0.02 150);
-  --accent-foreground: oklch(0.18 0.05 150);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.90 0.02 150);
-  --input: oklch(0.90 0.02 150);
-  --ring: oklch(0.48 0.13 150);
-  --sidebar: oklch(0.97 0.005 80);
-  --sidebar-foreground: oklch(0.18 0.05 150);
-  --sidebar-accent: oklch(0.94 0.02 150);
-  --sidebar-accent-foreground: oklch(0.18 0.05 150);
-  --sidebar-border: oklch(0.90 0.02 150);
-  --sidebar-ring: oklch(0.48 0.13 150);
+  /* Warm off-white background */
+  --background:         rgb(248, 245, 238);
+  --foreground:         rgb(13,  45,  24);
+  --card:               rgb(255, 255, 255);
+  --card-foreground:    rgb(13,  45,  24);
+  --popover:            rgb(255, 255, 255);
+  --popover-foreground: rgb(13,  45,  24);
+  --secondary:          rgb(220, 243, 229);
+  --secondary-foreground: rgb(15, 70, 38);
+  --muted:              rgb(238, 234, 222);
+  --muted-foreground:   rgb(80,  110, 90);
+  --accent:             rgb(220, 243, 229);
+  --accent-foreground:  rgb(13,  45,  24);
+  --destructive:        rgb(185, 28,  28);
+  --destructive-foreground: rgb(255, 255, 255);
+  --border:             rgb(200, 230, 210);
+  --input:              rgb(200, 230, 210);
+  --ring:               rgb(34,  120, 70);
+  --sidebar:            rgb(248, 245, 238);
+  --sidebar-foreground: rgb(13,  45,  24);
+  --sidebar-accent:     rgb(220, 243, 229);
+  --sidebar-accent-foreground: rgb(13, 45, 24);
+  --sidebar-border:     rgb(200, 230, 210);
+  --sidebar-ring:       rgb(34,  120, 70);
 }
 
 @layer base {
@@ -133,19 +133,16 @@
     padding-left: 1rem;
     padding-right: 1rem;
   }
-
   .flex {
     min-height: 0;
     min-width: 0;
   }
-
   @media (min-width: 640px) {
     .container {
       padding-left: 1.5rem;
       padding-right: 1.5rem;
     }
   }
-
   @media (min-width: 1024px) {
     .container {
       padding-left: 2rem;
@@ -168,38 +165,28 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: oklch(0.40 0.11 150);
+    background: rgb(22, 93, 52);
   }
-  .divider-double::before {
-    top: 0;
-  }
-  .divider-double::after {
-    bottom: 0;
-  }
+  .divider-double::before { top: 0; }
+  .divider-double::after  { bottom: 0; }
 
   /* Section heading style */
   .section-title {
     font-family: 'Amiri', serif;
     font-weight: 700;
-    color: oklch(0.25 0.07 150);
+    color: rgb(10, 52, 27);
     position: relative;
     display: inline-block;
   }
 
   /* Scrollbar styling */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: oklch(0.94 0.01 80);
-  }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: rgb(238, 234, 222); }
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.68 0.14 150);
+    background: rgb(86, 180, 124);
     border-radius: 4px;
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.48 0.13 150);
-  }
+  ::-webkit-scrollbar-thumb:hover { background: rgb(34, 120, 70); }
 }
 
 /* Smooth scrolling */
@@ -223,29 +210,16 @@ html {
 
 /* Hero entrance keyframes */
 @keyframes heroFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes heroSlideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-32px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 /* Selection color */
 ::selection {
-  background: oklch(0.40 0.11 150 / 0.3);
-  color: oklch(0.18 0.05 150);
+  background: rgba(22, 93, 52, 0.3);
+  color: rgb(13, 45, 24);
 }
