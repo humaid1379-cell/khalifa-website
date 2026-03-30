@@ -3,15 +3,15 @@
  * Contact: Clean section with social links, WhatsApp, email, Instagram
  * CSS IntersectionObserver animations — no framer-motion
  */
-import { Instagram, MessageCircle, Mail, Send } from "lucide-react";
+import { Instagram, MessageCircle, Send } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 
 const contactMethods = [
   {
     icon: Instagram,
     label: "انستغرام",
-    value: "@khalifa_alrumaiti",
-    href: "https://instagram.com",
+    value: "@kjalromaithi",
+    href: "https://instagram.com/kjalromaithi",
     color: "from-[#833AB4] via-[#FD1D1D] to-[#F77737]",
     bgHover: "hover:bg-[#833AB4]/10",
   },
@@ -22,14 +22,6 @@ const contactMethods = [
     href: "https://wa.me/971500000000",
     color: "from-[#25D366] to-[#128C7E]",
     bgHover: "hover:bg-[#25D366]/10",
-  },
-  {
-    icon: Mail,
-    label: "البريد الإلكتروني",
-    value: "khalifa@example.com",
-    href: "mailto:khalifa@example.com",
-    color: "from-[#2e7d4a] to-[#1b6b3a]",
-    bgHover: "hover:bg-[#2e7d4a]/10",
   },
 ];
 
@@ -49,7 +41,7 @@ export default function ContactSection() {
         </AnimatedSection>
 
         {/* Contact Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
           {contactMethods.map((method, i) => (
             <AnimatedSection key={method.label} delay={i * 100}>
               <a

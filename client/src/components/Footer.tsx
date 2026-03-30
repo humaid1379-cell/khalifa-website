@@ -2,7 +2,7 @@
  * Design: Green Ink Press — Editorial newspaper style
  * Footer: Dark green footer with copyright, social links, quick nav
  */
-import { Instagram, MessageCircle, Mail, ChevronUp } from "lucide-react";
+import { Instagram, MessageCircle, ChevronUp } from "lucide-react";
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -49,7 +49,7 @@ export default function Footer() {
           {/* Social Icons */}
           <div className="flex items-center gap-3">
             <a
-              href="https://instagram.com"
+              href="https://instagram.com/kjalromaithi"
               target="_blank"
               rel="noopener noreferrer"
               className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
@@ -65,13 +65,6 @@ export default function Footer() {
               aria-label="واتساب"
             >
               <MessageCircle size={16} />
-            </a>
-            <a
-              href="mailto:khalifa@example.com"
-              className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-              aria-label="البريد الإلكتروني"
-            >
-              <Mail size={16} />
             </a>
           </div>
         </div>
