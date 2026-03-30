@@ -78,7 +78,7 @@ export default function HeroSection() {
               style={{ animation: "heroFadeUp 0.6s ease 0.35s both" }}
             >
               <p className="font-[Amiri] text-xl md:text-2xl text-[#a8e6c0] italic leading-relaxed">
-                “الواقع ليس كما تقرآه وتشاهده”
+                "الواقع ليس كما تقرآه"
               </p>
             </div>
 
