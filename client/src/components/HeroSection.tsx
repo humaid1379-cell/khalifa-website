@@ -77,8 +77,8 @@ export default function HeroSection() {
               className="font-[Cairo] text-lg md:text-xl text-white/70 max-w-lg mb-8 leading-relaxed"
               style={{ animation: "heroFadeUp 0.6s ease 0.4s both" }}
             >
-              رئيس تنفيذي وكاتب محلل متخصص في الشؤون الاقتصادية والسياسية والاجتماعية.
-              يجمع بين الخبرة المؤسسية والإدارة الدولية والاهتمام الإعلامي المتميز.
+              كاتب منتظم في الصحف و المجلات الخليجية و العربية.
+              يكتب في السياسة والاقتصاد والرياضة والشؤون الاجتماعية بأسلوب تحليلي ساخر مميز.
             </p>
 
             {/* Social Links */}
