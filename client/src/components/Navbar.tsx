@@ -38,15 +38,7 @@ export default function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <div className="container flex items-center justify-between h-16 md:h-20">
-        {/* Logo / Name */}
-        <button
-          onClick={() => handleClick("#hero")}
-          className="font-[Amiri] text-lg md:text-xl font-bold text-white hover:text-[#d4edda] transition-colors"
-        >
-          خليفة الرميثي
-        </button>
-
+      <div className="container flex items-center justify-center md:justify-end h-16 md:h-20">
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
@@ -64,7 +56,7 @@ export default function Navbar() {
         {/* Mobile Hamburger */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-white p-2"
+          className="md:hidden text-white p-2 absolute left-4"
           aria-label="القائمة"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}

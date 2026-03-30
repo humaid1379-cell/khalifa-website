@@ -7,7 +7,7 @@
 import { Instagram } from "lucide-react";
 
 const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7bAYv5QYZcia9BxhPhwv4f/hero-bg-VSR5gUSaEZkvMorofDbQxu.webp";
-const PROFILE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7bAYv5QYZcia9BxhPhwv4f/profile-placeholder-cCvrmKH9X8w8hvca5V7rth.webp";
+const PROFILE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7bAYv5QYZcia9BxhPhwv4f/khalifa-profile_3a7883a5.jpeg";
 
 export default function HeroSection() {
   return (
@@ -35,16 +35,16 @@ export default function HeroSection() {
             style={{ animation: "heroSlideIn 0.8s ease 0.3s both" }}
           >
             <div className="relative">
-              <div className="w-52 h-64 md:w-64 md:h-80 rounded-2xl overflow-hidden border-2 border-[#2e7d4a]/40 shadow-2xl">
+              <div className="w-48 h-56 md:w-56 md:h-72 rounded-2xl overflow-hidden border-2 border-[#2e7d4a]/40 shadow-2xl">
                 <img
                   src={PROFILE_IMG}
                   alt="خليفة جمعة الرميثي"
-                  className="w-full h-[130%] object-cover object-[center_15%]"
+                  className="w-full h-full object-cover object-center"
                   loading="eager"
                 />
               </div>
               {/* Decorative frame */}
-              <div className="absolute -top-3 -right-3 w-52 h-64 md:w-64 md:h-80 rounded-2xl border-2 border-[#2e7d4a]/30 -z-10" />
+              <div className="absolute -top-3 -right-3 w-48 h-56 md:w-56 md:h-72 rounded-2xl border-2 border-[#2e7d4a]/30 -z-10" />
               {/* Decorative dot */}
               <div className="absolute -bottom-2 -left-2 w-6 h-6 rounded-full bg-[#2e7d4a] shadow-lg" />
             </div>
@@ -58,7 +58,7 @@ export default function HeroSection() {
               style={{ animation: "heroFadeUp 0.6s ease 0.1s both" }}
             >
               <span className="font-[Tajawal] text-[#7cc89a] text-sm tracking-wider uppercase">
-                كاتب وصحفي إماراتي
+                كاتب ومحلل
               </span>
             </div>
 
@@ -77,8 +77,8 @@ export default function HeroSection() {
               className="font-[Cairo] text-lg md:text-xl text-white/70 max-w-lg mb-8 leading-relaxed"
               style={{ animation: "heroFadeUp 0.6s ease 0.4s both" }}
             >
-              أكثر من عشرين عاماً في عالم الصحافة والكتابة، أسعى من خلال الكلمة
-              إلى إثراء الحوار المجتمعي وتسليط الضوء على القضايا التي تهم الإنسان العربي.
+              رئيس تنفيذي وكاتب محلل متخصص في الشؤون الاقتصادية والسياسية والاجتماعية.
+              يجمع بين الخبرة المؤسسية والإدارة الدولية والاهتمام الإعلامي المتميز.
             </p>
 
             {/* Social Links */}
