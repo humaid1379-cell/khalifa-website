@@ -1,24 +1,35 @@
 /*
  * Design: Green Ink Press — Editorial newspaper style
  * KharijLogo: Artistic SVG logo for "خارج النص" podcast
- * Concept: Open book with wind-swept pages + stylized quill crossing diagonally
- * Colors: ONLY dark green (#0d3b1f), light green (#7cc89a), and black (#000000)
+ * Concept: Open book (dark green + light green) + quill/pen
+ *   - Pen body:    wood / brown (#8B5E3C → #C49A6C)
+ *   - Pen nib:     silver / metallic (#B0B8C1 → #E8ECF0)
+ *   - Ink drop:    black (#111111)
+ *   - Book pages:  dark green (#0d3b1f) + light green (#7cc89a)
  */
 
 interface KharijLogoProps {
   size?: number;
-  /** "navbar" = compact on dark bg; "podcast" = larger on dark bg */
   variant?: "navbar" | "podcast";
   className?: string;
 }
 
 export default function KharijLogo({ size = 40, variant = "navbar", className = "" }: KharijLogoProps) {
-  // Three colors only: dark green, light green, black
   const darkGreen  = "#0d3b1f";
   const lightGreen = "#7cc89a";
-  const black      = "#000000";
+  const black      = "#111111";
 
-  // Podcast variant uses slightly more opaque/vivid fills; navbar is more subtle
+  // Wood colors
+  const woodDark   = "#6B3F1F";
+  const woodMid    = "#8B5E3C";
+  const woodLight  = "#C49A6C";
+  const woodHigh   = "#DDB88A";
+
+  // Silver/metallic colors
+  const silverDark = "#7A8490";
+  const silverMid  = "#B0B8C1";
+  const silverLight= "#E8ECF0";
+
   const bright = variant === "podcast";
 
   return (
@@ -32,24 +43,46 @@ export default function KharijLogo({ size = 40, variant = "navbar", className = 
       aria-hidden="true"
     >
       <defs>
-        {/* Left page: dark green → black gradient */}
+        {/* Book left page: dark green → black */}
         <linearGradient id={`lgL-${variant}`} x1="4" y1="10" x2="24" y2="38" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor={darkGreen} />
-          <stop offset="100%" stopColor={black} />
+          <stop offset="100%" stopColor="#020e07" />
         </linearGradient>
-        {/* Right page: slightly lighter dark green → black */}
+        {/* Book right page: slightly lighter dark green → black */}
         <linearGradient id={`lgR-${variant}`} x1="44" y1="10" x2="24" y2="38" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={darkGreen} stopOpacity="0.85" />
-          <stop offset="100%" stopColor={black} />
+          <stop offset="0%"   stopColor={darkGreen} stopOpacity="0.9" />
+          <stop offset="100%" stopColor="#020e07" />
         </linearGradient>
-        {/* Quill: light green → dark green */}
-        <linearGradient id={`lgQ-${variant}`} x1="14" y1="8" x2="36" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={lightGreen} />
-          <stop offset="100%" stopColor={darkGreen} />
+
+        {/* Pen body: wood grain — warm brown */}
+        <linearGradient id={`lgPen-${variant}`} x1="33" y1="7" x2="23" y2="32" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stopColor={woodHigh} />
+          <stop offset="30%"  stopColor={woodLight} />
+          <stop offset="65%"  stopColor={woodMid} />
+          <stop offset="100%" stopColor={woodDark} />
         </linearGradient>
-        {/* Subtle glow on quill */}
+        {/* Pen body highlight (left edge shine) */}
+        <linearGradient id={`lgPenHL-${variant}`} x1="32" y1="7" x2="30" y2="20" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stopColor={woodHigh} stopOpacity="0.6" />
+          <stop offset="100%" stopColor={woodHigh} stopOpacity="0" />
+        </linearGradient>
+
+        {/* Pen shaft: wood */}
+        <linearGradient id={`lgShaft-${variant}`} x1="24" y1="30" x2="22" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stopColor={woodMid} />
+          <stop offset="100%" stopColor={woodDark} />
+        </linearGradient>
+
+        {/* Nib: silver metallic */}
+        <linearGradient id={`lgNib-${variant}`} x1="20" y1="38" x2="24" y2="44" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stopColor={silverLight} />
+          <stop offset="40%"  stopColor={silverMid} />
+          <stop offset="100%" stopColor={silverDark} />
+        </linearGradient>
+
+        {/* Subtle glow on pen */}
         <filter id={`glow-${variant}`} x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="0.8" result="blur" />
+          <feGaussianBlur stdDeviation="0.6" result="blur" />
           <feMerge>
             <feMergeNode in="blur" />
             <feMergeNode in="SourceGraphic" />
@@ -74,19 +107,13 @@ export default function KharijLogo({ size = 40, variant = "navbar", className = 
         strokeWidth="0.6"
         strokeOpacity={bright ? "0.7" : "0.5"}
       />
-
-      {/* Left page — top corner curl */}
-      <path
-        d="M10 12 C9 11 8.5 10 9.5 9.5 C10.5 9 11.5 10 10 12Z"
-        fill={lightGreen}
-        opacity="0.4"
-      />
-
-      {/* Left page text lines */}
-      <line x1="8"  y1="18" x2="21" y2="17.2" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.5"  strokeLinecap="round" />
-      <line x1="8"  y1="21" x2="21" y2="20.3" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.4"  strokeLinecap="round" />
-      <line x1="8"  y1="24" x2="21" y2="23.4" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.3"  strokeLinecap="round" />
-      <line x1="8"  y1="27" x2="18" y2="26.5" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.2"  strokeLinecap="round" />
+      {/* Left corner curl */}
+      <path d="M10 12 C9 11 8.5 10 9.5 9.5 C10.5 9 11.5 10 10 12Z" fill={lightGreen} opacity="0.4" />
+      {/* Left text lines */}
+      <line x1="8"  y1="18" x2="21" y2="17.2" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.50" strokeLinecap="round" />
+      <line x1="8"  y1="21" x2="21" y2="20.3" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.38" strokeLinecap="round" />
+      <line x1="8"  y1="24" x2="21" y2="23.4" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.28" strokeLinecap="round" />
+      <line x1="8"  y1="27" x2="18" y2="26.5" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.18" strokeLinecap="round" />
 
       {/* ── RIGHT PAGE ── */}
       <path
@@ -102,18 +129,12 @@ export default function KharijLogo({ size = 40, variant = "navbar", className = 
         strokeWidth="0.6"
         strokeOpacity={bright ? "0.7" : "0.5"}
       />
-
-      {/* Right page — top corner curl */}
-      <path
-        d="M38 12 C39 11 39.5 10 38.5 9.5 C37.5 9 36.5 10 38 12Z"
-        fill={lightGreen}
-        opacity="0.4"
-      />
-
-      {/* Right page text lines */}
-      <line x1="27" y1="18" x2="40" y2="17.2" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.5"  strokeLinecap="round" />
-      <line x1="27" y1="21" x2="40" y2="20.3" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.4"  strokeLinecap="round" />
-      <line x1="27" y1="24" x2="37" y2="23.4" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.3"  strokeLinecap="round" />
+      {/* Right corner curl */}
+      <path d="M38 12 C39 11 39.5 10 38.5 9.5 C37.5 9 36.5 10 38 12Z" fill={lightGreen} opacity="0.4" />
+      {/* Right text lines */}
+      <line x1="27" y1="18" x2="40" y2="17.2" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.50" strokeLinecap="round" />
+      <line x1="27" y1="21" x2="40" y2="20.3" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.38" strokeLinecap="round" />
+      <line x1="27" y1="24" x2="37" y2="23.4" stroke={lightGreen} strokeWidth="0.7" strokeOpacity="0.28" strokeLinecap="round" />
 
       {/* ── BOOK SPINE ── */}
       <path
@@ -125,8 +146,9 @@ export default function KharijLogo({ size = 40, variant = "navbar", className = 
         opacity={bright ? "0.9" : "0.7"}
       />
 
-      {/* ── QUILL PEN — diagonal, crossing both pages ── */}
-      {/* Feather body */}
+      {/* ── PEN / QUILL — diagonal, crossing both pages ── */}
+
+      {/* Pen body — wood feather shape */}
       <path
         d="M33 7
            C35 8 37 10 36.5 12
@@ -139,47 +161,92 @@ export default function KharijLogo({ size = 40, variant = "navbar", className = 
            C32.5 15 34 13.5 34 12
            C34 10.5 32 9 30 8
            Z"
-        fill={`url(#lgQ-${variant})`}
+        fill={`url(#lgPen-${variant})`}
         filter={`url(#glow-${variant})`}
       />
-      {/* Feather inner vane highlight */}
+      {/* Wood grain lines on feather */}
       <path
-        d="M33 8.5
-           C34.5 9.5 35.5 11 35 12.5
-           C34.5 14 33 15 31.5 16.5
-           C30 18 28.5 20.5 27.5 23
-           L26.5 25
-           C27.5 22.5 29 19.5 30.5 17.5
-           C32 15.5 33.5 14 34 12.5
-           C34.5 11 33.5 9.5 32 8.5
-           Z"
-        fill={lightGreen}
-        fillOpacity="0.25"
+        d="M31.5 8.5 C33 9.5 34.5 11 34 13 C33.5 15 32 16 30.5 17.5"
+        stroke={woodHigh}
+        strokeWidth="0.5"
+        strokeOpacity="0.45"
+        strokeLinecap="round"
+        fill="none"
       />
-      {/* Quill shaft */}
+      <path
+        d="M30 9 C31.5 10 33 12 32.5 14 C32 16 30.5 17 29 18.5"
+        stroke={woodHigh}
+        strokeWidth="0.4"
+        strokeOpacity="0.3"
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Pen body left-edge highlight */}
+      <path
+        d="M33 7
+           C35 8 37 10 36.5 12
+           C36 14 34 15 32 17
+           C30.5 18.5 29 21 27.5 24"
+        stroke={`url(#lgPenHL-${variant})`}
+        strokeWidth="1"
+        strokeLinecap="round"
+        fill="none"
+      />
+
+      {/* Pen shaft — wood colored stick */}
       <path
         d="M24.5 31 L22 39"
-        stroke={lightGreen}
+        stroke={`url(#lgShaft-${variant})`}
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+      {/* Ferrule ring — silver band where shaft meets nib */}
+      <line
+        x1="22.8" y1="38.2"
+        x2="21.5" y2="39.5"
+        stroke={silverMid}
         strokeWidth="1.2"
         strokeLinecap="round"
+        opacity="0.9"
       />
-      {/* Nib split */}
-      <path
-        d="M22 39 L20.5 43 M22 39 L23.5 43"
-        stroke={lightGreen}
-        strokeWidth="0.8"
-        strokeLinecap="round"
-      />
-      {/* Ink drop at nib — black */}
-      <ellipse cx="21"   cy="43.5" rx="1.2" ry="1.5" fill={black}      opacity="0.85" />
-      <ellipse cx="23.5" cy="43.5" rx="0.8" ry="1"   fill={darkGreen}  opacity="0.7"  />
 
-      {/* ── RADIATING IDEA LINES ── */}
+      {/* Nib — silver metallic split tip */}
+      <path
+        d="M22 39 L20 43.5 L22.2 41.5 L24 43.5 Z"
+        fill={`url(#lgNib-${variant})`}
+        stroke={silverDark}
+        strokeWidth="0.3"
+      />
+      {/* Nib center split line */}
+      <line
+        x1="22.1" y1="39.5"
+        x2="22.1" y2="43"
+        stroke={silverDark}
+        strokeWidth="0.35"
+        strokeLinecap="round"
+        opacity="0.6"
+      />
+      {/* Nib highlight */}
+      <line
+        x1="21.2" y1="39.8"
+        x2="20.5" y2="42.5"
+        stroke={silverLight}
+        strokeWidth="0.4"
+        strokeLinecap="round"
+        opacity="0.55"
+      />
+
+      {/* Ink drop — black, at nib tip */}
+      <ellipse cx="22" cy="44.2" rx="1.1" ry="1.3" fill={black} opacity="0.9" />
+      {/* Ink drop highlight */}
+      <ellipse cx="21.5" cy="43.7" rx="0.35" ry="0.4" fill={silverLight} opacity="0.4" />
+
+      {/* ── RADIATING IDEA LINES — top right ── */}
       <line x1="37" y1="5"  x2="39.5" y2="3"  stroke={lightGreen} strokeWidth="0.8" strokeLinecap="round" opacity="0.65" />
       <line x1="39" y1="8"  x2="42"   y2="7"  stroke={lightGreen} strokeWidth="0.8" strokeLinecap="round" opacity="0.5"  />
       <line x1="40" y1="12" x2="43.5" y2="12" stroke={lightGreen} strokeWidth="0.8" strokeLinecap="round" opacity="0.35" />
 
-      {/* ── DASHED ARC — "beyond" motif ── */}
+      {/* ── DASHED ARC — "beyond the text" motif ── */}
       <path
         d="M14 10 C19 6 29 6 34 10"
         stroke={lightGreen}
