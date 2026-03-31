@@ -3,10 +3,12 @@
  * Articles: Searchable, filterable archive with card layout
  * Pagination, category filters, year filters
  * Modal for full article view — CSS transitions, no framer-motion
+ * Now reads from localStorage (admin-added) + hardcoded articles
  */
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Search, X, Calendar, Tag, ChevronLeft, ChevronRight } from "lucide-react";
-import { articles, categories, years, type Article } from "@/data/articles";
+import { articles as hardcodedArticles, categories as defaultCategories, type Article } from "@/data/articles";
+import { getStoredArticles, type StoredArticle } from "@/lib/articleStorage";
 import AnimatedSection from "./AnimatedSection";
 
 const ARTICLES_PER_PAGE = 6;
@@ -18,10 +20,32 @@ export default function ArticlesSection() {
   const [selectedCategory, setSelectedCategory] = useState("الكل");
   const [selectedYear, setSelectedYear] = useState("الكل");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [selectedArticle, setSelectedArticle] = useState<StoredArticle | null>(null);
+
+  // Merge admin-stored articles with hardcoded ones
+  const allArticles = useMemo((): StoredArticle[] => {
+    const stored = getStoredArticles();
+    const hardcoded: StoredArticle[] = hardcodedArticles.map((a) => ({
+      ...a,
+      newspaper: "",
+      isHardcoded: true,
+    }));
+    return [...stored, ...hardcoded];
+  }, []);
+
+  // Derive years and categories from all articles
+  const years = useMemo(
+    () => Array.from(new Set(allArticles.map((a) => a.year))).sort((a, b) => b - a),
+    [allArticles]
+  );
+
+  const categories = useMemo(() => {
+    const storedCats = allArticles.map((a) => a.category).filter(Boolean);
+    return Array.from(new Set([...defaultCategories, ...storedCats]));
+  }, [allArticles]);
 
   const filteredArticles = useMemo(() => {
-    return articles.filter((article) => {
+    return allArticles.filter((article) => {
       const matchesSearch =
         searchQuery === "" ||
         article.title.includes(searchQuery) ||
@@ -33,7 +57,7 @@ export default function ArticlesSection() {
         selectedYear === "الكل" || article.year.toString() === selectedYear;
       return matchesSearch && matchesCategory && matchesYear;
     });
-  }, [searchQuery, selectedCategory, selectedYear]);
+  }, [searchQuery, selectedCategory, selectedYear, allArticles]);
 
   const totalPages = Math.ceil(filteredArticles.length / ARTICLES_PER_PAGE);
   const paginatedArticles = useMemo(() => {
@@ -193,6 +217,13 @@ export default function ArticlesSection() {
                       {article.title}
                     </h3>
 
+                    {/* Newspaper name if present */}
+                    {article.newspaper && (
+                      <p className="font-[Tajawal] text-xs text-[#7aa88e] mb-2">
+                        {article.newspaper}
+                      </p>
+                    )}
+
                     {/* Excerpt */}
                     <p className="font-[Cairo] text-sm text-[#4a6b5a] leading-relaxed line-clamp-3">
                       {article.excerpt}
@@ -267,7 +298,7 @@ function ArticleModal({
   article,
   onClose,
 }: {
-  article: Article;
+  article: StoredArticle;
   onClose: () => void;
 }) {
   const [visible, setVisible] = useState(false);
@@ -331,6 +362,11 @@ function ArticleModal({
             <span className="font-[Tajawal] text-xs text-white/60">
               {formatDate(article.date)}
             </span>
+            {article.newspaper && (
+              <span className="font-[Tajawal] text-xs text-white/60">
+                — {article.newspaper}
+              </span>
+            )}
           </div>
 
           <h2 className="font-[Amiri] text-2xl md:text-3xl font-bold text-white leading-relaxed">
