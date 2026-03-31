@@ -1,25 +1,19 @@
 /*
  * Design: Green Ink Press — Editorial newspaper style
- * Articles: Searchable, filterable archive with card layout
- * Pagination, category filters, year filters
- * Modal for full article view — CSS transitions, no framer-motion
- * Now fetches from Cloudflare D1 API, falls back to hardcoded articles
+ * Main articles section: shows only the 5 NEWEST articles by date
+ * Full archive is at /archive
+ * Fetches from Cloudflare D1 API, falls back to one example article
  */
-import { useState, useMemo, useCallback, useEffect, useRef } from "react";
-import { Search, X, Calendar, Tag, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import { categories as defaultCategories, type Article } from "@/data/articles";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { X, ChevronLeft, Loader2, ArrowLeft } from "lucide-react";
 import { fetchAllArticles, type StoredArticle } from "@/lib/articleStorage";
 import AnimatedSection from "./AnimatedSection";
-
-const ARTICLES_PER_PAGE = 6;
+import { Link } from "wouter";
 
 const PATTERN_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7bAYv5QYZcia9BxhPhwv4f/articles-pattern-P3uHDEeAuMjKEYia9gYeCW.webp";
+const MAX_RECENT = 5;
 
 export default function ArticlesSection() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("الكل");
-  const [selectedYear, setSelectedYear] = useState("الكل");
-  const [currentPage, setCurrentPage] = useState(1);
   const [selectedArticle, setSelectedArticle] = useState<StoredArticle | null>(null);
   const [allArticles, setAllArticles] = useState<StoredArticle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,41 +38,14 @@ export default function ArticlesSection() {
     return () => { cancelled = true; };
   }, []);
 
-  // Derive years and categories from all articles
-  const years = useMemo(
-    () => Array.from(new Set(allArticles.map((a) => a.year))).sort((a, b) => b - a),
-    [allArticles]
-  );
-
-  const categories = useMemo(() => {
-    const storedCats = allArticles.map((a) => a.category).filter(Boolean);
-    return Array.from(new Set([...defaultCategories, ...storedCats]));
+  // Sort by date descending, take the 5 newest
+  const recentArticles = useMemo(() => {
+    return [...allArticles]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, MAX_RECENT);
   }, [allArticles]);
 
-  const filteredArticles = useMemo(() => {
-    return allArticles.filter((article) => {
-      const matchesSearch =
-        searchQuery === "" ||
-        article.title.includes(searchQuery) ||
-        article.excerpt.includes(searchQuery) ||
-        article.content.includes(searchQuery);
-      const matchesCategory =
-        selectedCategory === "الكل" || article.category === selectedCategory;
-      const matchesYear =
-        selectedYear === "الكل" || article.year.toString() === selectedYear;
-      return matchesSearch && matchesCategory && matchesYear;
-    });
-  }, [searchQuery, selectedCategory, selectedYear, allArticles]);
-
-  const totalPages = Math.ceil(filteredArticles.length / ARTICLES_PER_PAGE);
-  const paginatedArticles = useMemo(() => {
-    const start = (currentPage - 1) * ARTICLES_PER_PAGE;
-    return filteredArticles.slice(start, start + ARTICLES_PER_PAGE);
-  }, [filteredArticles, currentPage]);
-
-  const handleFilterChange = useCallback(() => {
-    setCurrentPage(1);
-  }, []);
+  const hasMore = allArticles.length > MAX_RECENT;
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -118,86 +85,12 @@ export default function ArticlesSection() {
         {/* Section Header */}
         <AnimatedSection className="text-center mb-12">
           <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#0d3b1f] mb-4">
-            أرشيف المقالات
+            أحدث المقالات
           </h2>
           <div className="divider-double mx-auto mb-6" />
           <p className="font-[Cairo] text-[#4a6b5a] max-w-2xl mx-auto leading-relaxed">
-            مجموعة من المقالات والآراء المنشورة على مدار السنوات
+            آخر ما نُشر من مقالات وآراء
           </p>
-        </AnimatedSection>
-
-        {/* Search & Filters */}
-        <AnimatedSection delay={100} className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-[#d4edda] mb-10">
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search
-                size={18}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7aa88e]"
-              />
-              <input
-                type="text"
-                placeholder="ابحث في المقالات..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  handleFilterChange();
-                }}
-                className="w-full pr-10 pl-4 py-2.5 rounded-lg border border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] placeholder:text-[#7aa88e] focus:outline-none focus:border-[#2e7d4a] focus:ring-1 focus:ring-[#2e7d4a] transition-colors"
-              />
-            </div>
-
-            {/* Category Filter */}
-            <div className="relative min-w-[160px]">
-              <Tag
-                size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7aa88e] pointer-events-none"
-              />
-              <select
-                value={selectedCategory}
-                onChange={(e) => {
-                  setSelectedCategory(e.target.value);
-                  handleFilterChange();
-                }}
-                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] focus:outline-none focus:border-[#2e7d4a] appearance-none cursor-pointer"
-              >
-                <option value="الكل">كل التصنيفات</option>
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Year Filter */}
-            <div className="relative min-w-[140px]">
-              <Calendar
-                size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7aa88e] pointer-events-none"
-              />
-              <select
-                value={selectedYear}
-                onChange={(e) => {
-                  setSelectedYear(e.target.value);
-                  handleFilterChange();
-                }}
-                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] focus:outline-none focus:border-[#2e7d4a] appearance-none cursor-pointer"
-              >
-                <option value="الكل">كل السنوات</option>
-                {years.map((year) => (
-                  <option key={year} value={year.toString()}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Results count */}
-          <div className="mt-3 font-[Tajawal] text-xs text-[#7aa88e]">
-            {loading ? "جاري التحميل..." : `${filteredArticles.length} مقال`}
-          </div>
         </AnimatedSection>
 
         {/* Loading state */}
@@ -208,10 +101,10 @@ export default function ArticlesSection() {
           </div>
         )}
 
-        {/* Articles Grid */}
-        {!loading && paginatedArticles.length > 0 && (
+        {/* Articles Grid — 5 newest */}
+        {!loading && recentArticles.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-            {paginatedArticles.map((article, i) => (
+            {recentArticles.map((article, i) => (
               <AnimatedSection key={article.id} delay={i * 60}>
                 <button
                   onClick={() => setSelectedArticle(article)}
@@ -260,51 +153,37 @@ export default function ArticlesSection() {
           </div>
         )}
 
-        {!loading && paginatedArticles.length === 0 && (
+        {!loading && recentArticles.length === 0 && (
           <div className="text-center py-16">
             <p className="font-[Cairo] text-[#7aa88e] text-lg">
-              لا توجد مقالات مطابقة لبحثك
+              لا توجد مقالات حتى الآن
             </p>
           </div>
         )}
 
-        {/* Pagination */}
-        {!loading && totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="w-10 h-10 rounded-lg border border-[#d4edda] flex items-center justify-center text-[#2e7d4a] hover:bg-[#e8f5e9] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronRight size={18} />
-            </button>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`w-10 h-10 rounded-lg font-[Tajawal] text-sm transition-colors ${
-                  currentPage === page
-                    ? "bg-[#2e7d4a] text-white shadow-md"
-                    : "border border-[#d4edda] text-[#2e7d4a] hover:bg-[#e8f5e9]"
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              className="w-10 h-10 rounded-lg border border-[#d4edda] flex items-center justify-center text-[#2e7d4a] hover:bg-[#e8f5e9] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronLeft size={18} />
-            </button>
-          </div>
+        {/* Archive link — shown when there are more than 5 articles, or always as a CTA */}
+        {!loading && (
+          <AnimatedSection delay={300} className="flex justify-center mt-4">
+            <Link href="/archive">
+              <span className="inline-flex items-center gap-2 bg-[#0d3b1f] text-white font-[Cairo] text-sm font-medium px-7 py-3 rounded-xl hover:bg-[#1b5e30] transition-colors shadow-md cursor-pointer">
+                {hasMore ? (
+                  <>
+                    <span>عرض جميع المقالات ({allArticles.length})</span>
+                    <ArrowLeft size={16} />
+                  </>
+                ) : (
+                  <>
+                    <span>أرشيف المقالات</span>
+                    <ArrowLeft size={16} />
+                  </>
+                )}
+              </span>
+            </Link>
+          </AnimatedSection>
         )}
       </div>
 
-      {/* Article Modal — CSS transition, no framer-motion */}
+      {/* Article Modal */}
       {selectedArticle && (
         <ArticleModal
           article={selectedArticle}
@@ -315,7 +194,7 @@ export default function ArticlesSection() {
   );
 }
 
-function ArticleModal({
+export function ArticleModal({
   article,
   onClose,
 }: {
@@ -326,7 +205,6 @@ function ArticleModal({
   const innerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Trigger entrance animation after mount
     requestAnimationFrame(() => {
       requestAnimationFrame(() => setVisible(true));
     });
@@ -376,7 +254,7 @@ function ArticleModal({
             <X size={18} />
           </button>
 
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-3 mb-3 flex-wrap">
             <span className="font-[Tajawal] text-xs bg-[#2e7d4a] text-white px-3 py-1 rounded-full">
               {article.category}
             </span>

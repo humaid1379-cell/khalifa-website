@@ -6,11 +6,13 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import KharijLogo from "./KharijLogo";
+import { Link, useLocation } from "wouter";
 
 const navLinks = [
   { label: "الرئيسية", href: "#hero" },
   { label: "السيرة الذاتية", href: "#bio" },
   { label: "المقالات", href: "#articles" },
+  { label: "الأرشيف", href: "/archive", isRoute: true },
   { label: "البودكاست", href: "#podcast" },
   { label: "تواصل", href: "#contact" },
 ];
@@ -18,6 +20,7 @@ const navLinks = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [location, navigate] = useLocation();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -25,8 +28,21 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleClick = (href: string) => {
+  const handleClick = (href: string, isRoute?: boolean) => {
     setIsOpen(false);
+    if (isRoute) {
+      navigate(href);
+      return;
+    }
+    // If we're not on the home page, navigate home first then scroll
+    if (location !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const el = document.querySelector(href);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 300);
+      return;
+    }
     const el = document.querySelector(href);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
@@ -63,7 +79,7 @@ export default function Navbar() {
           {navLinks.map((link) => (
             <button
               key={link.href}
-              onClick={() => handleClick(link.href)}
+              onClick={() => handleClick(link.href, link.isRoute)}
               className="font-[Cairo] text-sm text-white/80 hover:text-white transition-colors relative group"
             >
               {link.label}
@@ -104,7 +120,7 @@ export default function Navbar() {
           {navLinks.map((link) => (
             <button
               key={link.href}
-              onClick={() => handleClick(link.href)}
+              onClick={() => handleClick(link.href, link.isRoute)}
               className="font-[Cairo] text-base text-white/90 hover:text-white text-right py-2 border-b border-white/10 transition-colors"
             >
               {link.label}
