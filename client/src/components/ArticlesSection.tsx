@@ -3,12 +3,12 @@
  * Articles: Searchable, filterable archive with card layout
  * Pagination, category filters, year filters
  * Modal for full article view — CSS transitions, no framer-motion
- * Now reads from localStorage (admin-added) + hardcoded articles
+ * Now fetches from Cloudflare D1 API, falls back to hardcoded articles
  */
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
-import { Search, X, Calendar, Tag, ChevronLeft, ChevronRight } from "lucide-react";
-import { articles as hardcodedArticles, categories as defaultCategories, type Article } from "@/data/articles";
-import { getStoredArticles, type StoredArticle } from "@/lib/articleStorage";
+import { Search, X, Calendar, Tag, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { categories as defaultCategories, type Article } from "@/data/articles";
+import { fetchAllArticles, type StoredArticle } from "@/lib/articleStorage";
 import AnimatedSection from "./AnimatedSection";
 
 const ARTICLES_PER_PAGE = 6;
@@ -21,16 +21,27 @@ export default function ArticlesSection() {
   const [selectedYear, setSelectedYear] = useState("الكل");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedArticle, setSelectedArticle] = useState<StoredArticle | null>(null);
+  const [allArticles, setAllArticles] = useState<StoredArticle[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Merge admin-stored articles with hardcoded ones
-  const allArticles = useMemo((): StoredArticle[] => {
-    const stored = getStoredArticles();
-    const hardcoded: StoredArticle[] = hardcodedArticles.map((a) => ({
-      ...a,
-      newspaper: "",
-      isHardcoded: true,
-    }));
-    return [...stored, ...hardcoded];
+  // Fetch articles from API on mount
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const articles = await fetchAllArticles();
+        if (!cancelled) {
+          setAllArticles(articles);
+        }
+      } catch {
+        // fallback handled inside fetchAllArticles
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
   }, []);
 
   // Derive years and categories from all articles
@@ -185,12 +196,20 @@ export default function ArticlesSection() {
 
           {/* Results count */}
           <div className="mt-3 font-[Tajawal] text-xs text-[#7aa88e]">
-            {filteredArticles.length} مقال
+            {loading ? "جاري التحميل..." : `${filteredArticles.length} مقال`}
           </div>
         </AnimatedSection>
 
+        {/* Loading state */}
+        {loading && (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 size={28} className="animate-spin text-[#2e7d4a]" />
+            <span className="mr-3 font-[Cairo] text-[#4a6b5a]">جاري تحميل المقالات...</span>
+          </div>
+        )}
+
         {/* Articles Grid */}
-        {paginatedArticles.length > 0 ? (
+        {!loading && paginatedArticles.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
             {paginatedArticles.map((article, i) => (
               <AnimatedSection key={article.id} delay={i * 60}>
@@ -239,7 +258,9 @@ export default function ArticlesSection() {
               </AnimatedSection>
             ))}
           </div>
-        ) : (
+        )}
+
+        {!loading && paginatedArticles.length === 0 && (
           <div className="text-center py-16">
             <p className="font-[Cairo] text-[#7aa88e] text-lg">
               لا توجد مقالات مطابقة لبحثك
@@ -248,7 +269,7 @@ export default function ArticlesSection() {
         )}
 
         {/* Pagination */}
-        {totalPages > 1 && (
+        {!loading && totalPages > 1 && (
           <div className="flex items-center justify-center gap-2">
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}

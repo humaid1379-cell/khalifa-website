@@ -1,8 +1,9 @@
 /*
  * Admin Dashboard — Arabic RTL, green theme
- * Full CRUD for articles with table view, search, and modal forms
+ * Full CRUD for articles via Cloudflare D1 API
+ * Includes seed button to populate database with initial articles
  */
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import {
   Plus,
   Search,
@@ -16,18 +17,22 @@ import {
   LayoutDashboard,
   ChevronLeft,
   ChevronRight,
+  Database,
+  RefreshCw,
+  Loader2,
 } from "lucide-react";
 import {
-  getStoredArticles,
+  fetchArticles,
   addArticle,
   updateArticle,
   deleteArticle,
   getAllCategories,
   generateId,
   adminLogout,
+  seedDatabase,
+  getHardcodedArticles,
   type StoredArticle,
 } from "@/lib/articleStorage";
-import { articles as hardcodedArticles } from "@/data/articles";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -50,7 +55,8 @@ const emptyForm: ArticleForm = {
 };
 
 export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
-  const [articles, setArticles] = useState<StoredArticle[]>(getStoredArticles());
+  const [articles, setArticles] = useState<StoredArticle[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showForm, setShowForm] = useState(false);
@@ -58,31 +64,40 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [form, setForm] = useState<ArticleForm>(emptyForm);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [seeding, setSeeding] = useState(false);
 
   const categories = getAllCategories();
 
-  // Combine stored + hardcoded for display
-  const allArticles = useMemo(() => {
-    const stored = articles.map((a) => ({ ...a, isHardcoded: false }));
-    const hardcoded = hardcodedArticles.map((a) => ({
-      ...a,
-      newspaper: "",
-      isHardcoded: true,
-    }));
-    return [...stored, ...hardcoded];
-  }, [articles]);
+  // Load articles from API on mount
+  const loadArticles = useCallback(async () => {
+    setLoading(true);
+    try {
+      const apiArticles = await fetchArticles();
+      setArticles(apiArticles);
+    } catch {
+      setErrorMsg("فشل في تحميل المقالات");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadArticles();
+  }, [loadArticles]);
 
   // Filter by search
   const filteredArticles = useMemo(() => {
-    if (!searchQuery) return allArticles;
+    if (!searchQuery) return articles;
     const q = searchQuery.toLowerCase();
-    return allArticles.filter(
+    return articles.filter(
       (a) =>
         a.title.includes(q) ||
         a.excerpt.includes(q) ||
         (a.newspaper && a.newspaper.includes(q))
     );
-  }, [allArticles, searchQuery]);
+  }, [articles, searchQuery]);
 
   const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE);
   const paginatedArticles = useMemo(() => {
@@ -93,6 +108,11 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const showSuccess = (msg: string) => {
     setSuccessMsg(msg);
     setTimeout(() => setSuccessMsg(""), 3000);
+  };
+
+  const showError = (msg: string) => {
+    setErrorMsg(msg);
+    setTimeout(() => setErrorMsg(""), 4000);
   };
 
   const handleAdd = () => {
@@ -114,50 +134,91 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     setShowForm(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.title.trim() || !form.content.trim()) return;
+    setSaving(true);
 
     const year = new Date(form.date).getFullYear();
 
-    if (editingId) {
-      // Update existing
-      updateArticle(editingId, {
-        title: form.title.trim(),
-        newspaper: form.newspaper.trim(),
-        date: form.date,
-        category: form.category,
-        excerpt: form.excerpt.trim() || form.content.trim().substring(0, 150) + "...",
-        content: form.content.trim(),
-        year,
-      });
-      showSuccess("تم تحديث المقال بنجاح");
-    } else {
-      // Add new
-      const newArticle: StoredArticle = {
-        id: generateId(),
-        title: form.title.trim(),
-        newspaper: form.newspaper.trim(),
-        date: form.date,
-        category: form.category,
-        excerpt: form.excerpt.trim() || form.content.trim().substring(0, 150) + "...",
-        content: form.content.trim(),
-        year,
-      };
-      addArticle(newArticle);
-      showSuccess("تم إضافة المقال بنجاح");
-    }
+    try {
+      if (editingId) {
+        const result = await updateArticle(editingId, {
+          title: form.title.trim(),
+          newspaper: form.newspaper.trim(),
+          date: form.date,
+          category: form.category,
+          excerpt: form.excerpt.trim() || form.content.trim().substring(0, 150) + "...",
+          content: form.content.trim(),
+          year,
+        });
+        if (result.success) {
+          showSuccess("تم تحديث المقال بنجاح");
+        } else {
+          showError(result.error || "فشل في تحديث المقال");
+        }
+      } else {
+        const newArticle: StoredArticle = {
+          id: generateId(),
+          title: form.title.trim(),
+          newspaper: form.newspaper.trim(),
+          date: form.date,
+          category: form.category,
+          excerpt: form.excerpt.trim() || form.content.trim().substring(0, 150) + "...",
+          content: form.content.trim(),
+          year,
+        };
+        const result = await addArticle(newArticle);
+        if (result.success) {
+          showSuccess("تم إضافة المقال بنجاح");
+        } else {
+          showError(result.error || "فشل في إضافة المقال");
+        }
+      }
 
-    setArticles(getStoredArticles());
-    setShowForm(false);
-    setEditingId(null);
-    setForm(emptyForm);
+      await loadArticles();
+      setShowForm(false);
+      setEditingId(null);
+      setForm(emptyForm);
+    } catch {
+      showError("حدث خطأ في الاتصال بالخادم");
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleDelete = (id: string) => {
-    deleteArticle(id);
-    setArticles(getStoredArticles());
-    setDeleteConfirm(null);
-    showSuccess("تم حذف المقال بنجاح");
+  const handleDelete = async (id: string) => {
+    setSaving(true);
+    try {
+      const result = await deleteArticle(id);
+      if (result.success) {
+        showSuccess("تم حذف المقال بنجاح");
+        await loadArticles();
+      } else {
+        showError(result.error || "فشل في حذف المقال");
+      }
+    } catch {
+      showError("حدث خطأ في الاتصال بالخادم");
+    } finally {
+      setSaving(false);
+      setDeleteConfirm(null);
+    }
+  };
+
+  const handleSeed = async () => {
+    setSeeding(true);
+    try {
+      const result = await seedDatabase();
+      if (result.success) {
+        showSuccess(result.message || "تم تعبئة قاعدة البيانات بنجاح");
+        await loadArticles();
+      } else {
+        showError(result.error || "فشل في تعبئة قاعدة البيانات");
+      }
+    } catch {
+      showError("حدث خطأ في الاتصال بالخادم");
+    } finally {
+      setSeeding(false);
+    }
   };
 
   const handleLogout = () => {
@@ -209,22 +270,19 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         </div>
       )}
 
+      {/* Error toast */}
+      {errorMsg && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white px-6 py-3 rounded-xl shadow-xl font-[Cairo] text-sm animate-[fadeIn_0.3s_ease]">
+          {errorMsg}
+        </div>
+      )}
+
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-6">
         {/* Stats Bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <StatCard
             label="إجمالي المقالات"
-            value={allArticles.length}
-            icon={<FileText size={20} />}
-          />
-          <StatCard
-            label="مقالات مضافة"
             value={articles.length}
-            icon={<Plus size={20} />}
-          />
-          <StatCard
-            label="مقالات نموذجية"
-            value={hardcodedArticles.length}
             icon={<FileText size={20} />}
           />
           <StatCard
@@ -232,6 +290,40 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             value={categories.length}
             icon={<FileText size={20} />}
           />
+          <div className="col-span-2 md:col-span-2 flex gap-4">
+            <button
+              onClick={handleSeed}
+              disabled={seeding}
+              className="flex-1 bg-white rounded-xl p-4 shadow-sm border border-[#d4edda] hover:border-[#2e7d4a] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-[#e8f5e9] flex items-center justify-center text-[#2e7d4a]">
+                  {seeding ? <Loader2 size={20} className="animate-spin" /> : <Database size={20} />}
+                </div>
+                <div className="text-right">
+                  <p className="font-[Cairo] text-sm font-bold text-[#0d3b1f]">
+                    {seeding ? "جاري التعبئة..." : "تعبئة قاعدة البيانات"}
+                  </p>
+                  <p className="font-[Cairo] text-xs text-[#7aa88e]">إضافة المقالات النموذجية</p>
+                </div>
+              </div>
+            </button>
+            <button
+              onClick={loadArticles}
+              disabled={loading}
+              className="bg-white rounded-xl p-4 shadow-sm border border-[#d4edda] hover:border-[#2e7d4a] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-[#e8f5e9] flex items-center justify-center text-[#2e7d4a]">
+                  <RefreshCw size={20} className={loading ? "animate-spin" : ""} />
+                </div>
+                <div className="text-right">
+                  <p className="font-[Cairo] text-sm font-bold text-[#0d3b1f]">تحديث</p>
+                  <p className="font-[Cairo] text-xs text-[#7aa88e]">إعادة تحميل</p>
+                </div>
+              </div>
+            </button>
+          </div>
         </div>
 
         {/* Toolbar */}
@@ -266,117 +358,110 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           </div>
         </div>
 
-        {/* Articles Table */}
-        <div className="bg-white rounded-xl shadow-sm border border-[#d4edda] overflow-hidden">
-          {/* Desktop Table */}
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-[#f0f7f2] border-b border-[#d4edda]">
-                  <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
-                    العنوان
-                  </th>
-                  <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
-                    الصحيفة
-                  </th>
-                  <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
-                    التصنيف
-                  </th>
-                  <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
-                    التاريخ
-                  </th>
-                  <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
-                    النوع
-                  </th>
-                  <th className="text-center px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
-                    إجراءات
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedArticles.map((article, i) => (
-                  <tr
-                    key={article.id}
-                    className={`border-b border-[#e8f0ec] hover:bg-[#f8faf9] transition-colors ${
-                      i % 2 === 0 ? "bg-white" : "bg-[#fafcfb]"
-                    }`}
-                  >
-                    <td className="px-4 py-3">
-                      <p className="font-[Cairo] text-sm text-[#0d3b1f] font-medium line-clamp-1 max-w-xs">
-                        {article.title}
-                      </p>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="font-[Cairo] text-xs text-[#4a6b5a]">
-                        {article.newspaper || "—"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="inline-block font-[Tajawal] text-xs bg-[#e8f5e9] text-[#1b6b3a] px-2 py-0.5 rounded-full">
-                        {article.category}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="font-[Tajawal] text-xs text-[#7aa88e]">
-                        {formatDate(article.date)}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      {article.isHardcoded ? (
-                        <span className="font-[Cairo] text-xs text-[#7aa88e]">نموذجي</span>
-                      ) : (
-                        <span className="font-[Cairo] text-xs text-[#2e7d4a] font-medium">
-                          مضاف
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-center gap-2">
-                        {!article.isHardcoded && (
-                          <>
-                            <button
-                              onClick={() => handleEdit(article)}
-                              className="p-1.5 rounded-lg text-[#2e7d4a] hover:bg-[#e8f5e9] transition-colors"
-                              title="تعديل"
-                            >
-                              <Edit3 size={15} />
-                            </button>
-                            <button
-                              onClick={() => setDeleteConfirm(article.id)}
-                              className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
-                              title="حذف"
-                            >
-                              <Trash2 size={15} />
-                            </button>
-                          </>
-                        )}
-                        {article.isHardcoded && (
-                          <span className="font-[Cairo] text-xs text-[#aaa]">—</span>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {paginatedArticles.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="text-center py-12">
-                      <p className="font-[Cairo] text-[#7aa88e]">لا توجد مقالات</p>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+        {/* Loading state */}
+        {loading && (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 size={32} className="animate-spin text-[#2e7d4a]" />
+            <span className="mr-3 font-[Cairo] text-[#4a6b5a]">جاري تحميل المقالات...</span>
           </div>
+        )}
 
-          {/* Mobile Cards */}
-          <div className="md:hidden divide-y divide-[#e8f0ec]">
-            {paginatedArticles.map((article) => (
-              <div key={article.id} className="p-4">
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <h3 className="font-[Cairo] text-sm font-medium text-[#0d3b1f] line-clamp-2 flex-1">
-                    {article.title}
-                  </h3>
-                  {!article.isHardcoded && (
+        {/* Articles Table */}
+        {!loading && (
+          <div className="bg-white rounded-xl shadow-sm border border-[#d4edda] overflow-hidden">
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-[#f0f7f2] border-b border-[#d4edda]">
+                    <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
+                      العنوان
+                    </th>
+                    <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
+                      الصحيفة
+                    </th>
+                    <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
+                      التصنيف
+                    </th>
+                    <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
+                      التاريخ
+                    </th>
+                    <th className="text-center px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
+                      إجراءات
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedArticles.map((article, i) => (
+                    <tr
+                      key={article.id}
+                      className={`border-b border-[#e8f0ec] hover:bg-[#f8faf9] transition-colors ${
+                        i % 2 === 0 ? "bg-white" : "bg-[#fafcfb]"
+                      }`}
+                    >
+                      <td className="px-4 py-3">
+                        <p className="font-[Cairo] text-sm text-[#0d3b1f] font-medium line-clamp-1 max-w-xs">
+                          {article.title}
+                        </p>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="font-[Cairo] text-xs text-[#4a6b5a]">
+                          {article.newspaper || "—"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="inline-block font-[Tajawal] text-xs bg-[#e8f5e9] text-[#1b6b3a] px-2 py-0.5 rounded-full">
+                          {article.category}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="font-[Tajawal] text-xs text-[#7aa88e]">
+                          {formatDate(article.date)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => handleEdit(article)}
+                            className="p-1.5 rounded-lg text-[#2e7d4a] hover:bg-[#e8f5e9] transition-colors"
+                            title="تعديل"
+                          >
+                            <Edit3 size={15} />
+                          </button>
+                          <button
+                            onClick={() => setDeleteConfirm(article.id)}
+                            className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
+                            title="حذف"
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  {paginatedArticles.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="text-center py-12">
+                        <p className="font-[Cairo] text-[#7aa88e]">
+                          {articles.length === 0
+                            ? "لا توجد مقالات في قاعدة البيانات. اضغط على \"تعبئة قاعدة البيانات\" لإضافة المقالات النموذجية."
+                            : "لا توجد مقالات مطابقة للبحث"}
+                        </p>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="md:hidden divide-y divide-[#e8f0ec]">
+              {paginatedArticles.map((article) => (
+                <div key={article.id} className="p-4">
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <h3 className="font-[Cairo] text-sm font-medium text-[#0d3b1f] line-clamp-2 flex-1">
+                      {article.title}
+                    </h3>
                     <div className="flex items-center gap-1 shrink-0">
                       <button
                         onClick={() => handleEdit(article)}
@@ -391,56 +476,57 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                         <Trash2 size={14} />
                       </button>
                     </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-3 flex-wrap">
-                  <span className="font-[Tajawal] text-xs bg-[#e8f5e9] text-[#1b6b3a] px-2 py-0.5 rounded-full">
-                    {article.category}
-                  </span>
-                  <span className="font-[Tajawal] text-xs text-[#7aa88e]">
-                    {formatDate(article.date)}
-                  </span>
-                  {article.newspaper && (
-                    <span className="font-[Cairo] text-xs text-[#4a6b5a]">
-                      {article.newspaper}
+                  </div>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="font-[Tajawal] text-xs bg-[#e8f5e9] text-[#1b6b3a] px-2 py-0.5 rounded-full">
+                      {article.category}
                     </span>
-                  )}
-                  {article.isHardcoded && (
-                    <span className="font-[Cairo] text-xs text-[#aaa]">نموذجي</span>
-                  )}
+                    <span className="font-[Tajawal] text-xs text-[#7aa88e]">
+                      {formatDate(article.date)}
+                    </span>
+                    {article.newspaper && (
+                      <span className="font-[Cairo] text-xs text-[#4a6b5a]">
+                        {article.newspaper}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-            {paginatedArticles.length === 0 && (
-              <div className="text-center py-12">
-                <p className="font-[Cairo] text-[#7aa88e]">لا توجد مقالات</p>
+              ))}
+              {paginatedArticles.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="font-[Cairo] text-[#7aa88e]">
+                    {articles.length === 0
+                      ? "لا توجد مقالات. اضغط على \"تعبئة قاعدة البيانات\" أعلاه."
+                      : "لا توجد مقالات مطابقة"}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 p-4 border-t border-[#e8f0ec]">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="w-8 h-8 rounded-lg border border-[#d4edda] flex items-center justify-center text-[#2e7d4a] hover:bg-[#e8f5e9] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                >
+                  <ChevronRight size={16} />
+                </button>
+                <span className="font-[Tajawal] text-sm text-[#4a6b5a]">
+                  {currentPage} / {totalPages}
+                </span>
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="w-8 h-8 rounded-lg border border-[#d4edda] flex items-center justify-center text-[#2e7d4a] hover:bg-[#e8f5e9] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                >
+                  <ChevronLeft size={16} />
+                </button>
               </div>
             )}
           </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 p-4 border-t border-[#e8f0ec]">
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="w-8 h-8 rounded-lg border border-[#d4edda] flex items-center justify-center text-[#2e7d4a] hover:bg-[#e8f5e9] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                <ChevronRight size={16} />
-              </button>
-              <span className="font-[Tajawal] text-sm text-[#4a6b5a]">
-                {currentPage} / {totalPages}
-              </span>
-              <button
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                className="w-8 h-8 rounded-lg border border-[#d4edda] flex items-center justify-center text-[#2e7d4a] hover:bg-[#e8f5e9] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                <ChevronLeft size={16} />
-              </button>
-            </div>
-          )}
-        </div>
+        )}
       </main>
 
       {/* Article Form Modal */}
@@ -451,6 +537,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           categories={categories}
           isEditing={!!editingId}
           onSave={handleSave}
+          saving={saving}
           onClose={() => {
             setShowForm(false);
             setEditingId(null);
@@ -472,9 +559,10 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             <div className="flex gap-3">
               <button
                 onClick={() => handleDelete(deleteConfirm)}
-                className="flex-1 py-2.5 rounded-xl bg-red-600 text-white font-[Cairo] text-sm font-medium hover:bg-red-700 transition-colors"
+                disabled={saving}
+                className="flex-1 py-2.5 rounded-xl bg-red-600 text-white font-[Cairo] text-sm font-medium hover:bg-red-700 disabled:opacity-50 transition-colors"
               >
-                حذف
+                {saving ? "جاري الحذف..." : "حذف"}
               </button>
               <button
                 onClick={() => setDeleteConfirm(null)}
@@ -522,6 +610,7 @@ function ArticleFormModal({
   categories,
   isEditing,
   onSave,
+  saving,
   onClose,
 }: {
   form: ArticleForm;
@@ -529,6 +618,7 @@ function ArticleFormModal({
   categories: string[];
   isEditing: boolean;
   onSave: () => void;
+  saving: boolean;
   onClose: () => void;
 }) {
   const isValid = form.title.trim() && form.content.trim();
@@ -651,11 +741,15 @@ function ArticleFormModal({
           </button>
           <button
             onClick={onSave}
-            disabled={!isValid}
+            disabled={!isValid || saving}
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#0d3b1f] text-white font-[Cairo] text-sm font-medium hover:bg-[#1b5e30] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md"
           >
-            <Save size={16} />
-            <span>{isEditing ? "تحديث" : "حفظ"}</span>
+            {saving ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
+            <span>{saving ? "جاري الحفظ..." : isEditing ? "تحديث" : "حفظ"}</span>
           </button>
         </div>
       </div>

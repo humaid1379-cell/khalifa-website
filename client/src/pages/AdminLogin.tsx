@@ -1,6 +1,6 @@
 /*
  * Admin Login Page — Arabic RTL, green theme
- * Simple password-only authentication
+ * Simple password-only authentication (now async via API)
  */
 import { useState, type FormEvent } from "react";
 import { Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
@@ -16,20 +16,23 @@ export default function AdminLogin({ onSuccess }: Props) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    // Small delay for UX
-    setTimeout(() => {
-      if (adminLogin(password)) {
+    try {
+      const success = await adminLogin(password);
+      if (success) {
         onSuccess();
       } else {
         setError("كلمة المرور غير صحيحة");
         setLoading(false);
       }
-    }, 400);
+    } catch {
+      setError("حدث خطأ في الاتصال");
+      setLoading(false);
+    }
   };
 
   return (
