@@ -11,10 +11,10 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
 
-function jsonResponse(data, status = 200) {
+function jsonResponse(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+    headers: { "Content-Type": "application/json", ...CORS_HEADERS, ...extraHeaders },
   });
 }
 
@@ -32,13 +32,21 @@ export async function onRequestOptions() {
 }
 
 // GET /api/articles — list all articles
+// Cache-Control: public, max-age=60 — CDN caches for 60s, stale-while-revalidate for 300s
 export async function onRequestGet(context) {
   try {
     const { results } = await context.env.DB.prepare(
-      "SELECT * FROM articles ORDER BY date DESC, created_at DESC"
+      `SELECT id, title, excerpt, content, date, category, year, newspaper, created_at
+       FROM articles
+       ORDER BY date DESC, created_at DESC
+       LIMIT 500`
     ).all();
 
-    return jsonResponse({ success: true, articles: results || [] });
+    return jsonResponse(
+      { success: true, articles: results || [] },
+      200,
+      { "Cache-Control": "public, max-age=60, stale-while-revalidate=300" }
+    );
   } catch (error) {
     return jsonResponse({ success: false, error: error.message }, 500);
   }

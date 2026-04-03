@@ -5,7 +5,7 @@
  * Fetches from Cloudflare D1 API, falls back to one example article
  */
 import { useState, useMemo, useEffect, useRef } from "react";
-import { X, ChevronLeft, Loader2, ArrowLeft } from "lucide-react";
+import { X, ChevronLeft, ArrowLeft } from "lucide-react";
 import { fetchAllArticles, type StoredArticle } from "@/lib/articleStorage";
 import AnimatedSection from "./AnimatedSection";
 import { Link } from "wouter";
@@ -93,11 +93,28 @@ export default function ArticlesSection() {
           </p>
         </AnimatedSection>
 
-        {/* Loading state */}
+        {/* Skeleton loading state */}
         {loading && (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 size={28} className="animate-spin text-[#2e7d4a]" />
-            <span className="mr-3 font-[Cairo] text-[#4a6b5a]">جاري تحميل المقالات...</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-xl overflow-hidden shadow-sm border border-[#e8f0ec]">
+                <div className="h-1 bg-[#d4edda]" />
+                <div className="p-5 md:p-6 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="h-5 w-16 bg-[#e8f5e9] rounded-full animate-pulse" />
+                    <div className="h-4 w-24 bg-[#f0f7f2] rounded animate-pulse" />
+                  </div>
+                  <div className="h-6 w-full bg-[#f0f7f2] rounded animate-pulse" />
+                  <div className="h-5 w-3/4 bg-[#f0f7f2] rounded animate-pulse" />
+                  <div className="space-y-2 pt-1">
+                    <div className="h-4 w-full bg-[#f5faf6] rounded animate-pulse" />
+                    <div className="h-4 w-full bg-[#f5faf6] rounded animate-pulse" />
+                    <div className="h-4 w-2/3 bg-[#f5faf6] rounded animate-pulse" />
+                  </div>
+                  <div className="h-4 w-20 bg-[#e8f5e9] rounded animate-pulse mt-2" />
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
@@ -161,7 +178,7 @@ export default function ArticlesSection() {
           </div>
         )}
 
-        {/* Archive link — shown when there are more than 5 articles, or always as a CTA */}
+        {/* Archive link */}
         {!loading && (
           <AnimatedSection delay={300} className="flex justify-center mt-4">
             <Link href="/archive">
