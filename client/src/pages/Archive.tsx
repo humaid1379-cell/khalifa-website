@@ -77,9 +77,12 @@ export default function Archive() {
     };
   }, [selectedArticle]);
 
+  // Derive year from date field (avoids relying on 'year' column which may not exist in older D1 tables)
   const years = useMemo(
     () =>
-      Array.from(new Set(allArticles.map((a) => a.year))).sort((a, b) => b - a),
+      Array.from(
+        new Set(allArticles.map((a) => a.year ?? new Date(a.date).getFullYear()))
+      ).sort((a, b) => b - a),
     [allArticles]
   );
 
@@ -97,8 +100,9 @@ export default function Archive() {
         article.content.includes(searchQuery);
       const matchesCategory =
         selectedCategory === "الكل" || article.category === selectedCategory;
+      const articleYear = (article.year ?? new Date(article.date).getFullYear()).toString();
       const matchesYear =
-        selectedYear === "الكل" || article.year.toString() === selectedYear;
+        selectedYear === "الكل" || articleYear === selectedYear;
       return matchesSearch && matchesCategory && matchesYear;
     });
   }, [searchQuery, selectedCategory, selectedYear, allArticles]);

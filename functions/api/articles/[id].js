@@ -3,6 +3,9 @@
  * GET:    Get a single article by ID (public)
  * PUT:    Update an article (admin auth required)
  * DELETE: Delete an article (admin auth required)
+ *
+ * NOTE: Does NOT use the 'year' column — it may not exist in older D1 tables.
+ * year is computed from the date field on the fly.
  */
 
 const ADMIN_PASSWORD = "Khalifa@2025";
@@ -27,6 +30,14 @@ function checkAuth(request) {
   return authHeader.slice(7) === ADMIN_PASSWORD;
 }
 
+function yearFromDate(dateStr) {
+  try {
+    return new Date(dateStr).getFullYear();
+  } catch {
+    return new Date().getFullYear();
+  }
+}
+
 // Handle CORS preflight
 export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: CORS_HEADERS });
@@ -35,10 +46,9 @@ export async function onRequestOptions() {
 // GET /api/articles/:id — get single article
 export async function onRequestGet(context) {
   const { id } = context.params;
-
   try {
     const article = await context.env.DB.prepare(
-      "SELECT * FROM articles WHERE id = ?"
+      "SELECT id, title, excerpt, content, date, category, newspaper, created_at FROM articles WHERE id = ?"
     )
       .bind(id)
       .first();
@@ -47,13 +57,13 @@ export async function onRequestGet(context) {
       return jsonResponse({ success: false, error: "المقال غير موجود" }, 404);
     }
 
-    return jsonResponse({ success: true, article });
+    return jsonResponse({ success: true, article: { ...article, year: yearFromDate(article.date) } });
   } catch (error) {
     return jsonResponse({ success: false, error: error.message }, 500);
   }
 }
 
-// PUT /api/articles/:id — update article
+// PUT /api/articles/:id — update article (no year column)
 export async function onRequestPut(context) {
   if (!checkAuth(context.request)) {
     return jsonResponse({ success: false, error: "غير مصرح" }, 401);
@@ -63,7 +73,7 @@ export async function onRequestPut(context) {
 
   try {
     const body = await context.request.json();
-    const { title, excerpt, content, date, category, year, newspaper } = body;
+    const { title, excerpt, content, date, category, newspaper } = body;
 
     if (!title || !content || !date || !category) {
       return jsonResponse({ success: false, error: "بيانات ناقصة" }, 400);
@@ -71,10 +81,10 @@ export async function onRequestPut(context) {
 
     const result = await context.env.DB.prepare(
       `UPDATE articles
-       SET title = ?, excerpt = ?, content = ?, date = ?, category = ?, year = ?, newspaper = ?, updated_at = datetime('now')
+       SET title = ?, excerpt = ?, content = ?, date = ?, category = ?, newspaper = ?, updated_at = datetime('now')
        WHERE id = ?`
     )
-      .bind(title, excerpt || "", content, date, category, year || new Date(date).getFullYear(), newspaper || "", id)
+      .bind(title, excerpt || "", content, date, category, newspaper || "", id)
       .run();
 
     if (result.meta.changes === 0) {

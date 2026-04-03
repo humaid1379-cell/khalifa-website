@@ -8,13 +8,15 @@ CREATE TABLE IF NOT EXISTS articles (
   content TEXT NOT NULL,
   date TEXT NOT NULL,
   category TEXT NOT NULL DEFAULT 'رأي',
-  year INTEGER NOT NULL,
   newspaper TEXT DEFAULT '',
   created_at TEXT DEFAULT (datetime('now')),
   updated_at TEXT DEFAULT (datetime('now'))
 );
 
+-- NOTE: If you created the table before April 2026, the 'year' column may not exist.
+-- Run this to add it (safe to run even if it already exists in newer SQLite versions):
+-- ALTER TABLE articles ADD COLUMN year INTEGER;
+
 -- Index for faster queries
-CREATE INDEX IF NOT EXISTS idx_articles_year ON articles(year DESC);
 CREATE INDEX IF NOT EXISTS idx_articles_category ON articles(category);
 CREATE INDEX IF NOT EXISTS idx_articles_date ON articles(date DESC);

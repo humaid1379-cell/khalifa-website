@@ -1,9 +1,11 @@
 /**
  * Cloudflare Pages Function — /api/articles
  * GET:  List all articles (public, no auth needed)
+ *       - Does NOT query the 'year' column (may not exist in older tables)
+ *       - year is computed from date on the fly
+ *       - Adds Cache-Control headers for CDN caching (60s)
  * POST: Create a new article (admin auth required)
  */
-
 const ADMIN_PASSWORD = "Khalifa@2025";
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -26,24 +28,40 @@ function checkAuth(request) {
   return authHeader.slice(7) === ADMIN_PASSWORD;
 }
 
+/** Compute year from a date string safely */
+function yearFromDate(dateStr) {
+  try {
+    return new Date(dateStr).getFullYear();
+  } catch {
+    return new Date().getFullYear();
+  }
+}
+
 // Handle CORS preflight
 export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: CORS_HEADERS });
 }
 
 // GET /api/articles — list all articles
-// Cache-Control: public, max-age=60 — CDN caches for 60s, stale-while-revalidate for 300s
+// Avoids querying 'year' column directly (may not exist in older D1 tables).
+// year is computed from the date field instead.
 export async function onRequestGet(context) {
   try {
     const { results } = await context.env.DB.prepare(
-      `SELECT id, title, excerpt, content, date, category, year, newspaper, created_at
+      `SELECT id, title, excerpt, content, date, category, newspaper, created_at
        FROM articles
        ORDER BY date DESC, created_at DESC
        LIMIT 500`
     ).all();
 
+    // Attach computed year to each article
+    const articles = (results || []).map((a) => ({
+      ...a,
+      year: yearFromDate(a.date),
+    }));
+
     return jsonResponse(
-      { success: true, articles: results || [] },
+      { success: true, articles },
       200,
       { "Cache-Control": "public, max-age=60, stale-while-revalidate=300" }
     );
@@ -57,22 +75,18 @@ export async function onRequestPost(context) {
   if (!checkAuth(context.request)) {
     return jsonResponse({ success: false, error: "غير مصرح" }, 401);
   }
-
   try {
     const body = await context.request.json();
-    const { id, title, excerpt, content, date, category, year, newspaper } = body;
-
+    const { id, title, excerpt, content, date, category, newspaper } = body;
     if (!id || !title || !content || !date || !category) {
       return jsonResponse({ success: false, error: "بيانات ناقصة" }, 400);
     }
-
     await context.env.DB.prepare(
-      `INSERT INTO articles (id, title, excerpt, content, date, category, year, newspaper)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      `INSERT INTO articles (id, title, excerpt, content, date, category, newspaper)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
     )
-      .bind(id, title, excerpt || "", content, date, category, year || new Date(date).getFullYear(), newspaper || "")
+      .bind(id, title, excerpt || "", content, date, category, newspaper || "")
       .run();
-
     return jsonResponse({ success: true, message: "تم إضافة المقال بنجاح" }, 201);
   } catch (error) {
     return jsonResponse({ success: false, error: error.message }, 500);
