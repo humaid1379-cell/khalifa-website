@@ -1,12 +1,12 @@
 /*
  * Design: Kharij Al Nass — Warm editorial Arabic-first
  * Navbar: Sticky top nav with cream/teal branding
- * Clean horizontal links, hamburger on mobile
+ * Logo (IMG_2207) shown in navbar and podcast section
  */
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import KharijLogo from "./KharijLogo";
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 
 const navLinks = [
   { label: "الرئيسية", href: "#hero" },
@@ -56,24 +56,18 @@ export default function Navbar() {
     >
       <div className="container flex items-center justify-between h-16 md:h-20">
 
-        {/* Podcast Name + Logo — upper left (RTL: visually upper right) */}
+        {/* Logo — right side (RTL: visually leading) */}
         <div className="hidden md:flex items-center">
           <button
             onClick={() => handleClick("#podcast")}
-            className="flex items-center gap-2 group transition-all duration-300"
-            aria-label="خارج النص - البودكاست"
+            className="group transition-transform duration-300 hover:scale-105"
+            aria-label="خارج النص"
           >
-            <KharijLogo
-              variant="navbar"
-              className="transition-transform duration-300 group-hover:scale-105"
-            />
-            <span className="font-[Amiri] text-3xl font-bold text-[#87b0b6]">
-              خارج النص
-            </span>
+            <KharijLogo variant="navbar" />
           </button>
         </div>
 
-        {/* Desktop Links */}
+        {/* Desktop Nav Links */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <button
@@ -91,26 +85,19 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Mobile: podcast icon + name */}
-        <div className="md:hidden flex items-center gap-1.5">
+        {/* Mobile: logo + hamburger */}
+        <div className="md:hidden flex items-center justify-between w-full">
           <button
-            onClick={() => handleClick("#podcast")}
-            className="flex items-center gap-1.5"
-            aria-label="خارج النص"
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 text-[#3a3a32]"
+            aria-label="القائمة"
           >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+          <button onClick={() => handleClick("#podcast")} aria-label="خارج النص">
             <KharijLogo variant="navbar" />
-            <span className="font-[Amiri] text-2xl font-bold text-[#87b0b6]">خارج النص</span>
           </button>
         </div>
-
-        {/* Mobile Hamburger */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className={`md:hidden p-2 ${scrolled ? "text-[#3a3a32]" : "text-[#3a3a32]"}`}
-          aria-label="القائمة"
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
       </div>
 
       {/* Mobile Menu */}

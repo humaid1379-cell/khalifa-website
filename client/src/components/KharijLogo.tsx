@@ -8,7 +8,7 @@
  *   "podcast" → larger logo
  */
 
-const LOGO_URL = "/kharij-logo.jpeg";
+const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/kharij-logo-v2_eb0c6410.jpeg";
 
 interface KharijLogoProps {
   variant?: "navbar" | "podcast";

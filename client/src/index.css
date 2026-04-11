@@ -40,57 +40,99 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-
-  /* Kharij Al Nass brand palette */
-  --color-brand-cream:  #f1efd6;
-  --color-brand-red:    #bf4240;
-  --color-brand-teal:   #87b0b6;
-  --color-brand-teal-dark: #6a9199;
-  --color-brand-teal-light: #a8c8cd;
-  --color-brand-cream-dark: #e4e1c4;
-  --color-brand-text:   #3a3a32;
-  --color-brand-text-muted: #6b6b5e;
-
-  --font-amiri:   'Amiri', serif;
-  --font-poppins: 'Poppins', sans-serif;
 }
 
 :root {
-  /* Primary = teal */
-  --primary:            #87b0b6;
-  --primary-foreground: #f1efd6;
-  --sidebar-primary:    #6a9199;
-  --sidebar-primary-foreground: #f1efd6;
-  --chart-1: #87b0b6;
-  --chart-2: #bf4240;
-  --chart-3: #6a9199;
-  --chart-4: #a8c8cd;
-  --chart-5: #3a3a32;
-  --radius: 0.5rem;
-  /* Warm cream background */
-  --background:         #f1efd6;
-  --foreground:         #3a3a32;
-  --card:               #faf9f0;
-  --card-foreground:    #3a3a32;
-  --popover:            #faf9f0;
-  --popover-foreground: #3a3a32;
-  --secondary:          #e4e1c4;
-  --secondary-foreground: #3a3a32;
-  --muted:              #e4e1c4;
-  --muted-foreground:   #6b6b5e;
-  --accent:             #87b0b6;
-  --accent-foreground:  #f1efd6;
-  --destructive:        #bf4240;
-  --destructive-foreground: #ffffff;
-  --border:             #d4d1b8;
-  --input:              #d4d1b8;
-  --ring:               #87b0b6;
-  --sidebar:            #f1efd6;
-  --sidebar-foreground: #3a3a32;
-  --sidebar-accent:     #e4e1c4;
-  --sidebar-accent-foreground: #3a3a32;
-  --sidebar-border:     #d4d1b8;
-  --sidebar-ring:       #87b0b6;
+  --radius: 0.65rem;
+  --background: oklch(0.95 0.02 95);
+  --foreground: oklch(0.28 0.01 75);
+  --card: oklch(0.97 0.015 95);
+  --card-foreground: oklch(0.28 0.01 75);
+  --popover: oklch(0.97 0.015 95);
+  --popover-foreground: oklch(0.28 0.01 75);
+  --primary: oklch(0.55 0.08 190);
+  --primary-foreground: oklch(0.95 0.02 95);
+  --secondary: oklch(0.90 0.02 95);
+  --secondary-foreground: oklch(0.40 0.01 75);
+  --muted: oklch(0.92 0.015 95);
+  --muted-foreground: oklch(0.50 0.01 75);
+  --accent: oklch(0.55 0.15 25);
+  --accent-foreground: oklch(0.97 0.01 95);
+  --destructive: oklch(0.55 0.15 25);
+  --destructive-foreground: oklch(0.97 0.01 95);
+  --border: oklch(0.87 0.02 90);
+  --input: oklch(0.87 0.02 90);
+  --ring: oklch(0.55 0.08 190);
+  --chart-1: oklch(0.55 0.08 190);
+  --chart-2: oklch(0.55 0.15 25);
+  --chart-3: oklch(0.65 0.06 190);
+  --chart-4: oklch(0.45 0.10 25);
+  --chart-5: oklch(0.75 0.04 190);
+  --sidebar: oklch(0.95 0.02 95);
+  --sidebar-foreground: oklch(0.28 0.01 75);
+  --sidebar-primary: oklch(0.55 0.08 190);
+  --sidebar-primary-foreground: oklch(0.95 0.02 95);
+  --sidebar-accent: oklch(0.92 0.015 95);
+  --sidebar-accent-foreground: oklch(0.28 0.01 75);
+  --sidebar-border: oklch(0.87 0.02 90);
+  --sidebar-ring: oklch(0.55 0.08 190);
+}
+
+/* ─── Global ─────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Amiri', serif;
+  background-color: #f1efd6;
+  color: #3a3a32;
+  direction: rtl;
+}
+
+/* ─── Decorative double-line divider ─────────────────────────────── */
+.divider-double {
+  width: 60px;
+  position: relative;
+  height: 6px;
+}
+.divider-double::before,
+.divider-double::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #87b0b6;
+}
+.divider-double::before { top: 0; }
+.divider-double::after  { bottom: 0; }
+
+/* ─── Rosette pattern background ─────────────────────────────────── */
+.rosette-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2387b0b6' opacity='0.12'%3E%3Crect x='52' y='38' width='16' height='16' rx='2' transform='rotate(45 60 46)'/%3E%3Crect x='52' y='66' width='16' height='16' rx='2' transform='rotate(45 60 74)'/%3E%3Crect x='38' y='52' width='16' height='16' rx='2' transform='rotate(45 46 60)'/%3E%3Crect x='66' y='52' width='16' height='16' rx='2' transform='rotate(45 74 60)'/%3E%3Crect x='40' y='40' width='12' height='12' rx='2' transform='rotate(30 46 46)'/%3E%3Crect x='68' y='40' width='12' height='12' rx='2' transform='rotate(60 74 46)'/%3E%3Crect x='40' y='68' width='12' height='12' rx='2' transform='rotate(60 46 74)'/%3E%3Crect x='68' y='68' width='12' height='12' rx='2' transform='rotate(30 74 74)'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* ─── Sunrise icon SVG (used in hero) ────────────────────────────── */
+.sunrise-icon {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2387b0b6'%3E%3Crect x='48' y='0' width='4' height='30' rx='2'/%3E%3Crect x='48' y='0' width='4' height='30' rx='2' transform='rotate(-30 50 30)'/%3E%3Crect x='48' y='0' width='4' height='30' rx='2' transform='rotate(-60 50 30)'/%3E%3Crect x='48' y='0' width='4' height='30' rx='2' transform='rotate(30 50 30)'/%3E%3Crect x='48' y='0' width='4' height='30' rx='2' transform='rotate(60 50 30)'/%3E%3Crect x='48' y='0' width='4' height='30' rx='2' transform='rotate(90 50 30)'/%3E%3Crect x='48' y='0' width='4' height='30' rx='2' transform='rotate(-90 50 30)'/%3E%3Crect x='0' y='55' width='100' height='4' rx='2'/%3E%3C/g%3E%3C/svg%3E") no-repeat center;
+  background-size: contain;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1efd6; }
+::-webkit-scrollbar-thumb { background: #87b0b6; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #6a9199; }
+
+/* ─── Selection ──────────────────────────────────────────────────── */
+::selection {
+  background: rgba(135, 176, 182, 0.3);
+  color: #3a3a32;
 }
 
 @layer base {
@@ -99,11 +141,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Amiri', serif;
-    direction: rtl;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Amiri', serif;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -143,111 +180,4 @@
       max-width: 1280px;
     }
   }
-
-  /* Newspaper-style double line divider — teal */
-  .divider-double {
-    position: relative;
-    height: 6px;
-    margin: 0 auto;
-    max-width: 200px;
-  }
-  .divider-double::before,
-  .divider-double::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: #87b0b6;
-  }
-  .divider-double::before { top: 0; }
-  .divider-double::after  { bottom: 0; }
-
-  /* Section heading style */
-  .section-title {
-    font-family: 'Amiri', serif;
-    font-weight: 700;
-    color: #3a3a32;
-    position: relative;
-    display: inline-block;
-  }
-
-  /* Scrollbar styling */
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: #e4e1c4; }
-  ::-webkit-scrollbar-thumb {
-    background: #87b0b6;
-    border-radius: 4px;
-  }
-  ::-webkit-scrollbar-thumb:hover { background: #6a9199; }
-}
-
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Line clamp utilities */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* Hero entrance keyframes */
-@keyframes heroFadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes heroSlideIn {
-  from { opacity: 0; transform: translateX(-32px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-/* Selection color */
-::selection {
-  background: rgba(135, 176, 182, 0.3);
-  color: #3a3a32;
-}
-
-/* ── خارج النص — Decorative Brand Name ── */
-.kharij-brand-text {
-  font-family: 'Amiri', serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: #87b0b6;
-  transition: color 0.3s ease;
-  white-space: nowrap;
-}
-.kharij-brand-text--sm {
-  font-size: 1.05rem;
-}
-button:hover .kharij-brand-text,
-a:hover .kharij-brand-text {
-  color: #6a9199;
-}
-
-/* Geometric rosette pattern background */
-.rosette-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2387b0b6' fill-opacity='0.08'%3E%3Crect x='35' y='28' width='10' height='10' rx='1' transform='rotate(45 40 33)'/%3E%3Crect x='35' y='42' width='10' height='10' rx='1' transform='rotate(45 40 47)'/%3E%3Crect x='28' y='35' width='10' height='10' rx='1' transform='rotate(45 33 40)'/%3E%3Crect x='42' y='35' width='10' height='10' rx='1' transform='rotate(45 47 40)'/%3E%3Crect x='29' y='29' width='8' height='8' rx='1' transform='rotate(30 33 33)'/%3E%3Crect x='43' y='29' width='8' height='8' rx='1' transform='rotate(60 47 33)'/%3E%3Crect x='29' y='43' width='8' height='8' rx='1' transform='rotate(60 33 47)'/%3E%3Crect x='43' y='43' width='8' height='8' rx='1' transform='rotate(30 47 47)'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat: repeat;
-}
-
-/* Sunrise/fan decorative element */
-.sunrise-icon::before {
-  content: '';
-  display: block;
-  width: 60px;
-  height: 30px;
-  background: conic-gradient(from 180deg at 50% 100%, #87b0b6 0deg, transparent 20deg, #87b0b6 40deg, transparent 60deg, #87b0b6 80deg, transparent 100deg, #87b0b6 120deg, transparent 140deg, #87b0b6 160deg, transparent 180deg);
-  mask: radial-gradient(circle at 50% 100%, black 28px, transparent 29px);
-  -webkit-mask: radial-gradient(circle at 50% 100%, black 28px, transparent 29px);
 }
