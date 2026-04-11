@@ -1,5 +1,5 @@
 /*
- * Admin Login Page — Arabic RTL, green theme
+ * Admin Login Page — Arabic RTL, Kharij Al Nass branding
  * Simple password-only authentication (now async via API)
  */
 import { useState, type FormEvent } from "react";
@@ -39,7 +39,7 @@ export default function AdminLogin({ onSuccess }: Props) {
     <div
       className="min-h-screen flex items-center justify-center px-4"
       style={{
-        background: "linear-gradient(135deg, #0d3b1f 0%, #1b5e30 50%, #0d3b1f 100%)",
+        background: "linear-gradient(135deg, #6a9199 0%, #87b0b6 50%, #6a9199 100%)",
       }}
     >
       {/* Decorative pattern overlay */}
@@ -54,23 +54,23 @@ export default function AdminLogin({ onSuccess }: Props) {
         {/* Back to site link */}
         <a
           href="/"
-          className="inline-flex items-center gap-2 text-[#7cc89a] hover:text-white font-[Cairo] text-sm mb-6 transition-colors"
+          className="inline-flex items-center gap-2 text-[#f1efd6] hover:text-white font-[Amiri] text-sm mb-6 transition-colors"
         >
           <ArrowRight size={16} />
           <span>العودة إلى الموقع</span>
         </a>
 
         {/* Login Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-10">
+        <div className="bg-[#faf9f0] rounded-2xl shadow-2xl p-8 md:p-10">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-[#e8f5e9] rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock size={28} className="text-[#0d3b1f]" />
+            <div className="w-16 h-16 bg-[#87b0b6]/15 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Lock size={28} className="text-[#87b0b6]" />
             </div>
-            <h1 className="font-[Amiri] text-2xl font-bold text-[#0d3b1f] mb-2">
+            <h1 className="font-[Amiri] text-2xl font-bold text-[#3a3a32] mb-2">
               لوحة التحكم
             </h1>
-            <p className="font-[Cairo] text-sm text-[#4a6b5a]">
+            <p className="font-[Amiri] text-sm text-[#6b6b5e]">
               أدخل كلمة المرور للوصول إلى إدارة المقالات
             </p>
           </div>
@@ -80,7 +80,7 @@ export default function AdminLogin({ onSuccess }: Props) {
             <div className="mb-6">
               <label
                 htmlFor="password"
-                className="block font-[Cairo] text-sm font-medium text-[#0d3b1f] mb-2"
+                className="block font-[Amiri] text-sm font-medium text-[#3a3a32] mb-2"
               >
                 كلمة المرور
               </label>
@@ -94,14 +94,14 @@ export default function AdminLogin({ onSuccess }: Props) {
                     setError("");
                   }}
                   placeholder="أدخل كلمة المرور"
-                  className="w-full pr-4 pl-12 py-3 rounded-xl border-2 border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-[#0d3b1f] placeholder:text-[#7aa88e] focus:outline-none focus:border-[#2e7d4a] transition-colors text-base"
+                  className="w-full pr-4 pl-12 py-3 rounded-xl border-2 border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-[#3a3a32] placeholder:text-[#6b6b5e] focus:outline-none focus:border-[#87b0b6] transition-colors text-base"
                   autoFocus
                   dir="ltr"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7aa88e] hover:text-[#0d3b1f] transition-colors"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6b6b5e] hover:text-[#3a3a32] transition-colors"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -109,8 +109,8 @@ export default function AdminLogin({ onSuccess }: Props) {
 
               {/* Error message */}
               {error && (
-                <p className="mt-2 font-[Cairo] text-sm text-red-600 flex items-center gap-1">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-600" />
+                <p className="mt-2 font-[Amiri] text-sm text-[#bf4240] flex items-center gap-1">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#bf4240]" />
                   {error}
                 </p>
               )}
@@ -119,7 +119,7 @@ export default function AdminLogin({ onSuccess }: Props) {
             <button
               type="submit"
               disabled={loading || !password}
-              className="w-full py-3 rounded-xl bg-[#0d3b1f] text-white font-[Cairo] font-medium text-base hover:bg-[#1b5e30] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="w-full py-3 rounded-xl bg-[#87b0b6] text-white font-[Amiri] font-medium text-base hover:bg-[#6a9199] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               {loading ? (
                 <span className="inline-flex items-center gap-2">
@@ -134,7 +134,7 @@ export default function AdminLogin({ onSuccess }: Props) {
         </div>
 
         {/* Footer */}
-        <p className="text-center mt-6 font-[Cairo] text-xs text-[#7cc89a]/60">
+        <p className="text-center mt-6 font-[Amiri] text-xs text-[#f1efd6]/60">
           خليفة جمعة الرميثي — لوحة إدارة المقالات
         </p>
       </div>

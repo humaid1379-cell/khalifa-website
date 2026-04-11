@@ -1,5 +1,5 @@
 /*
- * Design: Green Ink Press — Editorial newspaper style
+ * Design: Kharij Al Nass — Warm editorial Arabic-first
  * Main articles section: shows only the 5 NEWEST articles by date
  * Full archive is at /archive
  * Fetches from Cloudflare D1 API, falls back to one example article
@@ -10,7 +10,6 @@ import { fetchAllArticles, type StoredArticle } from "@/lib/articleStorage";
 import AnimatedSection from "./AnimatedSection";
 import { Link } from "wouter";
 
-const PATTERN_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7bAYv5QYZcia9BxhPhwv4f/articles-pattern-P3uHDEeAuMjKEYia9gYeCW.webp";
 const MAX_RECENT = 5;
 
 export default function ArticlesSection() {
@@ -18,7 +17,6 @@ export default function ArticlesSection() {
   const [allArticles, setAllArticles] = useState<StoredArticle[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch articles from API on mount
   useEffect(() => {
     let cancelled = false;
     async function load() {
@@ -38,7 +36,6 @@ export default function ArticlesSection() {
     return () => { cancelled = true; };
   }, []);
 
-  // Sort by date descending, take the 5 newest
   const recentArticles = useMemo(() => {
     return [...allArticles]
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -56,7 +53,6 @@ export default function ArticlesSection() {
     });
   };
 
-  // Prevent body scroll when modal is open
   useEffect(() => {
     if (selectedArticle) {
       document.body.style.overflow = "hidden";
@@ -71,24 +67,20 @@ export default function ArticlesSection() {
   return (
     <section
       id="articles"
-      className="py-20 md:py-28 relative"
-      style={{
-        backgroundImage: `url(${PATTERN_BG})`,
-        backgroundSize: "400px",
-        backgroundRepeat: "repeat",
-      }}
+      className="py-20 md:py-28 relative rosette-pattern"
+      style={{ backgroundColor: '#f1efd6' }}
     >
       {/* Overlay for readability */}
-      <div className="absolute inset-0 bg-[#f7f5f2]/85" />
+      <div className="absolute inset-0 bg-[#f1efd6]/85" />
 
       <div className="container relative z-10">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-12">
-          <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#0d3b1f] mb-4">
+          <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#87b0b6] mb-4">
             أحدث المقالات
           </h2>
           <div className="divider-double mx-auto mb-6" />
-          <p className="font-[Cairo] text-[#4a6b5a] max-w-2xl mx-auto leading-relaxed">
+          <p className="font-[Amiri] text-[#6b6b5e] max-w-2xl mx-auto leading-relaxed">
             آخر ما نُشر من مقالات وآراء
           </p>
         </AnimatedSection>
@@ -97,21 +89,21 @@ export default function ArticlesSection() {
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-xl overflow-hidden shadow-sm border border-[#e8f0ec]">
-                <div className="h-1 bg-[#d4edda]" />
+              <div key={i} className="bg-[#faf9f0] rounded-xl overflow-hidden shadow-sm border border-[#d4d1b8]">
+                <div className="h-1 bg-[#87b0b6]/30" />
                 <div className="p-5 md:p-6 space-y-3">
                   <div className="flex items-center justify-between">
-                    <div className="h-5 w-16 bg-[#e8f5e9] rounded-full animate-pulse" />
-                    <div className="h-4 w-24 bg-[#f0f7f2] rounded animate-pulse" />
+                    <div className="h-5 w-16 bg-[#87b0b6]/15 rounded-full animate-pulse" />
+                    <div className="h-4 w-24 bg-[#e4e1c4] rounded animate-pulse" />
                   </div>
-                  <div className="h-6 w-full bg-[#f0f7f2] rounded animate-pulse" />
-                  <div className="h-5 w-3/4 bg-[#f0f7f2] rounded animate-pulse" />
+                  <div className="h-6 w-full bg-[#e4e1c4] rounded animate-pulse" />
+                  <div className="h-5 w-3/4 bg-[#e4e1c4] rounded animate-pulse" />
                   <div className="space-y-2 pt-1">
-                    <div className="h-4 w-full bg-[#f5faf6] rounded animate-pulse" />
-                    <div className="h-4 w-full bg-[#f5faf6] rounded animate-pulse" />
-                    <div className="h-4 w-2/3 bg-[#f5faf6] rounded animate-pulse" />
+                    <div className="h-4 w-full bg-[#e4e1c4]/60 rounded animate-pulse" />
+                    <div className="h-4 w-full bg-[#e4e1c4]/60 rounded animate-pulse" />
+                    <div className="h-4 w-2/3 bg-[#e4e1c4]/60 rounded animate-pulse" />
                   </div>
-                  <div className="h-4 w-20 bg-[#e8f5e9] rounded animate-pulse mt-2" />
+                  <div className="h-4 w-20 bg-[#87b0b6]/15 rounded animate-pulse mt-2" />
                 </div>
               </div>
             ))}
@@ -125,41 +117,41 @@ export default function ArticlesSection() {
               <AnimatedSection key={article.id} delay={i * 60}>
                 <button
                   onClick={() => setSelectedArticle(article)}
-                  className="w-full text-right bg-white rounded-xl overflow-hidden shadow-sm border border-[#e8f0ec] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                  className="w-full text-right bg-[#faf9f0] rounded-xl overflow-hidden shadow-sm border border-[#d4d1b8] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
                 >
-                  {/* Category bar */}
-                  <div className="h-1 bg-[#2e7d4a] group-hover:bg-[#1b6b3a] transition-colors" />
+                  {/* Category bar — teal */}
+                  <div className="h-1 bg-[#87b0b6] group-hover:bg-[#6a9199] transition-colors" />
 
                   <div className="p-5 md:p-6">
                     {/* Category & Date */}
                     <div className="flex items-center justify-between mb-3">
-                      <span className="font-[Tajawal] text-xs bg-[#e8f5e9] text-[#1b6b3a] px-2.5 py-1 rounded-full">
+                      <span className="font-[Amiri] text-xs bg-[#87b0b6]/15 text-[#6a9199] px-2.5 py-1 rounded-full">
                         {article.category}
                       </span>
-                      <span className="font-[Tajawal] text-xs text-[#7aa88e]">
+                      <span className="font-[Amiri] text-xs text-[#6b6b5e]">
                         {formatDate(article.date)}
                       </span>
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-[Amiri] text-lg font-bold text-[#0d3b1f] mb-3 leading-relaxed group-hover:text-[#1b6b3a] transition-colors line-clamp-2">
+                    <h3 className="font-[Amiri] text-lg font-bold text-[#3a3a32] mb-3 leading-relaxed group-hover:text-[#87b0b6] transition-colors line-clamp-2">
                       {article.title}
                     </h3>
 
                     {/* Newspaper name if present */}
                     {article.newspaper && (
-                      <p className="font-[Tajawal] text-xs text-[#7aa88e] mb-2">
+                      <p className="font-[Amiri] text-xs text-[#6b6b5e] mb-2">
                         {article.newspaper}
                       </p>
                     )}
 
                     {/* Excerpt */}
-                    <p className="font-[Cairo] text-sm text-[#4a6b5a] leading-relaxed line-clamp-3">
+                    <p className="font-[Amiri] text-sm text-[#6b6b5e] leading-relaxed line-clamp-3">
                       {article.excerpt}
                     </p>
 
                     {/* Read more */}
-                    <div className="mt-4 font-[Cairo] text-sm text-[#2e7d4a] group-hover:text-[#1b6b3a] flex items-center gap-1">
+                    <div className="mt-4 font-[Amiri] text-sm text-[#bf4240] group-hover:text-[#a83836] flex items-center gap-1">
                       <span>اقرأ المزيد</span>
                       <ChevronLeft size={14} />
                     </div>
@@ -172,7 +164,7 @@ export default function ArticlesSection() {
 
         {!loading && recentArticles.length === 0 && (
           <div className="text-center py-16">
-            <p className="font-[Cairo] text-[#7aa88e] text-lg">
+            <p className="font-[Amiri] text-[#6b6b5e] text-lg">
               لا توجد مقالات حتى الآن
             </p>
           </div>
@@ -182,7 +174,7 @@ export default function ArticlesSection() {
         {!loading && (
           <AnimatedSection delay={300} className="flex justify-center mt-4">
             <Link href="/archive">
-              <span className="inline-flex items-center gap-2 bg-[#0d3b1f] text-white font-[Cairo] text-sm font-medium px-7 py-3 rounded-xl hover:bg-[#1b5e30] transition-colors shadow-md cursor-pointer">
+              <span className="inline-flex items-center gap-2 bg-[#87b0b6] text-white font-[Amiri] text-sm font-medium px-7 py-3 rounded-xl hover:bg-[#6a9199] transition-colors shadow-md cursor-pointer">
                 {hasMore ? (
                   <>
                     <span>عرض جميع المقالات ({allArticles.length})</span>
@@ -253,7 +245,7 @@ export function ArticleModal({
     >
       <div
         ref={innerRef}
-        className="bg-white rounded-2xl w-full max-w-3xl max-h-[85vh] overflow-hidden shadow-2xl"
+        className="bg-[#faf9f0] rounded-2xl w-full max-w-3xl max-h-[85vh] overflow-hidden shadow-2xl"
         style={{
           opacity: visible ? 1 : 0,
           transform: visible ? "scale(1) translateY(0)" : "scale(0.95) translateY(20px)",
@@ -261,8 +253,8 @@ export function ArticleModal({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="bg-[#0d3b1f] p-6 relative">
+        {/* Header — teal */}
+        <div className="bg-[#87b0b6] p-6 relative">
           <button
             onClick={handleClose}
             className="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
@@ -272,14 +264,14 @@ export function ArticleModal({
           </button>
 
           <div className="flex items-center gap-3 mb-3 flex-wrap">
-            <span className="font-[Tajawal] text-xs bg-[#2e7d4a] text-white px-3 py-1 rounded-full">
+            <span className="font-[Amiri] text-xs bg-[#6a9199] text-white px-3 py-1 rounded-full">
               {article.category}
             </span>
-            <span className="font-[Tajawal] text-xs text-white/60">
+            <span className="font-[Amiri] text-xs text-white/70">
               {formatDate(article.date)}
             </span>
             {article.newspaper && (
-              <span className="font-[Tajawal] text-xs text-white/60">
+              <span className="font-[Amiri] text-xs text-white/70">
                 — {article.newspaper}
               </span>
             )}
@@ -292,21 +284,21 @@ export function ArticleModal({
 
         {/* Content */}
         <div className="p-6 md:p-8 overflow-y-auto max-h-[55vh]">
-          <div className="font-[Cairo] text-base text-[#2a3f33] leading-[2] whitespace-pre-line">
+          <div className="font-[Amiri] text-base text-[#3a3a32] leading-[2] whitespace-pre-line">
             {article.content}
           </div>
 
           {/* Author attribution */}
-          <div className="mt-8 pt-6 border-t border-[#d4edda]">
+          <div className="mt-8 pt-6 border-t border-[#d4d1b8]">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#e8f5e9] flex items-center justify-center">
-                <span className="font-[Amiri] text-[#2e7d4a] font-bold text-sm">خ</span>
+              <div className="w-10 h-10 rounded-full bg-[#87b0b6]/15 flex items-center justify-center">
+                <span className="font-[Amiri] text-[#87b0b6] font-bold text-sm">خ</span>
               </div>
               <div>
-                <p className="font-[Cairo] text-sm font-semibold text-[#0d3b1f]">
+                <p className="font-[Amiri] text-sm font-semibold text-[#3a3a32]">
                   خليفة جمعة الرميثي
                 </p>
-                <p className="font-[Tajawal] text-xs text-[#7aa88e]">
+                <p className="font-[Amiri] text-xs text-[#6b6b5e]">
                   كاتب وصحفي
                 </p>
               </div>

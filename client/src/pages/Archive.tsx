@@ -1,8 +1,7 @@
 /*
- * Design: Green Ink Press — Editorial newspaper style
+ * Design: Kharij Al Nass — Warm editorial Arabic-first
  * Archive page: full searchable, filterable article archive
  * All articles from D1 database, sorted by date descending
- * Search, category filter, year filter, pagination
  */
 import { useState, useMemo, useEffect } from "react";
 import {
@@ -21,9 +20,6 @@ import { Link } from "wouter";
 
 const ARTICLES_PER_PAGE = 9;
 
-const PATTERN_BG =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7bAYv5QYZcia9BxhPhwv4f/articles-pattern-P3uHDEeAuMjKEYia9gYeCW.webp";
-
 export default function Archive() {
   const [allArticles, setAllArticles] = useState<StoredArticle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +29,6 @@ export default function Archive() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedArticle, setSelectedArticle] = useState<StoredArticle | null>(null);
 
-  // Fetch articles from API on mount
   useEffect(() => {
     let cancelled = false;
     async function load() {
@@ -41,7 +36,6 @@ export default function Archive() {
       try {
         const articles = await fetchAllArticles();
         if (!cancelled) {
-          // Sort by date descending
           setAllArticles(
             [...articles].sort(
               (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -60,12 +54,10 @@ export default function Archive() {
     };
   }, []);
 
-  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // Prevent body scroll when modal is open
   useEffect(() => {
     if (selectedArticle) {
       document.body.style.overflow = "hidden";
@@ -77,7 +69,6 @@ export default function Archive() {
     };
   }, [selectedArticle]);
 
-  // Derive year from date field (avoids relying on 'year' column which may not exist in older D1 tables)
   const years = useMemo(
     () =>
       Array.from(
@@ -126,34 +117,30 @@ export default function Archive() {
 
   return (
     <div
-      className="min-h-screen"
-      style={{
-        backgroundImage: `url(${PATTERN_BG})`,
-        backgroundSize: "400px",
-        backgroundRepeat: "repeat",
-      }}
+      className="min-h-screen rosette-pattern"
+      style={{ backgroundColor: '#f1efd6' }}
     >
-      <div className="absolute inset-0 bg-[#f7f5f2]/85 pointer-events-none" />
+      <div className="absolute inset-0 bg-[#f1efd6]/85 pointer-events-none" />
 
-      {/* Page Header */}
-      <div className="relative z-10 bg-[#0d3b1f] text-white py-14 md:py-20">
+      {/* Page Header — teal */}
+      <div className="relative z-10 bg-[#87b0b6] text-white py-14 md:py-20">
         <div className="container">
           {/* Back link */}
           <Link href="/">
-            <span className="inline-flex items-center gap-1.5 text-[#7cc89a] hover:text-white font-[Cairo] text-sm mb-6 cursor-pointer transition-colors">
+            <span className="inline-flex items-center gap-1.5 text-[#f1efd6] hover:text-white font-[Amiri] text-sm mb-6 cursor-pointer transition-colors">
               <ArrowRight size={16} />
               <span>العودة إلى الرئيسية</span>
             </span>
           </Link>
 
-          <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4 text-[#f1efd6]">
             أرشيف المقالات
           </h1>
           <div
             className="w-16 h-0.5 mb-4"
-            style={{ background: "#2e7d4a" }}
+            style={{ background: "#f1efd6" }}
           />
-          <p className="font-[Cairo] text-white/70 text-base max-w-xl leading-relaxed">
+          <p className="font-[Amiri] text-white/80 text-base max-w-xl leading-relaxed">
             جميع المقالات والآراء المنشورة — مرتبة من الأحدث إلى الأقدم
           </p>
         </div>
@@ -162,13 +149,13 @@ export default function Archive() {
       {/* Main content */}
       <div className="relative z-10 container py-10 md:py-14">
         {/* Search & Filters */}
-        <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-[#d4edda] mb-10">
+        <div className="bg-[#faf9f0] rounded-xl p-4 md:p-6 shadow-sm border border-[#d4d1b8] mb-10">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search */}
             <div className="flex-1 relative">
               <Search
                 size={18}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7aa88e]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#87b0b6]"
               />
               <input
                 type="text"
@@ -178,7 +165,7 @@ export default function Archive() {
                   setSearchQuery(e.target.value);
                   resetPage();
                 }}
-                className="w-full pr-10 pl-4 py-2.5 rounded-lg border border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] placeholder:text-[#7aa88e] focus:outline-none focus:border-[#2e7d4a] focus:ring-1 focus:ring-[#2e7d4a] transition-colors"
+                className="w-full pr-10 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] placeholder:text-[#6b6b5e] focus:outline-none focus:border-[#87b0b6] focus:ring-1 focus:ring-[#87b0b6] transition-colors"
               />
             </div>
 
@@ -186,7 +173,7 @@ export default function Archive() {
             <div className="relative min-w-[160px]">
               <Tag
                 size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7aa88e] pointer-events-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#87b0b6] pointer-events-none"
               />
               <select
                 value={selectedCategory}
@@ -194,7 +181,7 @@ export default function Archive() {
                   setSelectedCategory(e.target.value);
                   resetPage();
                 }}
-                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] focus:outline-none focus:border-[#2e7d4a] appearance-none cursor-pointer"
+                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] focus:outline-none focus:border-[#87b0b6] appearance-none cursor-pointer"
               >
                 <option value="الكل">كل التصنيفات</option>
                 {categories.map((cat) => (
@@ -209,7 +196,7 @@ export default function Archive() {
             <div className="relative min-w-[140px]">
               <Calendar
                 size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7aa88e] pointer-events-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#87b0b6] pointer-events-none"
               />
               <select
                 value={selectedYear}
@@ -217,7 +204,7 @@ export default function Archive() {
                   setSelectedYear(e.target.value);
                   resetPage();
                 }}
-                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] focus:outline-none focus:border-[#2e7d4a] appearance-none cursor-pointer"
+                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] focus:outline-none focus:border-[#87b0b6] appearance-none cursor-pointer"
               >
                 <option value="الكل">كل السنوات</option>
                 {years.map((year) => (
@@ -230,7 +217,7 @@ export default function Archive() {
           </div>
 
           {/* Results count */}
-          <div className="mt-3 font-[Tajawal] text-xs text-[#7aa88e]">
+          <div className="mt-3 font-[Amiri] text-xs text-[#6b6b5e]">
             {loading
               ? "جاري التحميل..."
               : `${filteredArticles.length} مقال`}
@@ -240,8 +227,8 @@ export default function Archive() {
         {/* Loading */}
         {loading && (
           <div className="flex items-center justify-center py-20">
-            <Loader2 size={28} className="animate-spin text-[#2e7d4a]" />
-            <span className="mr-3 font-[Cairo] text-[#4a6b5a]">
+            <Loader2 size={28} className="animate-spin text-[#87b0b6]" />
+            <span className="mr-3 font-[Amiri] text-[#6b6b5e]">
               جاري تحميل المقالات...
             </span>
           </div>
@@ -254,30 +241,30 @@ export default function Archive() {
               <button
                 key={article.id}
                 onClick={() => setSelectedArticle(article)}
-                className="w-full text-right bg-white rounded-xl overflow-hidden shadow-sm border border-[#e8f0ec] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                className="w-full text-right bg-[#faf9f0] rounded-xl overflow-hidden shadow-sm border border-[#d4d1b8] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
               >
-                <div className="h-1 bg-[#2e7d4a] group-hover:bg-[#1b6b3a] transition-colors" />
+                <div className="h-1 bg-[#87b0b6] group-hover:bg-[#6a9199] transition-colors" />
                 <div className="p-5 md:p-6">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="font-[Tajawal] text-xs bg-[#e8f5e9] text-[#1b6b3a] px-2.5 py-1 rounded-full">
+                    <span className="font-[Amiri] text-xs bg-[#87b0b6]/15 text-[#6a9199] px-2.5 py-1 rounded-full">
                       {article.category}
                     </span>
-                    <span className="font-[Tajawal] text-xs text-[#7aa88e]">
+                    <span className="font-[Amiri] text-xs text-[#6b6b5e]">
                       {formatDate(article.date)}
                     </span>
                   </div>
-                  <h3 className="font-[Amiri] text-lg font-bold text-[#0d3b1f] mb-3 leading-relaxed group-hover:text-[#1b6b3a] transition-colors line-clamp-2">
+                  <h3 className="font-[Amiri] text-lg font-bold text-[#3a3a32] mb-3 leading-relaxed group-hover:text-[#87b0b6] transition-colors line-clamp-2">
                     {article.title}
                   </h3>
                   {article.newspaper && (
-                    <p className="font-[Tajawal] text-xs text-[#7aa88e] mb-2">
+                    <p className="font-[Amiri] text-xs text-[#6b6b5e] mb-2">
                       {article.newspaper}
                     </p>
                   )}
-                  <p className="font-[Cairo] text-sm text-[#4a6b5a] leading-relaxed line-clamp-3">
+                  <p className="font-[Amiri] text-sm text-[#6b6b5e] leading-relaxed line-clamp-3">
                     {article.excerpt}
                   </p>
-                  <div className="mt-4 font-[Cairo] text-sm text-[#2e7d4a] group-hover:text-[#1b6b3a] flex items-center gap-1">
+                  <div className="mt-4 font-[Amiri] text-sm text-[#bf4240] group-hover:text-[#a83836] flex items-center gap-1">
                     <span>اقرأ المزيد</span>
                     <ChevronLeft size={14} />
                   </div>
@@ -289,7 +276,7 @@ export default function Archive() {
 
         {!loading && paginatedArticles.length === 0 && (
           <div className="text-center py-20">
-            <p className="font-[Cairo] text-[#7aa88e] text-lg">
+            <p className="font-[Amiri] text-[#6b6b5e] text-lg">
               {allArticles.length === 0
                 ? "لا توجد مقالات في الأرشيف حتى الآن"
                 : "لا توجد مقالات مطابقة لبحثك"}
@@ -303,7 +290,7 @@ export default function Archive() {
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="w-10 h-10 rounded-lg border border-[#d4edda] bg-white flex items-center justify-center text-[#2e7d4a] hover:bg-[#e8f5e9] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="w-10 h-10 rounded-lg border border-[#d4d1b8] bg-[#faf9f0] flex items-center justify-center text-[#87b0b6] hover:bg-[#87b0b6]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRight size={18} />
             </button>
@@ -312,10 +299,10 @@ export default function Archive() {
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`w-10 h-10 rounded-lg font-[Tajawal] text-sm transition-colors ${
+                className={`w-10 h-10 rounded-lg font-[Amiri] text-sm transition-colors ${
                   currentPage === page
-                    ? "bg-[#2e7d4a] text-white shadow-md"
-                    : "border border-[#d4edda] bg-white text-[#2e7d4a] hover:bg-[#e8f5e9]"
+                    ? "bg-[#87b0b6] text-white shadow-md"
+                    : "border border-[#d4d1b8] bg-[#faf9f0] text-[#87b0b6] hover:bg-[#87b0b6]/10"
                 }`}
               >
                 {page}
@@ -325,7 +312,7 @@ export default function Archive() {
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="w-10 h-10 rounded-lg border border-[#d4edda] bg-white flex items-center justify-center text-[#2e7d4a] hover:bg-[#e8f5e9] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="w-10 h-10 rounded-lg border border-[#d4d1b8] bg-[#faf9f0] flex items-center justify-center text-[#87b0b6] hover:bg-[#87b0b6]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft size={18} />
             </button>

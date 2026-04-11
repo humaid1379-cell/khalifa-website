@@ -1,46 +1,44 @@
 /*
- * Design: Green Ink Press — Editorial newspaper style
- * Podcast: Minimal "Coming Soon" section with logo icon and text
+ * Design: Kharij Al Nass — Warm editorial Arabic-first
+ * Podcast: "Coming Soon" section with brand logo and teal/cream theme
  */
 import AnimatedSection from "./AnimatedSection";
 import KharijLogo from "./KharijLogo";
 
-const PODCAST_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7bAYv5QYZcia9BxhPhwv4f/podcast-bg-cByCNKiME5YQwrWoiXAypU.webp";
-
 export default function PodcastSection() {
   return (
-    <section id="podcast" className="relative py-32 md:py-40 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <img
-          src={PODCAST_BG}
-          alt=""
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-[#0d3b1f]/88" />
-      </div>
+    <section id="podcast" className="relative py-32 md:py-40 overflow-hidden" style={{ backgroundColor: '#87b0b6' }}>
+      {/* Decorative rosette pattern overlay */}
+      <div className="absolute inset-0 opacity-[0.08]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f1efd6'%3E%3Crect x='52' y='38' width='16' height='16' rx='2' transform='rotate(45 60 46)'/%3E%3Crect x='52' y='66' width='16' height='16' rx='2' transform='rotate(45 60 74)'/%3E%3Crect x='38' y='52' width='16' height='16' rx='2' transform='rotate(45 46 60)'/%3E%3Crect x='66' y='52' width='16' height='16' rx='2' transform='rotate(45 74 60)'/%3E%3Crect x='40' y='40' width='12' height='12' rx='2' transform='rotate(30 46 46)'/%3E%3Crect x='68' y='40' width='12' height='12' rx='2' transform='rotate(60 74 46)'/%3E%3Crect x='40' y='68' width='12' height='12' rx='2' transform='rotate(60 46 74)'/%3E%3Crect x='68' y='68' width='12' height='12' rx='2' transform='rotate(30 74 74)'/%3E%3C/g%3E%3C/svg%3E")`,
+        backgroundRepeat: 'repeat',
+      }} />
 
       <div className="container relative z-10">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-10">
-          <p className="font-[Cairo] text-xs uppercase tracking-[0.25em] text-white/40 mb-4">البودكاست</p>
-          {/* Logo icon */}
+          <p className="font-[Poppins] text-xs uppercase tracking-[0.25em] text-[#f1efd6]/60 mb-4">البودكاست</p>
+          {/* Logo */}
           <div className="flex justify-center mb-4">
-            <KharijLogo variant="podcast" className="drop-shadow-xl" />
+            <KharijLogo variant="podcast" className="drop-shadow-xl rounded-xl" />
           </div>
-          <h2 className="font-[Amiri] text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="font-[Amiri] text-4xl md:text-5xl font-bold text-[#f1efd6] mb-4">
             خارج النص
           </h2>
-          <div className="divider-double mx-auto mt-4" />
+          <div className="divider-double mx-auto mt-4" style={{ maxWidth: '200px' }}>
+            <div className="relative h-[6px]">
+              <div className="absolute left-0 right-0 top-0 h-[2px] bg-[#f1efd6]/40" />
+              <div className="absolute left-0 right-0 bottom-0 h-[2px] bg-[#f1efd6]/40" />
+            </div>
+          </div>
         </AnimatedSection>
 
         {/* Coming Soon Text */}
         <AnimatedSection delay={200} className="text-center">
-          <p className="font-[Amiri] text-6xl md:text-8xl font-bold text-[#7cc89a] leading-tight">
+          <p className="font-[Amiri] text-6xl md:text-8xl font-bold text-[#f1efd6] leading-tight">
             قريباً
           </p>
-          <p className="font-[Cairo] text-white/40 text-sm mt-6 tracking-wider">سيتم إطلاق البودكاست قريباً</p>
+          <p className="font-[Amiri] text-[#f1efd6]/50 text-sm mt-6 tracking-wider">سيتم إطلاق البودكاست قريباً</p>
         </AnimatedSection>
       </div>
     </section>

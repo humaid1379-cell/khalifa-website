@@ -18,8 +18,8 @@ export default function Admin() {
 
   if (checking) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0d3b1f]">
-        <div className="w-8 h-8 border-3 border-[#7cc89a]/30 border-t-[#7cc89a] rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-[#87b0b6]">
+        <div className="w-8 h-8 border-3 border-[#f1efd6]/30 border-t-[#f1efd6] rounded-full animate-spin" />
       </div>
     );
   }

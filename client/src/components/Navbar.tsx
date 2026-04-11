@@ -1,6 +1,6 @@
 /*
- * Design: Green Ink Press — Editorial newspaper style
- * Navbar: Sticky top nav with deep green background, Amiri headings
+ * Design: Kharij Al Nass — Warm editorial Arabic-first
+ * Navbar: Sticky top nav with cream/teal branding
  * Clean horizontal links, hamburger on mobile
  */
 import { useState, useEffect } from "react";
@@ -34,7 +34,6 @@ export default function Navbar() {
       navigate(href);
       return;
     }
-    // If we're not on the home page, navigate home first then scroll
     if (location !== "/") {
       navigate("/");
       setTimeout(() => {
@@ -51,13 +50,13 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#0d3b1f]/95 backdrop-blur-md shadow-lg"
+          ? "bg-[#f1efd6]/95 backdrop-blur-md shadow-lg"
           : "bg-transparent"
       }`}
     >
       <div className="container flex items-center justify-between h-16 md:h-20">
 
-        {/* Podcast Name + Icon — upper left (RTL: visually upper right) */}
+        {/* Podcast Name + Logo — upper left (RTL: visually upper right) */}
         <div className="hidden md:flex items-center">
           <button
             onClick={() => handleClick("#podcast")}
@@ -68,7 +67,7 @@ export default function Navbar() {
               variant="navbar"
               className="transition-transform duration-300 group-hover:scale-105"
             />
-            <span className="font-[Amiri] text-3xl font-bold" style={{ color: "#7cc89a" }}>
+            <span className="font-[Amiri] text-3xl font-bold text-[#87b0b6]">
               خارج النص
             </span>
           </button>
@@ -80,10 +79,14 @@ export default function Navbar() {
             <button
               key={link.href}
               onClick={() => handleClick(link.href, link.isRoute)}
-              className="font-[Cairo] text-sm text-white/80 hover:text-white transition-colors relative group"
+              className={`font-[Amiri] text-sm transition-colors relative group ${
+                scrolled
+                  ? "text-[#3a3a32]/80 hover:text-[#3a3a32]"
+                  : "text-[#3a3a32]/70 hover:text-[#3a3a32]"
+              }`}
             >
               {link.label}
-              <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-[#2e7d4a] transition-all duration-300 group-hover:w-full" />
+              <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-[#bf4240] transition-all duration-300 group-hover:w-full" />
             </button>
           ))}
         </div>
@@ -96,14 +99,14 @@ export default function Navbar() {
             aria-label="خارج النص"
           >
             <KharijLogo variant="navbar" />
-            <span className="font-[Amiri] text-2xl font-bold" style={{ color: "#7cc89a" }}>خارج النص</span>
+            <span className="font-[Amiri] text-2xl font-bold text-[#87b0b6]">خارج النص</span>
           </button>
         </div>
 
         {/* Mobile Hamburger */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-white p-2"
+          className={`md:hidden p-2 ${scrolled ? "text-[#3a3a32]" : "text-[#3a3a32]"}`}
           aria-label="القائمة"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -112,7 +115,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 bg-[#0d3b1f]/98 backdrop-blur-md ${
+        className={`md:hidden overflow-hidden transition-all duration-300 bg-[#f1efd6]/98 backdrop-blur-md ${
           isOpen ? "max-h-80" : "max-h-0"
         }`}
       >
@@ -121,7 +124,7 @@ export default function Navbar() {
             <button
               key={link.href}
               onClick={() => handleClick(link.href, link.isRoute)}
-              className="font-[Cairo] text-base text-white/90 hover:text-white text-right py-2 border-b border-white/10 transition-colors"
+              className="font-[Amiri] text-base text-[#3a3a32]/90 hover:text-[#3a3a32] text-right py-2 border-b border-[#d4d1b8] transition-colors"
             >
               {link.label}
             </button>

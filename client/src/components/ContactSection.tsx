@@ -1,7 +1,6 @@
 /*
- * Design: Green Ink Press — Editorial newspaper style
- * Contact: Clean section with social links, WhatsApp, email, Instagram
- * CSS IntersectionObserver animations — no framer-motion
+ * Design: Kharij Al Nass — Warm editorial Arabic-first
+ * Contact: Clean section with social links, WhatsApp, Instagram
  */
 import { Instagram, MessageCircle, Send } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
@@ -27,15 +26,15 @@ const contactMethods = [
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="py-20 md:py-28 bg-[#f7f5f2]">
+    <section id="contact" className="py-20 md:py-28 bg-[#f1efd6]">
       <div className="container">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-14">
-          <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#0d3b1f] mb-4">
+          <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#87b0b6] mb-4">
             تواصل معي
           </h2>
           <div className="divider-double mx-auto mb-6" />
-          <p className="font-[Cairo] text-[#4a6b5a] max-w-2xl mx-auto leading-relaxed">
+          <p className="font-[Amiri] text-[#6b6b5e] max-w-2xl mx-auto leading-relaxed">
             يسعدني التواصل معكم عبر أي من القنوات التالية
           </p>
         </AnimatedSection>
@@ -48,7 +47,7 @@ export default function ContactSection() {
                 href={method.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`block bg-white rounded-xl p-6 text-center shadow-sm border border-[#e8f0ec] ${method.bgHover} transition-all duration-300 hover:shadow-md hover:-translate-y-1 group`}
+                className={`block bg-[#faf9f0] rounded-xl p-6 text-center shadow-sm border border-[#d4d1b8] ${method.bgHover} transition-all duration-300 hover:shadow-md hover:-translate-y-1 group`}
               >
                 {/* Icon */}
                 <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${method.color} flex items-center justify-center mx-auto mb-4 shadow-md`}>
@@ -56,12 +55,12 @@ export default function ContactSection() {
                 </div>
 
                 {/* Label */}
-                <h3 className="font-[Amiri] text-lg font-bold text-[#0d3b1f] mb-2">
+                <h3 className="font-[Amiri] text-lg font-bold text-[#3a3a32] mb-2">
                   {method.label}
                 </h3>
 
                 {/* Value */}
-                <p className="font-[Cairo] text-sm text-[#4a6b5a]" dir="ltr">
+                <p className="font-[Poppins] text-sm text-[#6b6b5e]" dir="ltr">
                   {method.value}
                 </p>
               </a>
@@ -71,14 +70,14 @@ export default function ContactSection() {
 
         {/* WhatsApp CTA */}
         <AnimatedSection delay={300} className="text-center mt-12">
-          <p className="font-[Cairo] text-[#4a6b5a] text-sm mb-4">
+          <p className="font-[Amiri] text-[#6b6b5e] text-sm mb-4">
             للاشتراك في المقال الأسبوعي عبر واتساب
           </p>
           <a
             href="https://wa.me/971500000000"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-[Cairo] text-sm px-6 py-3 rounded-lg transition-colors shadow-md"
+            className="inline-flex items-center gap-2 bg-[#bf4240] hover:bg-[#a83836] text-white font-[Amiri] text-sm px-6 py-3 rounded-lg transition-colors shadow-md"
           >
             <Send size={16} />
             <span>اشترك الآن</span>

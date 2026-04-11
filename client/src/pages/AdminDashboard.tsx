@@ -236,25 +236,25 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f5f2]">
+    <div className="min-h-screen bg-[#f1efd6]">
       {/* Top Bar */}
-      <header className="bg-[#0d3b1f] text-white sticky top-0 z-40 shadow-lg">
+      <header className="bg-[#3a3a32] text-white sticky top-0 z-40 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <LayoutDashboard size={22} className="text-[#7cc89a]" />
+            <LayoutDashboard size={22} className="text-[#87b0b6]" />
             <h1 className="font-[Amiri] text-xl font-bold">لوحة إدارة المقالات</h1>
           </div>
           <div className="flex items-center gap-3">
             <a
               href="/"
-              className="hidden md:inline-flex items-center gap-1.5 text-[#7cc89a] hover:text-white font-[Cairo] text-sm transition-colors"
+              className="hidden md:inline-flex items-center gap-1.5 text-[#87b0b6] hover:text-white font-[Amiri] text-sm transition-colors"
             >
               <ArrowRight size={14} />
               <span>الموقع</span>
             </a>
             <button
               onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 text-red-300 hover:text-red-100 font-[Cairo] text-sm transition-colors"
+              className="inline-flex items-center gap-1.5 text-red-300 hover:text-red-100 font-[Amiri] text-sm transition-colors"
             >
               <LogOut size={14} />
               <span>خروج</span>
@@ -265,14 +265,14 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
       {/* Success toast */}
       {successMsg && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#0d3b1f] text-white px-6 py-3 rounded-xl shadow-xl font-[Cairo] text-sm animate-[fadeIn_0.3s_ease]">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#3a3a32] text-white px-6 py-3 rounded-xl shadow-xl font-[Amiri] text-sm animate-[fadeIn_0.3s_ease]">
           {successMsg}
         </div>
       )}
 
       {/* Error toast */}
       {errorMsg && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white px-6 py-3 rounded-xl shadow-xl font-[Cairo] text-sm animate-[fadeIn_0.3s_ease]">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white px-6 py-3 rounded-xl shadow-xl font-[Amiri] text-sm animate-[fadeIn_0.3s_ease]">
           {errorMsg}
         </div>
       )}
@@ -294,32 +294,32 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             <button
               onClick={handleSeed}
               disabled={seeding}
-              className="flex-1 bg-white rounded-xl p-4 shadow-sm border border-[#d4edda] hover:border-[#2e7d4a] transition-colors cursor-pointer"
+              className="flex-1 bg-white rounded-xl p-4 shadow-sm border border-[#d4d1b8] hover:border-[#87b0b6] transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#e8f5e9] flex items-center justify-center text-[#2e7d4a]">
+                <div className="w-10 h-10 rounded-lg bg-[#87b0b6/15] flex items-center justify-center text-[#87b0b6]">
                   {seeding ? <Loader2 size={20} className="animate-spin" /> : <Database size={20} />}
                 </div>
                 <div className="text-right">
-                  <p className="font-[Cairo] text-sm font-bold text-[#0d3b1f]">
+                  <p className="font-[Amiri] text-sm font-bold text-[#3a3a32]">
                     {seeding ? "جاري التعبئة..." : "تعبئة قاعدة البيانات"}
                   </p>
-                  <p className="font-[Cairo] text-xs text-[#7aa88e]">إضافة المقالات النموذجية</p>
+                  <p className="font-[Amiri] text-xs text-[#6b6b5e]">إضافة المقالات النموذجية</p>
                 </div>
               </div>
             </button>
             <button
               onClick={loadArticles}
               disabled={loading}
-              className="bg-white rounded-xl p-4 shadow-sm border border-[#d4edda] hover:border-[#2e7d4a] transition-colors cursor-pointer"
+              className="bg-white rounded-xl p-4 shadow-sm border border-[#d4d1b8] hover:border-[#87b0b6] transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#e8f5e9] flex items-center justify-center text-[#2e7d4a]">
+                <div className="w-10 h-10 rounded-lg bg-[#87b0b6/15] flex items-center justify-center text-[#87b0b6]">
                   <RefreshCw size={20} className={loading ? "animate-spin" : ""} />
                 </div>
                 <div className="text-right">
-                  <p className="font-[Cairo] text-sm font-bold text-[#0d3b1f]">تحديث</p>
-                  <p className="font-[Cairo] text-xs text-[#7aa88e]">إعادة تحميل</p>
+                  <p className="font-[Amiri] text-sm font-bold text-[#3a3a32]">تحديث</p>
+                  <p className="font-[Amiri] text-xs text-[#6b6b5e]">إعادة تحميل</p>
                 </div>
               </div>
             </button>
@@ -327,13 +327,13 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         </div>
 
         {/* Toolbar */}
-        <div className="bg-white rounded-xl p-4 shadow-sm border border-[#d4edda] mb-6">
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-[#d4d1b8] mb-6">
           <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
               <Search
                 size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7aa88e]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6b6b5e]"
               />
               <input
                 type="text"
@@ -343,14 +343,14 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full pr-10 pl-4 py-2.5 rounded-lg border border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] placeholder:text-[#7aa88e] focus:outline-none focus:border-[#2e7d4a] focus:ring-1 focus:ring-[#2e7d4a] transition-colors"
+                className="w-full pr-10 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] placeholder:text-[#6b6b5e] focus:outline-none focus:border-[#87b0b6] focus:ring-1 focus:ring-[#87b0b6] transition-colors"
               />
             </div>
 
             {/* Add button */}
             <button
               onClick={handleAdd}
-              className="inline-flex items-center justify-center gap-2 bg-[#0d3b1f] text-white px-5 py-2.5 rounded-lg font-[Cairo] text-sm font-medium hover:bg-[#1b5e30] transition-colors shadow-md"
+              className="inline-flex items-center justify-center gap-2 bg-[#3a3a32] text-white px-5 py-2.5 rounded-lg font-[Amiri] text-sm font-medium hover:bg-[#6a9199] transition-colors shadow-md"
             >
               <Plus size={18} />
               <span>إضافة مقال جديد</span>
@@ -361,32 +361,32 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         {/* Loading state */}
         {loading && (
           <div className="flex items-center justify-center py-16">
-            <Loader2 size={32} className="animate-spin text-[#2e7d4a]" />
-            <span className="mr-3 font-[Cairo] text-[#4a6b5a]">جاري تحميل المقالات...</span>
+            <Loader2 size={32} className="animate-spin text-[#87b0b6]" />
+            <span className="mr-3 font-[Amiri] text-[#6b6b5e]">جاري تحميل المقالات...</span>
           </div>
         )}
 
         {/* Articles Table */}
         {!loading && (
-          <div className="bg-white rounded-xl shadow-sm border border-[#d4edda] overflow-hidden">
+          <div className="bg-white rounded-xl shadow-sm border border-[#d4d1b8] overflow-hidden">
             {/* Desktop Table */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-[#f0f7f2] border-b border-[#d4edda]">
-                    <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
+                  <tr className="bg-[#e4e1c4] border-b border-[#d4d1b8]">
+                    <th className="text-right px-4 py-3 font-[Amiri] text-xs font-semibold text-[#3a3a32] uppercase tracking-wider">
                       العنوان
                     </th>
-                    <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
+                    <th className="text-right px-4 py-3 font-[Amiri] text-xs font-semibold text-[#3a3a32] uppercase tracking-wider">
                       الصحيفة
                     </th>
-                    <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
+                    <th className="text-right px-4 py-3 font-[Amiri] text-xs font-semibold text-[#3a3a32] uppercase tracking-wider">
                       التصنيف
                     </th>
-                    <th className="text-right px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
+                    <th className="text-right px-4 py-3 font-[Amiri] text-xs font-semibold text-[#3a3a32] uppercase tracking-wider">
                       التاريخ
                     </th>
-                    <th className="text-center px-4 py-3 font-[Cairo] text-xs font-semibold text-[#0d3b1f] uppercase tracking-wider">
+                    <th className="text-center px-4 py-3 font-[Amiri] text-xs font-semibold text-[#3a3a32] uppercase tracking-wider">
                       إجراءات
                     </th>
                   </tr>
@@ -395,27 +395,27 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                   {paginatedArticles.map((article, i) => (
                     <tr
                       key={article.id}
-                      className={`border-b border-[#e8f0ec] hover:bg-[#f8faf9] transition-colors ${
+                      className={`border-b border-[#d4d1b8] hover:bg-[#f1efd6] transition-colors ${
                         i % 2 === 0 ? "bg-white" : "bg-[#fafcfb]"
                       }`}
                     >
                       <td className="px-4 py-3">
-                        <p className="font-[Cairo] text-sm text-[#0d3b1f] font-medium line-clamp-1 max-w-xs">
+                        <p className="font-[Amiri] text-sm text-[#3a3a32] font-medium line-clamp-1 max-w-xs">
                           {article.title}
                         </p>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="font-[Cairo] text-xs text-[#4a6b5a]">
+                        <span className="font-[Amiri] text-xs text-[#6b6b5e]">
                           {article.newspaper || "—"}
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="inline-block font-[Tajawal] text-xs bg-[#e8f5e9] text-[#1b6b3a] px-2 py-0.5 rounded-full">
+                        <span className="inline-block font-[Amiri] text-xs bg-[#87b0b6/15] text-[#6a9199] px-2 py-0.5 rounded-full">
                           {article.category}
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="font-[Tajawal] text-xs text-[#7aa88e]">
+                        <span className="font-[Amiri] text-xs text-[#6b6b5e]">
                           {formatDate(article.date)}
                         </span>
                       </td>
@@ -423,7 +423,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                         <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() => handleEdit(article)}
-                            className="p-1.5 rounded-lg text-[#2e7d4a] hover:bg-[#e8f5e9] transition-colors"
+                            className="p-1.5 rounded-lg text-[#87b0b6] hover:bg-[#87b0b6/15] transition-colors"
                             title="تعديل"
                           >
                             <Edit3 size={15} />
@@ -442,7 +442,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                   {paginatedArticles.length === 0 && (
                     <tr>
                       <td colSpan={5} className="text-center py-12">
-                        <p className="font-[Cairo] text-[#7aa88e]">
+                        <p className="font-[Amiri] text-[#6b6b5e]">
                           {articles.length === 0
                             ? "لا توجد مقالات في قاعدة البيانات. اضغط على \"تعبئة قاعدة البيانات\" لإضافة المقالات النموذجية."
                             : "لا توجد مقالات مطابقة للبحث"}
@@ -455,17 +455,17 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             </div>
 
             {/* Mobile Cards */}
-            <div className="md:hidden divide-y divide-[#e8f0ec]">
+            <div className="md:hidden divide-y divide-[#d4d1b8]">
               {paginatedArticles.map((article) => (
                 <div key={article.id} className="p-4">
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="font-[Cairo] text-sm font-medium text-[#0d3b1f] line-clamp-2 flex-1">
+                    <h3 className="font-[Amiri] text-sm font-medium text-[#3a3a32] line-clamp-2 flex-1">
                       {article.title}
                     </h3>
                     <div className="flex items-center gap-1 shrink-0">
                       <button
                         onClick={() => handleEdit(article)}
-                        className="p-1.5 rounded-lg text-[#2e7d4a] hover:bg-[#e8f5e9]"
+                        className="p-1.5 rounded-lg text-[#87b0b6] hover:bg-[#87b0b6/15]"
                       >
                         <Edit3 size={14} />
                       </button>
@@ -478,14 +478,14 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 flex-wrap">
-                    <span className="font-[Tajawal] text-xs bg-[#e8f5e9] text-[#1b6b3a] px-2 py-0.5 rounded-full">
+                    <span className="font-[Amiri] text-xs bg-[#87b0b6/15] text-[#6a9199] px-2 py-0.5 rounded-full">
                       {article.category}
                     </span>
-                    <span className="font-[Tajawal] text-xs text-[#7aa88e]">
+                    <span className="font-[Amiri] text-xs text-[#6b6b5e]">
                       {formatDate(article.date)}
                     </span>
                     {article.newspaper && (
-                      <span className="font-[Cairo] text-xs text-[#4a6b5a]">
+                      <span className="font-[Amiri] text-xs text-[#6b6b5e]">
                         {article.newspaper}
                       </span>
                     )}
@@ -494,7 +494,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               ))}
               {paginatedArticles.length === 0 && (
                 <div className="text-center py-12">
-                  <p className="font-[Cairo] text-[#7aa88e]">
+                  <p className="font-[Amiri] text-[#6b6b5e]">
                     {articles.length === 0
                       ? "لا توجد مقالات. اضغط على \"تعبئة قاعدة البيانات\" أعلاه."
                       : "لا توجد مقالات مطابقة"}
@@ -505,21 +505,21 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 p-4 border-t border-[#e8f0ec]">
+              <div className="flex items-center justify-center gap-2 p-4 border-t border-[#d4d1b8]">
                 <button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="w-8 h-8 rounded-lg border border-[#d4edda] flex items-center justify-center text-[#2e7d4a] hover:bg-[#e8f5e9] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="w-8 h-8 rounded-lg border border-[#d4d1b8] flex items-center justify-center text-[#87b0b6] hover:bg-[#87b0b6/15] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronRight size={16} />
                 </button>
-                <span className="font-[Tajawal] text-sm text-[#4a6b5a]">
+                <span className="font-[Amiri] text-sm text-[#6b6b5e]">
                   {currentPage} / {totalPages}
                 </span>
                 <button
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="w-8 h-8 rounded-lg border border-[#d4edda] flex items-center justify-center text-[#2e7d4a] hover:bg-[#e8f5e9] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="w-8 h-8 rounded-lg border border-[#d4d1b8] flex items-center justify-center text-[#87b0b6] hover:bg-[#87b0b6/15] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeft size={16} />
                 </button>
@@ -550,23 +550,23 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
           <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
-            <h3 className="font-[Amiri] text-xl font-bold text-[#0d3b1f] mb-3">
+            <h3 className="font-[Amiri] text-xl font-bold text-[#3a3a32] mb-3">
               تأكيد الحذف
             </h3>
-            <p className="font-[Cairo] text-sm text-[#4a6b5a] mb-6">
+            <p className="font-[Amiri] text-sm text-[#6b6b5e] mb-6">
               هل أنت متأكد من حذف هذا المقال؟ لا يمكن التراجع عن هذا الإجراء.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => handleDelete(deleteConfirm)}
                 disabled={saving}
-                className="flex-1 py-2.5 rounded-xl bg-red-600 text-white font-[Cairo] text-sm font-medium hover:bg-red-700 disabled:opacity-50 transition-colors"
+                className="flex-1 py-2.5 rounded-xl bg-red-600 text-white font-[Amiri] text-sm font-medium hover:bg-red-700 disabled:opacity-50 transition-colors"
               >
                 {saving ? "جاري الحذف..." : "حذف"}
               </button>
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="flex-1 py-2.5 rounded-xl border-2 border-[#d4edda] text-[#0d3b1f] font-[Cairo] text-sm font-medium hover:bg-[#f8faf9] transition-colors"
+                className="flex-1 py-2.5 rounded-xl border-2 border-[#d4d1b8] text-[#3a3a32] font-[Amiri] text-sm font-medium hover:bg-[#f1efd6] transition-colors"
               >
                 إلغاء
               </button>
@@ -590,14 +590,14 @@ function StatCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm border border-[#d4edda]">
+    <div className="bg-white rounded-xl p-4 shadow-sm border border-[#d4d1b8]">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-lg bg-[#e8f5e9] flex items-center justify-center text-[#2e7d4a]">
+        <div className="w-10 h-10 rounded-lg bg-[#87b0b6/15] flex items-center justify-center text-[#87b0b6]">
           {icon}
         </div>
         <div>
-          <p className="font-[Cairo] text-2xl font-bold text-[#0d3b1f]">{value}</p>
-          <p className="font-[Cairo] text-xs text-[#7aa88e]">{label}</p>
+          <p className="font-[Amiri] text-2xl font-bold text-[#3a3a32]">{value}</p>
+          <p className="font-[Amiri] text-xs text-[#6b6b5e]">{label}</p>
         </div>
       </div>
     </div>
@@ -627,13 +627,13 @@ function ArticleFormModal({
     <div className="fixed inset-0 z-50 flex items-start justify-center p-4 bg-black/50 overflow-y-auto">
       <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl my-8">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-[#e8f0ec]">
-          <h2 className="font-[Amiri] text-xl font-bold text-[#0d3b1f]">
+        <div className="flex items-center justify-between p-5 border-b border-[#d4d1b8]">
+          <h2 className="font-[Amiri] text-xl font-bold text-[#3a3a32]">
             {isEditing ? "تعديل المقال" : "إضافة مقال جديد"}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg text-[#7aa88e] hover:bg-[#f0f7f2] transition-colors"
+            className="p-2 rounded-lg text-[#6b6b5e] hover:bg-[#e4e1c4] transition-colors"
           >
             <X size={20} />
           </button>
@@ -643,7 +643,7 @@ function ArticleFormModal({
         <div className="p-5 space-y-4">
           {/* Title */}
           <div>
-            <label className="block font-[Cairo] text-sm font-medium text-[#0d3b1f] mb-1.5">
+            <label className="block font-[Amiri] text-sm font-medium text-[#3a3a32] mb-1.5">
               عنوان المقال <span className="text-red-500">*</span>
             </label>
             <input
@@ -651,14 +651,14 @@ function ArticleFormModal({
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
               placeholder="أدخل عنوان المقال"
-              className="w-full px-4 py-2.5 rounded-xl border-2 border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] placeholder:text-[#7aa88e] focus:outline-none focus:border-[#2e7d4a] transition-colors"
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] placeholder:text-[#6b6b5e] focus:outline-none focus:border-[#87b0b6] transition-colors"
             />
           </div>
 
           {/* Newspaper + Date row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block font-[Cairo] text-sm font-medium text-[#0d3b1f] mb-1.5">
+              <label className="block font-[Amiri] text-sm font-medium text-[#3a3a32] mb-1.5">
                 اسم الصحيفة / المجلة
               </label>
               <input
@@ -666,18 +666,18 @@ function ArticleFormModal({
                 value={form.newspaper}
                 onChange={(e) => setForm({ ...form, newspaper: e.target.value })}
                 placeholder="مثال: جريدة الاتحاد"
-                className="w-full px-4 py-2.5 rounded-xl border-2 border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] placeholder:text-[#7aa88e] focus:outline-none focus:border-[#2e7d4a] transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl border-2 border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] placeholder:text-[#6b6b5e] focus:outline-none focus:border-[#87b0b6] transition-colors"
               />
             </div>
             <div>
-              <label className="block font-[Cairo] text-sm font-medium text-[#0d3b1f] mb-1.5">
+              <label className="block font-[Amiri] text-sm font-medium text-[#3a3a32] mb-1.5">
                 تاريخ النشر
               </label>
               <input
                 type="date"
                 value={form.date}
                 onChange={(e) => setForm({ ...form, date: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl border-2 border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] focus:outline-none focus:border-[#2e7d4a] transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl border-2 border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] focus:outline-none focus:border-[#87b0b6] transition-colors"
                 dir="ltr"
               />
             </div>
@@ -685,13 +685,13 @@ function ArticleFormModal({
 
           {/* Category */}
           <div>
-            <label className="block font-[Cairo] text-sm font-medium text-[#0d3b1f] mb-1.5">
+            <label className="block font-[Amiri] text-sm font-medium text-[#3a3a32] mb-1.5">
               التصنيف
             </label>
             <select
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border-2 border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] focus:outline-none focus:border-[#2e7d4a] appearance-none cursor-pointer transition-colors"
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] focus:outline-none focus:border-[#87b0b6] appearance-none cursor-pointer transition-colors"
             >
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
@@ -703,22 +703,22 @@ function ArticleFormModal({
 
           {/* Excerpt */}
           <div>
-            <label className="block font-[Cairo] text-sm font-medium text-[#0d3b1f] mb-1.5">
+            <label className="block font-[Amiri] text-sm font-medium text-[#3a3a32] mb-1.5">
               المقتطف{" "}
-              <span className="text-[#7aa88e] font-normal">(اختياري — يُولّد تلقائياً)</span>
+              <span className="text-[#6b6b5e] font-normal">(اختياري — يُولّد تلقائياً)</span>
             </label>
             <textarea
               value={form.excerpt}
               onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
               placeholder="ملخص قصير للمقال يظهر في بطاقة المقال"
               rows={2}
-              className="w-full px-4 py-2.5 rounded-xl border-2 border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] placeholder:text-[#7aa88e] focus:outline-none focus:border-[#2e7d4a] transition-colors resize-none"
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] placeholder:text-[#6b6b5e] focus:outline-none focus:border-[#87b0b6] transition-colors resize-none"
             />
           </div>
 
           {/* Content */}
           <div>
-            <label className="block font-[Cairo] text-sm font-medium text-[#0d3b1f] mb-1.5">
+            <label className="block font-[Amiri] text-sm font-medium text-[#3a3a32] mb-1.5">
               نص المقال <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -726,23 +726,23 @@ function ArticleFormModal({
               onChange={(e) => setForm({ ...form, content: e.target.value })}
               placeholder="اكتب نص المقال الكامل هنا..."
               rows={10}
-              className="w-full px-4 py-2.5 rounded-xl border-2 border-[#d4edda] bg-[#f8faf9] font-[Cairo] text-sm text-[#0d3b1f] placeholder:text-[#7aa88e] focus:outline-none focus:border-[#2e7d4a] transition-colors resize-y leading-relaxed"
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] placeholder:text-[#6b6b5e] focus:outline-none focus:border-[#87b0b6] transition-colors resize-y leading-relaxed"
             />
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 p-5 border-t border-[#e8f0ec]">
+        <div className="flex items-center justify-end gap-3 p-5 border-t border-[#d4d1b8]">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 rounded-xl border-2 border-[#d4edda] text-[#0d3b1f] font-[Cairo] text-sm font-medium hover:bg-[#f8faf9] transition-colors"
+            className="px-5 py-2.5 rounded-xl border-2 border-[#d4d1b8] text-[#3a3a32] font-[Amiri] text-sm font-medium hover:bg-[#f1efd6] transition-colors"
           >
             إلغاء
           </button>
           <button
             onClick={onSave}
             disabled={!isValid || saving}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#0d3b1f] text-white font-[Cairo] text-sm font-medium hover:bg-[#1b5e30] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#3a3a32] text-white font-[Amiri] text-sm font-medium hover:bg-[#6a9199] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md"
           >
             {saving ? (
               <Loader2 size={16} className="animate-spin" />

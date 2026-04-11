@@ -1,8 +1,6 @@
 /*
- * Design: Green Ink Press — Editorial newspaper style
- * Bio: CV-style timeline with warm background, newspaper-inspired dividers
- * CSS IntersectionObserver animations — no framer-motion
- * Mobile: reduced padding, shorter timeline connectors, content-height section
+ * Design: Kharij Al Nass — Warm editorial Arabic-first
+ * Bio: CV-style timeline with cream background, teal/red accents
  */
 import AnimatedSection from "./AnimatedSection";
 
@@ -26,15 +24,15 @@ const timeline = [
 
 export default function BioSection() {
   return (
-    <section id="bio" className="py-12 md:py-24 bg-[#f7f5f2]">
+    <section id="bio" className="py-12 md:py-24 bg-[#f1efd6]">
       <div className="container">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-10 md:mb-14">
-          <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#0d3b1f] mb-4">
+          <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#87b0b6] mb-4">
             السيرة الذاتية
           </h2>
           <div className="divider-double mx-auto mb-6" />
-          <p className="font-[Cairo] text-[#4a6b5a] max-w-2xl mx-auto leading-relaxed">
+          <p className="font-[Amiri] text-[#6b6b5e] max-w-2xl mx-auto leading-relaxed">
             مسيرة مهنية متميزة تجمع بين التعليم العالمي والخبرة المؤسسية والشغف الإعلامي
           </p>
         </AnimatedSection>
@@ -47,21 +45,21 @@ export default function BioSection() {
                 <div className="flex gap-4 md:gap-6">
                   {/* Timeline dot and line */}
                   <div className="flex flex-col items-center flex-shrink-0">
-                    <div className="w-3.5 h-3.5 md:w-4 md:h-4 rounded-full bg-[#2e7d4a] shadow-md mt-1" />
+                    <div className="w-3.5 h-3.5 md:w-4 md:h-4 rounded-full bg-[#bf4240] shadow-md mt-1" />
                     {i < timeline.length - 1 && (
-                      <div className="w-0.5 flex-1 min-h-[40px] bg-gradient-to-b from-[#2e7d4a] to-[#2e7d4a]/30 mt-2" />
+                      <div className="w-0.5 flex-1 min-h-[40px] bg-gradient-to-b from-[#bf4240] to-[#bf4240]/30 mt-2" />
                     )}
                   </div>
 
                   {/* Content */}
                   <div className="pb-2 md:pb-4 flex-1 min-w-0">
-                    <span className="inline-block font-[Tajawal] text-xs text-[#2e7d4a] bg-[#e8f0ec] px-3 py-1 rounded-full mb-2">
+                    <span className="inline-block font-[Amiri] text-xs text-[#bf4240] bg-[#bf4240]/10 px-3 py-1 rounded-full mb-2">
                       {item.year}
                     </span>
-                    <h3 className="font-[Amiri] text-lg md:text-xl font-bold text-[#0d3b1f] mb-2 leading-snug">
+                    <h3 className="font-[Amiri] text-lg md:text-xl font-bold text-[#3a3a32] mb-2 leading-snug">
                       {item.title}
                     </h3>
-                    <p className="font-[Cairo] text-[#4a6b5a] leading-relaxed text-sm">
+                    <p className="font-[Amiri] text-[#6b6b5e] leading-relaxed text-sm">
                       {item.description}
                     </p>
                   </div>
@@ -72,11 +70,11 @@ export default function BioSection() {
         </div>
 
         {/* Bio Paragraph */}
-        <AnimatedSection delay={400} className="mt-10 md:mt-14 bg-white rounded-xl p-6 md:p-8 border border-[#e8f0ec] max-w-2xl">
-          <p className="font-[Cairo] text-[#4a6b5a] leading-relaxed text-base">
+        <AnimatedSection delay={400} className="mt-10 md:mt-14 bg-[#faf9f0] rounded-xl p-6 md:p-8 border border-[#d4d1b8] max-w-2xl">
+          <p className="font-[Amiri] text-[#6b6b5e] leading-relaxed text-base">
             تخرج من جامعة Hope في الولايات المتحدة الامريكية بتخصص ادارة دولية . وحاصل على ماجستير تنفيذي من جامعة هارفارد في القيادة والتطوير . ويعمل رئيس تنفيذي في إحدى المؤسسات الاستثمارية الإماراتية.
           </p>
-          <p className="font-[Cairo] text-[#4a6b5a] leading-relaxed text-base mt-4">
+          <p className="font-[Amiri] text-[#6b6b5e] leading-relaxed text-base mt-4">
             يجمع بين الخبرة المؤسسية والادارة الدولية والاهتمام الإعلامي. يكتب بانتظام في صحف إماراتية وخليجية وعربية، مقالاته متنوعة تغطي السياسة والاقتصاد والرياضة والشؤون الاجتماعية. عُرف بأسلوبه التحليلي الساخر، وقدّم مساهمات لافتة في تعزيز الحوار العام حول قضايا منوعة في الاقتصاد والتنمية الاجتماعية والرياضة في المنطقة.
           </p>
         </AnimatedSection>
