@@ -64,14 +64,21 @@ export default function ArticlesSection() {
     };
   }, [selectedArticle]);
 
+  const ROSETTE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/rosette-pattern_27b104e0.jpeg";
+
   return (
     <section
       id="articles"
-      className="py-20 md:py-28 relative rosette-pattern"
-      style={{ backgroundColor: '#f1efd6' }}
+      className="py-20 md:py-28 relative"
+      style={{
+        backgroundColor: '#f1efd6',
+        backgroundImage: `url(${ROSETTE_IMG})`,
+        backgroundRepeat: 'repeat',
+        backgroundSize: '120px 120px',
+      }}
     >
       {/* Overlay for readability */}
-      <div className="absolute inset-0 bg-[#f1efd6]/85" />
+      <div className="absolute inset-0 bg-[#f1efd6]/88" />
 
       <div className="container relative z-10">
         {/* Section Header */}

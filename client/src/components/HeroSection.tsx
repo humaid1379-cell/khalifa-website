@@ -6,6 +6,7 @@
 import { Instagram } from "lucide-react";
 
 const PROFILE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7bAYv5QYZcia9BxhPhwv4f/khalifa-profile_3a7883a5.jpeg";
+const SUNRISE_ICON = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/sunrise-icon_d8dc8858.jpeg";
 
 /* Inline SVG rosette pattern for hero background */
 function RosettePattern() {
@@ -82,6 +83,19 @@ export default function HeroSection() {
               <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#87b0b6] leading-tight">
                 الواقع ليس كما تقرآه
               </p>
+            </div>
+
+            {/* Sunrise / Book icon */}
+            <div
+              className="flex justify-center md:justify-start mb-4"
+              style={{ animation: "heroFadeUp 0.6s ease 0.42s both" }}
+            >
+              <img
+                src={SUNRISE_ICON}
+                alt=""
+                className="w-14 h-14 object-contain opacity-70"
+                aria-hidden="true"
+              />
             </div>
 
             {/* Tagline */}

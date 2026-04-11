@@ -69,8 +69,18 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Flower motif divider */}
+        <div className="flex justify-center mt-8 mb-2 opacity-20">
+          <img
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/flower-motif_8ce1a1cf.jpeg"
+            alt=""
+            className="w-12 h-12 object-contain invert"
+            aria-hidden="true"
+          />
+        </div>
+
         {/* Bottom */}
-        <div className="mt-8 pt-6 border-t border-[#f1efd6]/10 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="pt-6 border-t border-[#f1efd6]/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="font-[Poppins] text-xs text-[#f1efd6]/40">
             &copy; {new Date().getFullYear()} خليفة جمعة الرميثي. جميع الحقوق محفوظة.
           </p>
