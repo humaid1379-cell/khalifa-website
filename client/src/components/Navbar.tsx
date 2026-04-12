@@ -13,7 +13,7 @@ const navLinks = [
   { label: "السيرة الذاتية", href: "#bio" },
   { label: "المقالات", href: "#articles" },
   { label: "الأرشيف", href: "/archive", isRoute: true },
-  { label: "البودكاست", href: "#podcast" },
+  { label: "البودكاست", href: "/podcast", isRoute: true },
   { label: "تواصل", href: "#contact" },
 ];
 
@@ -27,6 +27,11 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Close menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
 
   const handleClick = (href: string, isRoute?: boolean) => {
     setIsOpen(false);
@@ -59,7 +64,7 @@ export default function Navbar() {
         {/* Logo — right side (RTL: visually leading) */}
         <div className="hidden md:flex items-center">
           <button
-            onClick={() => handleClick("#podcast")}
+            onClick={() => handleClick("/podcast", true)}
             className="group transition-transform duration-300 hover:scale-105"
             aria-label="خارج النص"
           >
@@ -94,24 +99,25 @@ export default function Navbar() {
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-          <button onClick={() => handleClick("#podcast")} aria-label="خارج النص">
+          <button onClick={() => handleClick("/podcast", true)} aria-label="خارج النص">
             <KharijLogo variant="navbar" />
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu — full height with scroll so nothing is cut off */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 bg-[#f1efd6]/98 backdrop-blur-md ${
-          isOpen ? "max-h-80" : "max-h-0"
+        className={`md:hidden transition-all duration-300 bg-[#f1efd6] border-t border-[#d4d1b8] ${
+          isOpen ? "block" : "hidden"
         }`}
+        style={{ maxHeight: "calc(100vh - 4rem)", overflowY: "auto" }}
       >
-        <div className="container py-4 flex flex-col gap-4">
+        <div className="container py-4 flex flex-col">
           {navLinks.map((link) => (
             <button
               key={link.href}
               onClick={() => handleClick(link.href, link.isRoute)}
-              className="font-[Amiri] text-base text-[#3a3a32]/90 hover:text-[#3a3a32] text-right py-2 border-b border-[#d4d1b8] transition-colors"
+              className="font-[Amiri] text-lg text-[#3a3a32]/90 hover:text-[#bf4240] text-right py-3 px-2 border-b border-[#d4d1b8]/60 transition-colors w-full"
             >
               {link.label}
             </button>

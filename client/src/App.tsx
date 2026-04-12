@@ -1,13 +1,16 @@
-import { lazy, Suspense } from "react";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import { lazy, Suspense } from "react";
 
-// Lazy-load non-critical routes to reduce initial bundle
 const Admin = lazy(() => import("./pages/Admin"));
 const Archive = lazy(() => import("./pages/Archive"));
+const Podcast = lazy(() => import("./pages/Podcast"));
 
-// Minimal spinner shown while lazy chunks load
 function PageLoader() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f1efd6]">
@@ -22,25 +25,33 @@ function PageLoader() {
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/admin"}>
-        <Suspense fallback={<PageLoader />}>
-          <Admin />
-        </Suspense>
+      <Route path="/" component={Home} />
+      <Route path="/admin">
+        <Suspense fallback={<PageLoader />}><Admin /></Suspense>
       </Route>
-      <Route path={"/archive"}>
-        <Suspense fallback={<PageLoader />}>
-          <Archive />
-        </Suspense>
+      <Route path="/archive">
+        <Suspense fallback={<PageLoader />}><Archive /></Suspense>
       </Route>
-      <Route path={"/404"} component={NotFound} />
+      <Route path="/podcast">
+        <Suspense fallback={<PageLoader />}><Podcast /></Suspense>
+      </Route>
+      <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
   );
 }
 
 function App() {
-  return <Router />;
+  return (
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="light">
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
+  );
 }
 
 export default App;
