@@ -116,7 +116,7 @@ export default function HeroSection() {
 
             {/* Social Links */}
             <div
-              className="flex items-center gap-4 justify-center md:justify-start"
+              className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6"
               style={{ animation: "heroFadeUp 0.6s ease 0.5s both" }}
             >
               <a
