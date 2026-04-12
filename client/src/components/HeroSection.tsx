@@ -81,7 +81,7 @@ export default function HeroSection() {
 
             {/* Slogan */}
             <div
-              className="mb-6"
+              className="mb-6 inline-block border-2 border-[#87b0b6] bg-[#87b0b6]/10 px-8 md:px-10 py-6 md:py-8 rounded-lg"
               style={{ animation: "heroFadeUp 0.6s ease 0.35s both" }}
             >
               <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#87b0b6] leading-tight">
