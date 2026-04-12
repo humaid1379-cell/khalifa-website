@@ -136,10 +136,13 @@ export default function Archive() {
           <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4 text-[#f1efd6]">
             أرشيف المقالات
           </h1>
-          <div
-            className="w-16 h-0.5 mb-4"
-            style={{ background: "#f1efd6" }}
-          />
+          {/* Double white line divider */}
+          <div className="flex justify-center mb-6">
+            <div className="relative h-[6px] w-48">
+              <div className="absolute left-0 right-0 top-0 h-[2px] bg-white" />
+              <div className="absolute left-0 right-0 bottom-0 h-[2px] bg-white" />
+            </div>
+          </div>
           <p className="font-[Amiri] text-white/80 text-base max-w-xl leading-relaxed">
             جميع المقالات والآراء المنشورة — مرتبة من الأحدث إلى الأقدم
           </p>
