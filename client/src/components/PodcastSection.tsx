@@ -31,13 +31,11 @@ export default function PodcastSection() {
           <p className="font-[Amiri] text-6xl md:text-8xl font-bold text-[#f1efd6] leading-tight">
             قريباً
           </p>
-          <p className="font-[Amiri] text-xl font-bold text-[#455a5d] mt-6 tracking-wider">سيتم إطلاق البودكاست قريباً</p>
-
           {/* CTA button → /podcast */}
           <div className="mt-10">
             <Link href="/podcast">
               <span
-                className="inline-block font-[Amiri] text-xl font-bold px-8 py-4 rounded-lg text-[#455a5d] hover:bg-[#6a9199] transition-all duration-300 cursor-pointer"
+                className="inline-block font-[Amiri] text-xl font-bold px-8 py-4 rounded-lg text-[#455a5d] border-2 border-[#455a5d] hover:bg-[#6a9199] transition-all duration-300 cursor-pointer"
                 style={{ backgroundColor: '#87b0b6', letterSpacing: '0' }}
               >
                 اكتشف البودكاست
