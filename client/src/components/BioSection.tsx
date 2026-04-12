@@ -31,11 +31,11 @@ export default function BioSection() {
           <h2 className="font-[Amiri] text-5xl md:text-7xl font-bold text-[#455a5d] mb-4">
             السيرة الذاتية
           </h2>
-          {/* Double white line divider */}
+          {/* Double light blue line divider */}
           <div className="flex justify-center mb-6">
             <div className="relative h-[6px] w-48">
-              <div className="absolute left-0 right-0 top-0 h-[2px] bg-white" />
-              <div className="absolute left-0 right-0 bottom-0 h-[2px] bg-white" />
+              <div className="absolute left-0 right-0 top-0 h-[2px]" style={{ backgroundColor: '#87b0b6' }} />
+              <div className="absolute left-0 right-0 bottom-0 h-[2px]" style={{ backgroundColor: '#87b0b6' }} />
             </div>
           </div>
           <p className="font-[Amiri] text-[#5a7275] max-w-2xl mx-auto leading-relaxed">
