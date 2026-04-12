@@ -24,6 +24,8 @@ export default function PodcastSection() {
             <KharijLogo variant="podcast" className="drop-shadow-xl rounded-xl" />
           </div>
 
+          {/* White divider line */}
+          <div className="w-24 h-[2px] bg-white mx-auto my-8" />
         </AnimatedSection>
 
         {/* Coming Soon Text */}
