@@ -31,7 +31,13 @@ export default function BioSection() {
           <h2 className="font-[Amiri] text-5xl md:text-7xl font-bold text-[#455a5d] mb-4">
             السيرة الذاتية
           </h2>
-          <div className="divider-double mx-auto mb-6" />
+          {/* Double white line divider */}
+          <div className="flex justify-center mb-6">
+            <div className="relative h-[6px] w-48">
+              <div className="absolute left-0 right-0 top-0 h-[2px] bg-white" />
+              <div className="absolute left-0 right-0 bottom-0 h-[2px] bg-white" />
+            </div>
+          </div>
           <p className="font-[Amiri] text-[#5a7275] max-w-2xl mx-auto leading-relaxed">
             مسيرة مهنية متميزة تجمع بين التعليم العالمي والخبرة المؤسسية والشغف الإعلامي
           </p>
