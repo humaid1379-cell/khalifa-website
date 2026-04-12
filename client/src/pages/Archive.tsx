@@ -127,7 +127,7 @@ export default function Archive() {
         <div className="container">
           {/* Back link */}
           <Link href="/">
-            <span className="inline-flex items-center gap-1.5 border-2 border-[#455a5d] text-[#455a5d] font-bold px-4 py-2 rounded-lg font-[Amiri] text-sm mb-6 cursor-pointer transition-all hover:bg-[#455a5d] hover:text-[#f1efd6]">
+            <span className="inline-flex items-center gap-1.5 border-2 border-white text-white font-bold px-4 py-2 rounded-lg font-[Amiri] text-sm mb-6 cursor-pointer transition-all hover:bg-white hover:text-[#87b0b6]">
               <ArrowRight size={16} />
               <span>العودة إلى الرئيسية</span>
             </span>
