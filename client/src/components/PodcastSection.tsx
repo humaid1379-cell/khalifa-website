@@ -20,8 +20,13 @@ export default function PodcastSection() {
         <AnimatedSection className="text-center mb-10">
           <p className="font-[Amiri] text-5xl md:text-7xl font-bold text-[#455a5d] mb-4">البودكاست</p>
           
-          {/* White divider line */}
-          <div className="w-24 h-[2px] bg-white mx-auto my-6" />
+          {/* Double white line divider */}
+          <div className="flex justify-center my-6">
+            <div className="relative h-[6px] w-48">
+              <div className="absolute left-0 right-0 top-0 h-[2px] bg-white" />
+              <div className="absolute left-0 right-0 bottom-0 h-[2px] bg-white" />
+            </div>
+          </div>
           
           {/* Logo */}
           <div className="flex justify-center mb-4">
