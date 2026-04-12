@@ -35,21 +35,17 @@ export default function PodcastPage() {
                 البودكاست
               </p>
 
+              {/* Double white line divider */}
+              <div className="flex justify-center mb-8">
+                <div className="relative h-[6px] w-48">
+                  <div className="absolute left-0 right-0 top-0 h-[2px] bg-white" />
+                  <div className="absolute left-0 right-0 bottom-0 h-[2px] bg-white" />
+                </div>
+              </div>
+
               {/* Logo */}
               <div className="flex justify-center mb-6">
                 <KharijLogo variant="podcast" className="drop-shadow-xl rounded-xl" />
-              </div>
-
-              <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold text-[#f1efd6] mb-4">
-                خارج النص
-              </h1>
-
-              {/* Double divider */}
-              <div className="flex justify-center mt-4 mb-8">
-                <div className="relative h-[6px] w-48">
-                  <div className="absolute left-0 right-0 top-0 h-[2px] bg-[#f1efd6]/40" />
-                  <div className="absolute left-0 right-0 bottom-0 h-[2px] bg-[#f1efd6]/40" />
-                </div>
               </div>
             </div>
 
@@ -58,10 +54,6 @@ export default function PodcastPage() {
               <p className="font-[Amiri] text-6xl md:text-8xl font-bold text-[#f1efd6] leading-tight">
                 قريباً
               </p>
-              <p className="font-[Amiri] text-xl font-bold text-[#455a5d] mt-6">
-                سيتم إطلاق البودكاست قريباً
-              </p>
-
               {/* Back to home */}
               <button
                 onClick={() => navigate("/")}
