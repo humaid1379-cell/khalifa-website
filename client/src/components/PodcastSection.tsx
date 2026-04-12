@@ -18,7 +18,7 @@ export default function PodcastSection() {
       <div className="container relative z-10">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-10">
-          <p className="font-[Amiri] text-4xl md:text-6xl font-bold text-[#455a5d] mb-4">البودكاست</p>
+          <p className="font-[Amiri] text-5xl md:text-7xl font-bold text-[#455a5d] mb-4">البودكاست</p>
           {/* Logo */}
           <div className="flex justify-center mb-4">
             <KharijLogo variant="podcast" className="drop-shadow-xl rounded-xl" />
