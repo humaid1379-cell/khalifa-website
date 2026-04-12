@@ -133,7 +133,7 @@ export default function Archive() {
             </span>
           </Link>
 
-          <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4 text-[#455a5d] text-center">
+          <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4 text-[#455a5d] text-center mt-8 md:mt-10">
             أرشيف المقالات
           </h1>
           {/* Double white line divider */}
