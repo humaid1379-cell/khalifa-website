@@ -66,7 +66,7 @@ export default function HeroSection() {
               className="inline-block mb-4"
               style={{ animation: "heroFadeUp 0.6s ease 0.1s both" }}
             >
-              <span className="font-[Poppins] text-[#bf4240] text-sm tracking-wider uppercase">
+              <span className="font-[Poppins] text-[#87b0b6] text-sm tracking-wider uppercase">
                 كاتب ومحلل
               </span>
             </div>
@@ -84,7 +84,7 @@ export default function HeroSection() {
               className="mb-6 inline-block border-2 border-[#87b0b6] bg-[#87b0b6]/10 px-8 md:px-10 py-6 md:py-8 rounded-lg"
               style={{ animation: "heroFadeUp 0.6s ease 0.35s both" }}
             >
-              <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#455a5d] leading-tight">
+              <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#bf4240] leading-tight">
                 الواقع ليس كما تقرآه
               </p>
             </div>
