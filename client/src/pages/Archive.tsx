@@ -135,8 +135,8 @@ export default function Archive() {
           </Link>
 
           {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <KharijLogo variant="podcast" className="drop-shadow-xl rounded-xl" />
+          <div className="flex justify-start mb-6">
+            <KharijLogo variant="navbar" className="drop-shadow-xl rounded-xl" />
           </div>
 
           <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4 text-[#455a5d] text-center mt-4 md:mt-6">
