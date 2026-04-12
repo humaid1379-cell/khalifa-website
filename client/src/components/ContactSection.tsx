@@ -1,6 +1,10 @@
 /*
  * Design: Kharij Al Nass — Warm editorial Arabic-first
  * Contact: Clean section with social links, WhatsApp, Instagram
+ *
+ * Fixes applied:
+ * - Contact cards now have a light teal tint bg and subtle box shadow (#11)
+ * - Solid border instead of any dashed borders (#1)
  */
 import { Instagram, MessageCircle, Send } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
@@ -39,7 +43,7 @@ export default function ContactSection() {
           </p>
         </AnimatedSection>
 
-        {/* Contact Cards */}
+        {/* Contact Cards — improved visibility with teal tint and shadow (#11) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
           {contactMethods.map((method, i) => (
             <AnimatedSection key={method.label} delay={i * 100}>
@@ -47,7 +51,11 @@ export default function ContactSection() {
                 href={method.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`block bg-[#faf9f0] rounded-xl p-6 text-center shadow-sm border border-[#d4d1b8] ${method.bgHover} transition-all duration-300 hover:shadow-md hover:-translate-y-1 group`}
+                className={`block rounded-xl p-6 text-center border-2 border-[#87b0b6]/25 ${method.bgHover} transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group`}
+                style={{
+                  backgroundColor: '#eef5f6',
+                  boxShadow: '0 2px 8px rgba(69, 90, 93, 0.08)',
+                }}
               >
                 {/* Icon */}
                 <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${method.color} flex items-center justify-center mx-auto mb-4 shadow-md`}>

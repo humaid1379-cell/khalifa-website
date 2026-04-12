@@ -1,6 +1,14 @@
 /*
  * Design: Kharij Al Nass — Warm editorial Arabic-first
  * Dedicated /podcast page — mirrors PodcastSection content with full-page layout
+ *
+ * Fixes applied:
+ * - "البودكاست" heading changed to cream for contrast on teal (#3)
+ * - Removed redundant "خارج النص" text below logo (#5)
+ * - Reduced "قريباً" text size (#14)
+ * - Back button arrow direction fixed for RTL: → instead of ← (#10)
+ * - Back button uses solid border, not dashed (#1)
+ * - Logo container uses mix-blend-mode to blend with teal (#4)
  */
 import { useLocation } from "wouter";
 import KharijLogo from "@/components/KharijLogo";
@@ -31,18 +39,19 @@ export default function PodcastPage() {
           <div className="container relative z-10">
             {/* Section Header */}
             <div className="text-center mb-10">
-              <p className="font-[Amiri] text-4xl md:text-6xl font-bold text-[#455a5d] mb-6">
+              {/* Heading — cream text for contrast on teal (#3) */}
+              <p className="font-[Amiri] text-lg uppercase tracking-[0.15em] text-[#f1efd6]/70 mb-6">
                 البودكاست
               </p>
 
-              {/* Logo */}
+              {/* Logo — blended with teal background (#4) */}
               <div className="flex justify-center mb-6">
-                <KharijLogo variant="podcast" className="drop-shadow-xl rounded-xl" />
+                <div className="rounded-xl overflow-hidden" style={{ mixBlendMode: 'multiply' }}>
+                  <KharijLogo variant="podcast" className="drop-shadow-xl" />
+                </div>
               </div>
 
-              <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold text-[#f1efd6] mb-4">
-                خارج النص
-              </h1>
+              {/* Removed redundant "خارج النص" heading — logo already shows it (#5) */}
 
               {/* Double divider */}
               <div className="flex justify-center mt-4 mb-8">
@@ -53,21 +62,21 @@ export default function PodcastPage() {
               </div>
             </div>
 
-            {/* Coming Soon */}
+            {/* Coming Soon — reduced size (#14) */}
             <div className="text-center">
-              <p className="font-[Amiri] text-6xl md:text-8xl font-bold text-[#f1efd6] leading-tight">
+              <p className="font-[Amiri] text-4xl md:text-5xl font-bold text-[#f1efd6] leading-tight">
                 قريباً
               </p>
-              <p className="font-[Amiri] text-xl font-bold text-[#455a5d] mt-6">
+              <p className="font-[Amiri] text-[#f1efd6]/60 text-sm mt-6 tracking-wider">
                 سيتم إطلاق البودكاست قريباً
               </p>
 
-              {/* Back to home */}
+              {/* Back to home — solid border, RTL arrow direction fixed (#1, #10) */}
               <button
                 onClick={() => navigate("/")}
-                className="mt-12 inline-flex items-center gap-2 border-2 border-[#455a5d] text-[#455a5d] font-bold px-6 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-base hover:bg-[#455a5d] hover:text-[#f1efd6]"
+                className="mt-12 inline-flex items-center gap-2 border-2 border-[#f1efd6]/50 hover:border-[#f1efd6] hover:bg-[#f1efd6]/10 text-[#f1efd6]/80 hover:text-[#f1efd6] px-6 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
               >
-                ← العودة للرئيسية
+                العودة للرئيسية →
               </button>
             </div>
           </div>

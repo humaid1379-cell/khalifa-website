@@ -6,9 +6,13 @@
  * Variants:
  *   "navbar"  → compact logo
  *   "podcast" → larger logo
+ *
+ * Fix applied:
+ * - Logo is a JPEG with white/cream background — for podcast variant,
+ *   the parent container applies mix-blend-mode: multiply to blend with teal (#4)
  */
 
-const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/kharij-logo-v2_45310a94.webp";
+const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/kharij-logo-v2_eb0c6410.jpeg";
 
 interface KharijLogoProps {
   variant?: "navbar" | "podcast";
@@ -24,9 +28,6 @@ export default function KharijLogo({ variant = "navbar", className = "" }: Khari
       alt="خارج النص"
       className={`${size} object-contain ${className}`}
       loading={variant === "navbar" ? "eager" : "lazy"}
-      width={406}
-      height={294}
-      decoding="async"
     />
   );
 }

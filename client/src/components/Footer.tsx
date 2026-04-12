@@ -1,6 +1,10 @@
 /*
  * Design: Kharij Al Nass — Warm editorial Arabic-first
  * Footer: Teal footer with copyright, social links, quick nav
+ *
+ * Fixes applied:
+ * - Flower motif enlarged to ~80px (#13)
+ * - All elements use clean solid styles, no dashed borders (#1)
  */
 import { Instagram, MessageCircle, ChevronUp } from "lucide-react";
 
@@ -26,7 +30,7 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Links — clean text buttons, no dashed borders */}
           <div className="flex items-center gap-6">
             {[
               { label: "الرئيسية", href: "#hero" },
@@ -46,7 +50,7 @@ export default function Footer() {
             ))}
           </div>
 
-          {/* Social Icons */}
+          {/* Social Icons — solid circular buttons, no dashed borders */}
           <div className="flex items-center gap-3">
             <a
               href="https://instagram.com/kjalromaithi"
@@ -69,17 +73,13 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Flower motif divider */}
-        <div className="flex justify-center mt-8 mb-2 opacity-20">
+        {/* Flower motif divider — enlarged to ~80px (#13) */}
+        <div className="flex justify-center mt-8 mb-4 opacity-30">
           <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/flower-motif_20551baa.webp"
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/flower-motif_8ce1a1cf.jpeg"
             alt=""
-            className="w-12 h-12 object-contain invert"
+            className="w-20 h-20 md:w-24 md:h-24 object-contain invert"
             aria-hidden="true"
-            loading="lazy"
-            width={389}
-            height={342}
-            decoding="async"
           />
         </div>
 
@@ -89,7 +89,7 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} خليفة جمعة الرميثي. جميع الحقوق محفوظة.
           </p>
 
-          {/* Back to top */}
+          {/* Back to top — clean text button */}
           <button
             onClick={scrollToTop}
             className="flex items-center gap-1 font-[Amiri] text-xs text-[#f1efd6]/40 hover:text-[#f1efd6]/70 transition-colors"
