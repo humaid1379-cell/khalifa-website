@@ -18,6 +18,7 @@ import { categories as defaultCategories } from "@/data/articles";
 import { ArticleModal } from "@/components/ArticlesSection";
 import { Link } from "wouter";
 import KharijLogo from "@/components/KharijLogo";
+import Navbar from "@/components/Navbar";
 
 const ARTICLES_PER_PAGE = 9;
 
@@ -121,6 +122,7 @@ export default function Archive() {
       className="min-h-screen rosette-pattern"
       style={{ backgroundColor: '#f1efd6' }}
     >
+      <Navbar />
       <div className="absolute inset-0 bg-[#f1efd6]/85 pointer-events-none" />
 
       {/* Page Header — teal */}
@@ -131,14 +133,6 @@ export default function Archive() {
         </div>
 
         <div className="container">
-          {/* Back link */}
-          <Link href="/">
-            <span className="inline-flex items-center gap-1.5 border-2 border-white text-white font-bold px-4 py-2 rounded-lg font-[Amiri] text-sm mb-6 cursor-pointer transition-all hover:bg-white hover:text-[#87b0b6]">
-              <ArrowRight size={16} />
-              <span>العودة إلى الرئيسية</span>
-            </span>
-          </Link>
-
           <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4 text-[#455a5d] text-center mt-4 md:mt-6">
             أرشيف المقالات
           </h1>
@@ -326,7 +320,17 @@ export default function Archive() {
               <ChevronLeft size={18} />
             </button>
           </div>
-        )}
+         )}
+
+        {/* Back to home button — below content */}
+        <div className="flex justify-center mt-12 mb-4">
+          <Link href="/">
+            <span className="inline-flex items-center gap-1.5 border-2 border-[#87b0b6] text-[#455a5d] font-bold px-6 py-3 rounded-lg font-[Amiri] text-sm cursor-pointer transition-all hover:bg-[#87b0b6] hover:text-white">
+              <ArrowRight size={16} />
+              <span>العودة إلى الرئيسية</span>
+            </span>
+          </Link>
+        </div>
       </div>
 
       {/* Article Modal */}
