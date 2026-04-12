@@ -19,13 +19,14 @@ export default function PodcastSection() {
         {/* Section Header */}
         <AnimatedSection className="text-center mb-10">
           <p className="font-[Amiri] text-5xl md:text-7xl font-bold text-[#455a5d] mb-4">البودكاست</p>
+          
+          {/* White divider line */}
+          <div className="w-24 h-[2px] bg-white mx-auto my-6" />
+          
           {/* Logo */}
           <div className="flex justify-center mb-4">
             <KharijLogo variant="podcast" className="drop-shadow-xl rounded-xl" />
           </div>
-
-          {/* White divider line */}
-          <div className="w-24 h-[2px] bg-white mx-auto my-8" />
         </AnimatedSection>
 
         {/* Coming Soon Text */}
