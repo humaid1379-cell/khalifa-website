@@ -1,7 +1,8 @@
 /*
  * Design: Kharij Al Nass — Warm editorial Arabic-first
- * Podcast: "Coming Soon" section with brand logo and teal/cream theme
+ * Podcast: "Coming Soon" section with brand logo, teal/cream theme, and CTA to /podcast
  */
+import { Link } from "wouter";
 import AnimatedSection from "./AnimatedSection";
 import KharijLogo from "./KharijLogo";
 
@@ -39,6 +40,18 @@ export default function PodcastSection() {
             قريباً
           </p>
           <p className="font-[Amiri] text-[#f1efd6]/50 text-sm mt-6 tracking-wider">سيتم إطلاق البودكاست قريباً</p>
+
+          {/* CTA button → /podcast */}
+          <div className="mt-10">
+            <Link href="/podcast">
+              <span
+                className="inline-block font-[Poppins] text-sm font-semibold uppercase px-8 py-3 border-2 border-[#f1efd6] text-[#f1efd6] hover:bg-[#f1efd6] hover:text-[#455a5d] transition-all duration-300 cursor-pointer"
+                style={{ letterSpacing: '0.15em' }}
+              >
+                اكتشف البودكاست
+              </span>
+            </Link>
+          </div>
         </AnimatedSection>
       </div>
     </section>
