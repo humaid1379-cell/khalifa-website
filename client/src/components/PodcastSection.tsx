@@ -23,15 +23,7 @@ export default function PodcastSection() {
           <div className="flex justify-center mb-4">
             <KharijLogo variant="podcast" className="drop-shadow-xl rounded-xl" />
           </div>
-          <h2 className="font-[Amiri] text-4xl md:text-5xl font-bold text-[#f1efd6] mb-4">
-            خارج النص
-          </h2>
-          <div className="divider-double mx-auto mt-4" style={{ maxWidth: '200px' }}>
-            <div className="relative h-[6px]">
-              <div className="absolute left-0 right-0 top-0 h-[2px] bg-[#f1efd6]/40" />
-              <div className="absolute left-0 right-0 bottom-0 h-[2px] bg-[#f1efd6]/40" />
-            </div>
-          </div>
+
         </AnimatedSection>
 
         {/* Coming Soon Text */}
