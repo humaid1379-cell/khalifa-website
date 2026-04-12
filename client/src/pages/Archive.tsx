@@ -17,6 +17,7 @@ import { fetchAllArticles, type StoredArticle } from "@/lib/articleStorage";
 import { categories as defaultCategories } from "@/data/articles";
 import { ArticleModal } from "@/components/ArticlesSection";
 import { Link } from "wouter";
+import KharijLogo from "@/components/KharijLogo";
 
 const ARTICLES_PER_PAGE = 9;
 
@@ -133,7 +134,12 @@ export default function Archive() {
             </span>
           </Link>
 
-          <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4 text-[#455a5d] text-center mt-8 md:mt-10">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <KharijLogo variant="podcast" className="drop-shadow-xl rounded-xl" />
+          </div>
+
+          <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4 text-[#455a5d] text-center mt-4 md:mt-6">
             أرشيف المقالات
           </h1>
           {/* Double white line divider */}
