@@ -18,7 +18,7 @@ export default function PodcastSection() {
       <div className="container relative z-10">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-10">
-          <p className="font-[Poppins] text-base font-bold uppercase tracking-[0.25em] text-[#455a5d] mb-4">البودكاست</p>
+          <p className="font-[Amiri] text-2xl md:text-3xl font-bold text-[#455a5d] mb-4">البودكاست</p>
           {/* Logo */}
           <div className="flex justify-center mb-4">
             <KharijLogo variant="podcast" className="drop-shadow-xl rounded-xl" />
@@ -45,7 +45,7 @@ export default function PodcastSection() {
           <div className="mt-10">
             <Link href="/podcast">
               <span
-                className="inline-block font-[Poppins] text-base font-bold uppercase px-8 py-4 border-2 border-[#455a5d] text-[#455a5d] bg-[#f1efd6]/20 hover:bg-[#455a5d] hover:text-[#f1efd6] transition-all duration-300 cursor-pointer"
+                className="inline-block font-[Amiri] text-xl font-bold px-8 py-4 border-2 border-[#455a5d] text-[#455a5d] bg-[#f1efd6]/20 hover:bg-[#455a5d] hover:text-[#f1efd6] transition-all duration-300 cursor-pointer"
                 style={{ letterSpacing: '0.15em' }}
               >
                 اكتشف البودكاست
