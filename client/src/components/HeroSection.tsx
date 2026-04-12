@@ -66,7 +66,7 @@ export default function HeroSection() {
               className="inline-block mb-4"
               style={{ animation: "heroFadeUp 0.6s ease 0.1s both" }}
             >
-              <span className="font-[Poppins] text-[#87b0b6] text-sm tracking-wider uppercase font-bold">
+              <span className="font-[Poppins] text-[#bf4240] text-sm tracking-wider uppercase font-bold">
                 كاتب ومحلل
               </span>
             </div>
