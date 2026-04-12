@@ -83,7 +83,7 @@ export default function ArticlesSection() {
       <div className="container relative z-10">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-12">
-          <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#87b0b6] mb-4">
+          <h2 className="font-[Amiri] text-5xl md:text-7xl font-bold text-[#455a5d] mb-4">
             أحدث المقالات
           </h2>
           <div className="divider-double mx-auto mb-6" />
