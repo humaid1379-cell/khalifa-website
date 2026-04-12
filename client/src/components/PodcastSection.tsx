@@ -45,8 +45,8 @@ export default function PodcastSection() {
           <div className="mt-10">
             <Link href="/podcast">
               <span
-                className="inline-block font-[Amiri] text-xl font-bold px-8 py-4 border-2 border-[#455a5d] text-[#455a5d] bg-[#f1efd6]/20 hover:bg-[#455a5d] hover:text-[#f1efd6] transition-all duration-300 cursor-pointer"
-                style={{ letterSpacing: '0' }}
+                className="inline-block font-[Amiri] text-xl font-bold px-8 py-4 rounded-lg text-[#455a5d] hover:bg-[#6a9199] transition-all duration-300 cursor-pointer"
+                style={{ backgroundColor: '#87b0b6', letterSpacing: '0' }}
               >
                 اكتشف البودكاست
               </span>
