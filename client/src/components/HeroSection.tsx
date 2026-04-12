@@ -125,7 +125,7 @@ export default function HeroSection() {
                   e.preventDefault();
                   document.querySelector("#articles")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="flex items-center gap-2 bg-[#bf4240] hover:bg-[#a83836] text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
+                className="flex items-center gap-2 border-2 border-[#455a5d] text-[#87b0b6] hover:bg-[#455a5d]/10 px-5 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm font-bold"
               >
                 اقرأ المقالات
               </a>
@@ -133,7 +133,7 @@ export default function HeroSection() {
                 href="https://instagram.com/kjalromaithi"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-[#87b0b6] hover:border-[#6a9199] text-[#87b0b6] hover:text-[#6a9199] flex items-center gap-2 px-5 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
+                className="border-2 border-[#455a5d] text-[#87b0b6] hover:bg-[#455a5d]/10 flex items-center gap-2 px-5 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm font-bold"
               >
                 <Instagram size={18} />
                 <span>تابعني على انستغرام</span>
