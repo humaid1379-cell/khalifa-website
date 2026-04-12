@@ -3,14 +3,9 @@
  * Main articles section: shows only the 5 NEWEST articles by date
  * Full archive is at /archive
  * Fetches from Cloudflare D1 API, falls back to one example article
- *
- * Fixes applied:
- * - Article cards use solid borders, not dashed (#1)
- * - Single-card layout centered (#9)
- * - Archive link arrow uses ArrowRight for RTL (#10)
  */
 import { useState, useMemo, useEffect, useRef } from "react";
-import { X, ChevronLeft, ArrowRight } from "lucide-react";
+import { X, ChevronLeft, ArrowLeft } from "lucide-react";
 import { fetchAllArticles, type StoredArticle } from "@/lib/articleStorage";
 import AnimatedSection from "./AnimatedSection";
 import { Link } from "wouter";
@@ -69,19 +64,7 @@ export default function ArticlesSection() {
     };
   }, [selectedArticle]);
 
-  const ROSETTE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/rosette-pattern_27b104e0.jpeg";
-
-  /* Determine grid classes based on article count for centering (#9) */
-  const getGridClasses = () => {
-    const count = recentArticles.length;
-    if (count === 1) {
-      return "flex justify-center mb-10";
-    }
-    if (count === 2) {
-      return "grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 max-w-3xl mx-auto";
-    }
-    return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10";
-  };
+  const ROSETTE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/rosette-pattern_3324a349.webp";
 
   return (
     <section
@@ -113,7 +96,7 @@ export default function ArticlesSection() {
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-[#faf9f0] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15">
+              <div key={i} className="bg-[#faf9f0] rounded-xl overflow-hidden shadow-sm border border-[#d4d1b8]">
                 <div className="h-1 bg-[#87b0b6]/30" />
                 <div className="p-5 md:p-6 space-y-3">
                   <div className="flex items-center justify-between">
@@ -134,14 +117,14 @@ export default function ArticlesSection() {
           </div>
         )}
 
-        {/* Articles Grid — centered when few articles (#9), solid borders (#1) */}
+        {/* Articles Grid — 5 newest */}
         {!loading && recentArticles.length > 0 && (
-          <div className={getGridClasses()}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
             {recentArticles.map((article, i) => (
               <AnimatedSection key={article.id} delay={i * 60}>
                 <button
                   onClick={() => setSelectedArticle(article)}
-                  className={`${recentArticles.length === 1 ? 'w-full max-w-md' : 'w-full'} text-right bg-[#faf9f0] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group`}
+                  className="w-full text-right bg-[#faf9f0] rounded-xl overflow-hidden shadow-sm border border-[#d4d1b8] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
                 >
                   {/* Category bar — teal */}
                   <div className="h-1 bg-[#87b0b6] group-hover:bg-[#6a9199] transition-colors" />
@@ -194,7 +177,7 @@ export default function ArticlesSection() {
           </div>
         )}
 
-        {/* Archive link — solid fill button, arrow fixed for RTL */}
+        {/* Archive link */}
         {!loading && (
           <AnimatedSection delay={300} className="flex justify-center mt-4">
             <Link href="/archive">
@@ -202,12 +185,12 @@ export default function ArticlesSection() {
                 {hasMore ? (
                   <>
                     <span>عرض جميع المقالات ({allArticles.length})</span>
-                    <ArrowRight size={16} className="rotate-180" />
+                    <ArrowLeft size={16} />
                   </>
                 ) : (
                   <>
                     <span>أرشيف المقالات</span>
-                    <ArrowRight size={16} className="rotate-180" />
+                    <ArrowLeft size={16} />
                   </>
                 )}
               </span>
