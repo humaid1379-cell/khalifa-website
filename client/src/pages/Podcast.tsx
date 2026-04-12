@@ -65,7 +65,7 @@ export default function PodcastPage() {
               {/* Back to home */}
               <button
                 onClick={() => navigate("/")}
-                className="mt-12 inline-flex items-center gap-2 border border-[#f1efd6]/40 hover:border-[#f1efd6]/80 text-[#f1efd6]/70 hover:text-[#f1efd6] px-6 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
+                className="mt-12 inline-flex items-center gap-2 border-2 border-[#455a5d] text-[#455a5d] font-bold px-6 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-base hover:bg-[#455a5d] hover:text-[#f1efd6]"
               >
                 ← العودة للرئيسية
               </button>
