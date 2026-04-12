@@ -72,10 +72,14 @@ export default function Footer() {
         {/* Flower motif divider */}
         <div className="flex justify-center mt-8 mb-2 opacity-20">
           <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/flower-motif_8ce1a1cf.jpeg"
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/flower-motif_20551baa.webp"
             alt=""
             className="w-12 h-12 object-contain invert"
             aria-hidden="true"
+            loading="lazy"
+            width={389}
+            height={342}
+            decoding="async"
           />
         </div>
 

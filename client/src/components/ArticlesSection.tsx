@@ -64,7 +64,7 @@ export default function ArticlesSection() {
     };
   }, [selectedArticle]);
 
-  const ROSETTE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/rosette-pattern_27b104e0.jpeg";
+  const ROSETTE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/rosette-pattern_3324a349.webp";
 
   return (
     <section

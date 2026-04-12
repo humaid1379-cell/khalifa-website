@@ -5,8 +5,8 @@
  */
 import { Instagram } from "lucide-react";
 
-const PROFILE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7bAYv5QYZcia9BxhPhwv4f/khalifa-profile_3a7883a5.jpeg";
-const SUNRISE_ICON = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/sunrise-icon_d8dc8858.jpeg";
+const PROFILE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/khalifa-profile_28521daa.webp";
+const SUNRISE_ICON = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/sunrise-icon_60d3bd1c.webp";
 
 /* Inline SVG rosette pattern for hero background */
 function RosettePattern() {
@@ -46,6 +46,10 @@ export default function HeroSection() {
                   alt="خليفة جمعة الرميثي"
                   className="w-full h-full object-cover object-center"
                   loading="eager"
+                  width={800}
+                  height={658}
+                  fetchPriority="high"
+                  decoding="async"
                 />
               </div>
               {/* Decorative frame */}
@@ -95,6 +99,10 @@ export default function HeroSection() {
                 alt=""
                 className="w-14 h-14 object-contain opacity-70"
                 aria-hidden="true"
+                loading="lazy"
+                width={365}
+                height={226}
+                decoding="async"
               />
             </div>
 
