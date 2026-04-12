@@ -34,7 +34,7 @@ export default function ContactSection() {
             تواصل معي
           </h2>
           <div className="divider-double mx-auto mb-6" />
-          <p className="font-[Amiri] text-[#6b6b5e] max-w-2xl mx-auto leading-relaxed">
+          <p className="font-[Amiri] text-[#5a7275] max-w-2xl mx-auto leading-relaxed">
             يسعدني التواصل معكم عبر أي من القنوات التالية
           </p>
         </AnimatedSection>
@@ -55,12 +55,12 @@ export default function ContactSection() {
                 </div>
 
                 {/* Label */}
-                <h3 className="font-[Amiri] text-lg font-bold text-[#3a3a32] mb-2">
+                <h3 className="font-[Amiri] text-lg font-bold text-[#455a5d] mb-2">
                   {method.label}
                 </h3>
 
                 {/* Value */}
-                <p className="font-[Poppins] text-sm text-[#6b6b5e]" dir="ltr">
+                <p className="font-[Poppins] text-sm text-[#5a7275]" dir="ltr">
                   {method.value}
                 </p>
               </a>
@@ -70,7 +70,7 @@ export default function ContactSection() {
 
         {/* WhatsApp CTA */}
         <AnimatedSection delay={300} className="text-center mt-12">
-          <p className="font-[Amiri] text-[#6b6b5e] text-sm mb-4">
+          <p className="font-[Amiri] text-[#5a7275] text-sm mb-4">
             للاشتراك في المقال الأسبوعي عبر واتساب
           </p>
           <a

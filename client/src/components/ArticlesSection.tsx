@@ -87,7 +87,7 @@ export default function ArticlesSection() {
             أحدث المقالات
           </h2>
           <div className="divider-double mx-auto mb-6" />
-          <p className="font-[Amiri] text-[#6b6b5e] max-w-2xl mx-auto leading-relaxed">
+          <p className="font-[Amiri] text-[#5a7275] max-w-2xl mx-auto leading-relaxed">
             آخر ما نُشر من مقالات وآراء
           </p>
         </AnimatedSection>
@@ -135,25 +135,25 @@ export default function ArticlesSection() {
                       <span className="font-[Amiri] text-xs bg-[#87b0b6]/15 text-[#6a9199] px-2.5 py-1 rounded-full">
                         {article.category}
                       </span>
-                      <span className="font-[Amiri] text-xs text-[#6b6b5e]">
+                      <span className="font-[Amiri] text-xs text-[#5a7275]">
                         {formatDate(article.date)}
                       </span>
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-[Amiri] text-lg font-bold text-[#3a3a32] mb-3 leading-relaxed group-hover:text-[#87b0b6] transition-colors line-clamp-2">
+                    <h3 className="font-[Amiri] text-lg font-bold text-[#455a5d] mb-3 leading-relaxed group-hover:text-[#87b0b6] transition-colors line-clamp-2">
                       {article.title}
                     </h3>
 
                     {/* Newspaper name if present */}
                     {article.newspaper && (
-                      <p className="font-[Amiri] text-xs text-[#6b6b5e] mb-2">
+                      <p className="font-[Amiri] text-xs text-[#5a7275] mb-2">
                         {article.newspaper}
                       </p>
                     )}
 
                     {/* Excerpt */}
-                    <p className="font-[Amiri] text-sm text-[#6b6b5e] leading-relaxed line-clamp-3">
+                    <p className="font-[Amiri] text-sm text-[#5a7275] leading-relaxed line-clamp-3">
                       {article.excerpt}
                     </p>
 
@@ -171,7 +171,7 @@ export default function ArticlesSection() {
 
         {!loading && recentArticles.length === 0 && (
           <div className="text-center py-16">
-            <p className="font-[Amiri] text-[#6b6b5e] text-lg">
+            <p className="font-[Amiri] text-[#5a7275] text-lg">
               لا توجد مقالات حتى الآن
             </p>
           </div>
@@ -291,7 +291,7 @@ export function ArticleModal({
 
         {/* Content */}
         <div className="p-6 md:p-8 overflow-y-auto max-h-[55vh]">
-          <div className="font-[Amiri] text-base text-[#3a3a32] leading-[2] whitespace-pre-line">
+          <div className="font-[Amiri] text-base text-[#455a5d] leading-[2] whitespace-pre-line">
             {article.content}
           </div>
 
@@ -302,10 +302,10 @@ export function ArticleModal({
                 <span className="font-[Amiri] text-[#87b0b6] font-bold text-sm">خ</span>
               </div>
               <div>
-                <p className="font-[Amiri] text-sm font-semibold text-[#3a3a32]">
+                <p className="font-[Amiri] text-sm font-semibold text-[#455a5d]">
                   خليفة جمعة الرميثي
                 </p>
-                <p className="font-[Amiri] text-xs text-[#6b6b5e]">
+                <p className="font-[Amiri] text-xs text-[#5a7275]">
                   كاتب وصحفي
                 </p>
               </div>

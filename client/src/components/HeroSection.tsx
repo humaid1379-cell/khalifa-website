@@ -69,7 +69,7 @@ export default function HeroSection() {
 
             {/* Name */}
             <h1
-              className="font-[Amiri] text-2xl md:text-3xl lg:text-4xl font-bold text-[#3a3a32] leading-tight mb-4"
+              className="font-[Amiri] text-2xl md:text-3xl lg:text-4xl font-bold text-[#455a5d] leading-tight mb-4"
               style={{ animation: "heroFadeUp 0.7s ease 0.2s both" }}
             >
               خليفة جمعة الرميثي
@@ -100,7 +100,7 @@ export default function HeroSection() {
 
             {/* Tagline */}
             <p
-              className="font-[Amiri] text-base md:text-lg text-[#6b6b5e] max-w-lg mb-8 leading-relaxed"
+              className="font-[Amiri] text-base md:text-lg text-[#5a7275] max-w-lg mb-8 leading-relaxed"
               style={{ animation: "heroFadeUp 0.6s ease 0.45s both" }}
             >
               إعلامي و كاتب في الصحف و المجلات الخليجية و العربية. يكتب في السياسة والاقتصاد والشؤون الاجتماعية بأسلوب تحليلي ساخر.

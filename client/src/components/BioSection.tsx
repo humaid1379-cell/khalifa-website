@@ -32,7 +32,7 @@ export default function BioSection() {
             السيرة الذاتية
           </h2>
           <div className="divider-double mx-auto mb-6" />
-          <p className="font-[Amiri] text-[#6b6b5e] max-w-2xl mx-auto leading-relaxed">
+          <p className="font-[Amiri] text-[#5a7275] max-w-2xl mx-auto leading-relaxed">
             مسيرة مهنية متميزة تجمع بين التعليم العالمي والخبرة المؤسسية والشغف الإعلامي
           </p>
         </AnimatedSection>
@@ -56,10 +56,10 @@ export default function BioSection() {
                     <span className="inline-block font-[Amiri] text-xs text-[#bf4240] bg-[#bf4240]/10 px-3 py-1 rounded-full mb-2">
                       {item.year}
                     </span>
-                    <h3 className="font-[Amiri] text-lg md:text-xl font-bold text-[#3a3a32] mb-2 leading-snug">
+                    <h3 className="font-[Amiri] text-lg md:text-xl font-bold text-[#455a5d] mb-2 leading-snug">
                       {item.title}
                     </h3>
-                    <p className="font-[Amiri] text-[#6b6b5e] leading-relaxed text-sm">
+                    <p className="font-[Amiri] text-[#5a7275] leading-relaxed text-sm">
                       {item.description}
                     </p>
                   </div>
@@ -71,10 +71,10 @@ export default function BioSection() {
 
         {/* Bio Paragraph */}
         <AnimatedSection delay={400} className="mt-10 md:mt-14 bg-[#faf9f0] rounded-xl p-6 md:p-8 border border-[#d4d1b8] max-w-2xl">
-          <p className="font-[Amiri] text-[#6b6b5e] leading-relaxed text-base">
+          <p className="font-[Amiri] text-[#5a7275] leading-relaxed text-base">
             تخرج من جامعة Hope في الولايات المتحدة الامريكية بتخصص ادارة دولية . وحاصل على ماجستير تنفيذي من جامعة هارفارد في القيادة والتطوير . ويعمل رئيس تنفيذي في إحدى المؤسسات الاستثمارية الإماراتية.
           </p>
-          <p className="font-[Amiri] text-[#6b6b5e] leading-relaxed text-base mt-4">
+          <p className="font-[Amiri] text-[#5a7275] leading-relaxed text-base mt-4">
             يجمع بين الخبرة المؤسسية والادارة الدولية والاهتمام الإعلامي. يكتب بانتظام في صحف إماراتية وخليجية وعربية، مقالاته متنوعة تغطي السياسة والاقتصاد والرياضة والشؤون الاجتماعية. عُرف بأسلوبه التحليلي الساخر، وقدّم مساهمات لافتة في تعزيز الحوار العام حول قضايا منوعة في الاقتصاد والتنمية الاجتماعية والرياضة في المنطقة.
           </p>
         </AnimatedSection>

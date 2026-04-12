@@ -86,7 +86,7 @@ html {
 body {
   font-family: 'Amiri', serif;
   background-color: #f1efd6;
-  color: #3a3a32;
+  color: #455a5d;
   direction: rtl;
 }
 
@@ -132,7 +132,7 @@ body {
 /* ─── Selection ──────────────────────────────────────────────────── */
 ::selection {
   background: rgba(135, 176, 182, 0.3);
-  color: #3a3a32;
+  color: #455a5d;
 }
 
 @layer base {

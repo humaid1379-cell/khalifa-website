@@ -165,7 +165,7 @@ export default function Archive() {
                   setSearchQuery(e.target.value);
                   resetPage();
                 }}
-                className="w-full pr-10 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] placeholder:text-[#6b6b5e] focus:outline-none focus:border-[#87b0b6] focus:ring-1 focus:ring-[#87b0b6] transition-colors"
+                className="w-full pr-10 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#455a5d] placeholder:text-[#5a7275] focus:outline-none focus:border-[#87b0b6] focus:ring-1 focus:ring-[#87b0b6] transition-colors"
               />
             </div>
 
@@ -181,7 +181,7 @@ export default function Archive() {
                   setSelectedCategory(e.target.value);
                   resetPage();
                 }}
-                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] focus:outline-none focus:border-[#87b0b6] appearance-none cursor-pointer"
+                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#455a5d] focus:outline-none focus:border-[#87b0b6] appearance-none cursor-pointer"
               >
                 <option value="الكل">كل التصنيفات</option>
                 {categories.map((cat) => (
@@ -204,7 +204,7 @@ export default function Archive() {
                   setSelectedYear(e.target.value);
                   resetPage();
                 }}
-                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#3a3a32] focus:outline-none focus:border-[#87b0b6] appearance-none cursor-pointer"
+                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-sm text-[#455a5d] focus:outline-none focus:border-[#87b0b6] appearance-none cursor-pointer"
               >
                 <option value="الكل">كل السنوات</option>
                 {years.map((year) => (
@@ -217,7 +217,7 @@ export default function Archive() {
           </div>
 
           {/* Results count */}
-          <div className="mt-3 font-[Amiri] text-xs text-[#6b6b5e]">
+          <div className="mt-3 font-[Amiri] text-xs text-[#5a7275]">
             {loading
               ? "جاري التحميل..."
               : `${filteredArticles.length} مقال`}
@@ -228,7 +228,7 @@ export default function Archive() {
         {loading && (
           <div className="flex items-center justify-center py-20">
             <Loader2 size={28} className="animate-spin text-[#87b0b6]" />
-            <span className="mr-3 font-[Amiri] text-[#6b6b5e]">
+            <span className="mr-3 font-[Amiri] text-[#5a7275]">
               جاري تحميل المقالات...
             </span>
           </div>
@@ -249,19 +249,19 @@ export default function Archive() {
                     <span className="font-[Amiri] text-xs bg-[#87b0b6]/15 text-[#6a9199] px-2.5 py-1 rounded-full">
                       {article.category}
                     </span>
-                    <span className="font-[Amiri] text-xs text-[#6b6b5e]">
+                    <span className="font-[Amiri] text-xs text-[#5a7275]">
                       {formatDate(article.date)}
                     </span>
                   </div>
-                  <h3 className="font-[Amiri] text-lg font-bold text-[#3a3a32] mb-3 leading-relaxed group-hover:text-[#87b0b6] transition-colors line-clamp-2">
+                  <h3 className="font-[Amiri] text-lg font-bold text-[#455a5d] mb-3 leading-relaxed group-hover:text-[#87b0b6] transition-colors line-clamp-2">
                     {article.title}
                   </h3>
                   {article.newspaper && (
-                    <p className="font-[Amiri] text-xs text-[#6b6b5e] mb-2">
+                    <p className="font-[Amiri] text-xs text-[#5a7275] mb-2">
                       {article.newspaper}
                     </p>
                   )}
-                  <p className="font-[Amiri] text-sm text-[#6b6b5e] leading-relaxed line-clamp-3">
+                  <p className="font-[Amiri] text-sm text-[#5a7275] leading-relaxed line-clamp-3">
                     {article.excerpt}
                   </p>
                   <div className="mt-4 font-[Amiri] text-sm text-[#bf4240] group-hover:text-[#a83836] flex items-center gap-1">
@@ -276,7 +276,7 @@ export default function Archive() {
 
         {!loading && paginatedArticles.length === 0 && (
           <div className="text-center py-20">
-            <p className="font-[Amiri] text-[#6b6b5e] text-lg">
+            <p className="font-[Amiri] text-[#5a7275] text-lg">
               {allArticles.length === 0
                 ? "لا توجد مقالات في الأرشيف حتى الآن"
                 : "لا توجد مقالات مطابقة لبحثك"}

@@ -16,7 +16,7 @@ function PageLoader() {
     <div className="min-h-screen flex items-center justify-center bg-[#f1efd6]">
       <div className="flex flex-col items-center gap-3">
         <div className="w-8 h-8 rounded-full border-2 border-[#87b0b6] border-t-transparent animate-spin" />
-        <span className="font-[Amiri] text-sm text-[#6b6b5e]">جاري التحميل...</span>
+        <span className="font-[Amiri] text-sm text-[#5a7275]">جاري التحميل...</span>
       </div>
     </div>
   );

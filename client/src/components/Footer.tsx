@@ -10,7 +10,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#3a3a32] text-[#f1efd6]">
+    <footer className="bg-[#455a5d] text-[#f1efd6]">
       {/* Top divider */}
       <div className="h-1 bg-gradient-to-l from-[#87b0b6] via-[#bf4240] to-[#87b0b6]" />
 
