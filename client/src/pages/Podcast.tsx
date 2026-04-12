@@ -31,7 +31,7 @@ export default function PodcastPage() {
           <div className="container relative z-10">
             {/* Section Header */}
             <div className="text-center mb-10">
-              <p className="font-[Poppins] text-xs uppercase tracking-[0.25em] text-[#f1efd6]/60 mb-6">
+              <p className="font-[Amiri] text-4xl md:text-6xl font-bold text-[#455a5d] mb-6">
                 البودكاست
               </p>
 
@@ -58,7 +58,7 @@ export default function PodcastPage() {
               <p className="font-[Amiri] text-6xl md:text-8xl font-bold text-[#f1efd6] leading-tight">
                 قريباً
               </p>
-              <p className="font-[Amiri] text-[#f1efd6]/50 text-sm mt-6 tracking-wider">
+              <p className="font-[Amiri] text-xl font-bold text-[#455a5d] mt-6">
                 سيتم إطلاق البودكاست قريباً
               </p>
 
