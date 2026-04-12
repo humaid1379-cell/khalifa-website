@@ -125,6 +125,11 @@ export default function Archive() {
 
       {/* Page Header — teal */}
       <div className="relative z-10 bg-[#87b0b6] text-white py-14 md:py-20">
+        {/* Logo — top left corner */}
+        <div className="absolute top-4 left-4 md:top-6 md:left-6">
+          <KharijLogo variant="navbar" className="drop-shadow-xl rounded-xl" />
+        </div>
+
         <div className="container">
           {/* Back link */}
           <Link href="/">
@@ -133,11 +138,6 @@ export default function Archive() {
               <span>العودة إلى الرئيسية</span>
             </span>
           </Link>
-
-          {/* Logo */}
-          <div className="flex justify-start mb-6">
-            <KharijLogo variant="navbar" className="drop-shadow-xl rounded-xl" />
-          </div>
 
           <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4 text-[#455a5d] text-center mt-4 md:mt-6">
             أرشيف المقالات
