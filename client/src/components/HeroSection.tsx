@@ -23,13 +23,13 @@ export default function HeroSection() {
     <section
       id="hero"
       className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden"
-      style={{ backgroundColor: '#f1efd6' }}
+      style={{ backgroundColor: '#f5f0e1' }}
     >
       {/* Decorative rosette pattern background */}
       <RosettePattern />
 
       {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-l from-[#f1efd6] via-[#f1efd6]/95 to-[#e8e5c8]/90" />
+      <div className="absolute inset-0 bg-gradient-to-l from-[#f5f0e1] via-[#f5f0e1]/95 to-[#e8e5c8]/90" />
 
       {/* Content */}
       <div className="container relative z-10 py-24 md:py-0">
@@ -40,7 +40,7 @@ export default function HeroSection() {
             style={{ animation: "heroSlideIn 0.8s ease 0.3s both" }}
           >
             <div className="relative">
-              <div className="w-48 h-56 md:w-56 md:h-72 rounded-2xl overflow-hidden border-2 border-[#87b0b6]/30 shadow-2xl">
+              <div className="w-48 h-56 md:w-56 md:h-72 rounded-2xl overflow-hidden border-2 border-[#87b07a]/30 shadow-2xl">
                 <img
                   src={PROFILE_IMG}
                   alt="خليفة جمعة الرميثي"
@@ -53,9 +53,9 @@ export default function HeroSection() {
                 />
               </div>
               {/* Decorative frame */}
-              <div className="absolute -top-3 -right-3 w-48 h-56 md:w-56 md:h-72 rounded-2xl border-2 border-[#87b0b6]/20 -z-10" />
+              <div className="absolute -top-3 -right-3 w-48 h-56 md:w-56 md:h-72 rounded-2xl border-2 border-[#87b07a]/20 -z-10" />
               {/* Decorative dot — red accent */}
-              <div className="absolute -bottom-2 -left-2 w-6 h-6 rounded-full bg-[#bf4240] shadow-lg" />
+              <div className="absolute -bottom-2 -left-2 w-6 h-6 rounded-full bg-[#8b2e3b] shadow-lg" />
             </div>
           </div>
 
@@ -66,14 +66,14 @@ export default function HeroSection() {
               className="inline-block mb-4"
               style={{ animation: "heroFadeUp 0.6s ease 0.1s both" }}
             >
-              <span className="font-[Poppins] text-[#bf4240] text-sm tracking-wider uppercase font-bold">
+              <span className="font-[Poppins] text-[#8b2e3b] text-sm tracking-wider uppercase font-bold">
                 كاتب ومحلل
               </span>
             </div>
 
             {/* Name */}
             <h1
-              className="font-[Amiri] text-2xl md:text-3xl lg:text-4xl font-bold text-[#455a5d] leading-tight mb-4"
+              className="font-[Amiri] text-2xl md:text-3xl lg:text-4xl font-bold text-[#3d5a45] leading-tight mb-4"
               style={{ animation: "heroFadeUp 0.7s ease 0.2s both" }}
             >
               خليفة جمعة الرميثي
@@ -81,7 +81,7 @@ export default function HeroSection() {
 
             {/* Slogan */}
             <div
-              className="mb-6 inline-block border-2 border-[#bf4240] bg-[#bf4240] px-8 md:px-10 py-6 md:py-8 rounded-lg"
+              className="mb-6 inline-block border-2 border-[#8b2e3b] bg-[#8b2e3b] px-8 md:px-10 py-6 md:py-8 rounded-lg"
               style={{ animation: "heroFadeUp 0.6s ease 0.35s both" }}
             >
               <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
@@ -108,7 +108,7 @@ export default function HeroSection() {
 
             {/* Tagline */}
             <p
-              className="font-[Amiri] text-base md:text-lg text-[#5a7275] max-w-lg mb-8 leading-relaxed"
+              className="font-[Amiri] text-base md:text-lg text-[#4a6b50] max-w-lg mb-8 leading-relaxed"
               style={{ animation: "heroFadeUp 0.6s ease 0.45s both" }}
             >
               إعلامي و كاتب في الصحف و المجلات الخليجية و العربية. يكتب في السياسة والاقتصاد والشؤون الاجتماعية بأسلوب تحليلي ساخر.
@@ -125,7 +125,7 @@ export default function HeroSection() {
                   e.preventDefault();
                   document.querySelector("#articles")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="flex items-center gap-2 bg-[#87b0b6] text-white hover:bg-[#6a9199] px-5 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm font-bold"
+                className="flex items-center gap-2 bg-[#87b07a] text-white hover:bg-[#6a9166] px-5 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm font-bold"
               >
                 اقرأ المقالات
               </a>
@@ -133,7 +133,7 @@ export default function HeroSection() {
                 href="https://instagram.com/kjalromaithi"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#87b0b6] text-white hover:bg-[#6a9199] flex items-center gap-2 px-5 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm font-bold"
+                className="bg-[#87b07a] text-white hover:bg-[#6a9166] flex items-center gap-2 px-5 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm font-bold"
               >
                 <Instagram size={18} className="text-white" />
                 <span>تابعني على انستغرام</span>
@@ -144,7 +144,7 @@ export default function HeroSection() {
       </div>
 
       {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#f1efd6] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#f5f0e1] to-transparent" />
     </section>
   );
 }

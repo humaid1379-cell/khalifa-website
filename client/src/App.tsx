@@ -13,10 +13,10 @@ const Podcast = lazy(() => import("./pages/Podcast"));
 
 function PageLoader() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f1efd6]">
+    <div className="min-h-screen flex items-center justify-center bg-[#f5f0e1]">
       <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 rounded-full border-2 border-[#87b0b6] border-t-transparent animate-spin" />
-        <span className="font-[Amiri] text-sm text-[#5a7275]">جاري التحميل...</span>
+        <div className="w-8 h-8 rounded-full border-2 border-[#87b07a] border-t-transparent animate-spin" />
+        <span className="font-[Amiri] text-sm text-[#4a6b50]">جاري التحميل...</span>
       </div>
     </div>
   );

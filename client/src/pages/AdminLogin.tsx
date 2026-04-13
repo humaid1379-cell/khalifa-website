@@ -39,7 +39,7 @@ export default function AdminLogin({ onSuccess }: Props) {
     <div
       className="min-h-screen flex items-center justify-center px-4"
       style={{
-        background: "linear-gradient(135deg, #6a9199 0%, #87b0b6 50%, #6a9199 100%)",
+        background: "linear-gradient(135deg, #6a9166 0%, #87b07a 50%, #6a9166 100%)",
       }}
     >
       {/* Decorative pattern overlay */}
@@ -54,18 +54,18 @@ export default function AdminLogin({ onSuccess }: Props) {
         {/* Back to site link */}
         <a
           href="/"
-          className="inline-flex items-center gap-2 text-[#f1efd6] hover:text-white font-[Amiri] text-sm mb-6 transition-colors"
+          className="inline-flex items-center gap-2 text-[#f5f0e1] hover:text-white font-[Amiri] text-sm mb-6 transition-colors"
         >
           <ArrowRight size={16} />
           <span>العودة إلى الموقع</span>
         </a>
 
         {/* Login Card */}
-        <div className="bg-[#faf9f0] rounded-2xl shadow-2xl p-8 md:p-10">
+        <div className="bg-[#faf8f2] rounded-2xl shadow-2xl p-8 md:p-10">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-[#87b0b6]/15 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock size={28} className="text-[#87b0b6]" />
+            <div className="w-16 h-16 bg-[#87b07a]/15 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Lock size={28} className="text-[#87b07a]" />
             </div>
             <h1 className="font-[Amiri] text-2xl font-bold text-[#3a3a32] mb-2">
               لوحة التحكم
@@ -94,7 +94,7 @@ export default function AdminLogin({ onSuccess }: Props) {
                     setError("");
                   }}
                   placeholder="أدخل كلمة المرور"
-                  className="w-full pr-4 pl-12 py-3 rounded-xl border-2 border-[#d4d1b8] bg-[#f1efd6] font-[Amiri] text-[#3a3a32] placeholder:text-[#6b6b5e] focus:outline-none focus:border-[#87b0b6] transition-colors text-base"
+                  className="w-full pr-4 pl-12 py-3 rounded-xl border-2 border-[#d4d1b8] bg-[#f5f0e1] font-[Amiri] text-[#3a3a32] placeholder:text-[#6b6b5e] focus:outline-none focus:border-[#87b07a] transition-colors text-base"
                   autoFocus
                   dir="ltr"
                 />
@@ -109,8 +109,8 @@ export default function AdminLogin({ onSuccess }: Props) {
 
               {/* Error message */}
               {error && (
-                <p className="mt-2 font-[Amiri] text-sm text-[#bf4240] flex items-center gap-1">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#bf4240]" />
+                <p className="mt-2 font-[Amiri] text-sm text-[#8b2e3b] flex items-center gap-1">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#8b2e3b]" />
                   {error}
                 </p>
               )}
@@ -119,7 +119,7 @@ export default function AdminLogin({ onSuccess }: Props) {
             <button
               type="submit"
               disabled={loading || !password}
-              className="w-full py-3 rounded-xl bg-[#87b0b6] text-white font-[Amiri] font-medium text-base hover:bg-[#6a9199] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="w-full py-3 rounded-xl bg-[#87b07a] text-white font-[Amiri] font-medium text-base hover:bg-[#6a9166] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               {loading ? (
                 <span className="inline-flex items-center gap-2">
@@ -134,7 +134,7 @@ export default function AdminLogin({ onSuccess }: Props) {
         </div>
 
         {/* Footer */}
-        <p className="text-center mt-6 font-[Amiri] text-xs text-[#f1efd6]/60">
+        <p className="text-center mt-6 font-[Amiri] text-xs text-[#f5f0e1]/60">
           خليفة جمعة الرميثي — لوحة إدارة المقالات
         </p>
       </div>

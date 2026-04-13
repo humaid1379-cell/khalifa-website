@@ -10,18 +10,18 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#455a5d] text-[#f1efd6]">
+    <footer className="bg-[#3d5a45] text-[#f5f0e1]">
       {/* Top divider */}
-      <div className="h-1 bg-gradient-to-l from-[#87b0b6] via-[#bf4240] to-[#87b0b6]" />
+      <div className="h-1 bg-gradient-to-l from-[#87b07a] via-[#8b2e3b] to-[#87b07a]" />
 
       <div className="container py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Name & Tagline */}
           <div className="text-center md:text-right">
-            <h3 className="font-[Amiri] text-xl font-bold text-[#f1efd6] mb-1">
+            <h3 className="font-[Amiri] text-xl font-bold text-[#f5f0e1] mb-1">
               خليفة جمعة الرميثي
             </h3>
-            <p className="font-[Amiri] text-sm text-[#f1efd6]/50">
+            <p className="font-[Amiri] text-sm text-[#f5f0e1]/50">
               كاتب وصحفي إماراتي
             </p>
           </div>
@@ -39,7 +39,7 @@ export default function Footer() {
                 onClick={() =>
                   document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="font-[Amiri] text-sm text-[#f1efd6]/60 hover:text-[#f1efd6] transition-colors"
+                className="font-[Amiri] text-sm text-[#f5f0e1]/60 hover:text-[#f5f0e1] transition-colors"
               >
                 {link.label}
               </button>
@@ -52,7 +52,7 @@ export default function Footer() {
               href="https://instagram.com/kjalromaithi"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-9 h-9 rounded-full bg-[#f1efd6]/10 hover:bg-[#f1efd6]/20 flex items-center justify-center transition-colors"
+              className="w-9 h-9 rounded-full bg-[#f5f0e1]/10 hover:bg-[#f5f0e1]/20 flex items-center justify-center transition-colors"
               aria-label="انستغرام"
             >
               <Instagram size={16} />
@@ -61,7 +61,7 @@ export default function Footer() {
               href="https://wa.me/971500000000"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-9 h-9 rounded-full bg-[#f1efd6]/10 hover:bg-[#f1efd6]/20 flex items-center justify-center transition-colors"
+              className="w-9 h-9 rounded-full bg-[#f5f0e1]/10 hover:bg-[#f5f0e1]/20 flex items-center justify-center transition-colors"
               aria-label="واتساب"
             >
               <MessageCircle size={16} />
@@ -84,15 +84,15 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="pt-6 border-t border-[#f1efd6]/10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="font-[Poppins] text-xs text-[#f1efd6]/40">
+        <div className="pt-6 border-t border-[#f5f0e1]/10 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="font-[Poppins] text-xs text-[#f5f0e1]/40">
             &copy; {new Date().getFullYear()} خليفة جمعة الرميثي. جميع الحقوق محفوظة.
           </p>
 
           {/* Back to top */}
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-1 font-[Amiri] text-xs text-[#f1efd6]/40 hover:text-[#f1efd6]/70 transition-colors"
+            className="flex items-center gap-1 font-[Amiri] text-xs text-[#f5f0e1]/40 hover:text-[#f5f0e1]/70 transition-colors"
           >
             <ChevronUp size={14} />
             <span>العودة للأعلى</span>

@@ -85,8 +85,8 @@ html {
 
 body {
   font-family: 'Amiri', serif;
-  background-color: #f1efd6;
-  color: #455a5d;
+  background-color: #f5f0e1;
+  color: #3d5a45;
   direction: rtl;
 }
 
@@ -103,7 +103,7 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: #87b0b6;
+  background: #87b07a;
 }
 .divider-double::before { top: 0; }
 .divider-double::after  { bottom: 0; }
@@ -125,14 +125,14 @@ body {
 
 /* ─── Scrollbar ──────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #f1efd6; }
-::-webkit-scrollbar-thumb { background: #87b0b6; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #6a9199; }
+::-webkit-scrollbar-track { background: #f5f0e1; }
+::-webkit-scrollbar-thumb { background: #87b07a; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #6a9166; }
 
 /* ─── Selection ──────────────────────────────────────────────────── */
 ::selection {
   background: rgba(135, 176, 182, 0.3);
-  color: #455a5d;
+  color: #3d5a45;
 }
 
 @layer base {
