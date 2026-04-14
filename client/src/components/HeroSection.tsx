@@ -11,7 +11,7 @@
 import { Instagram } from "lucide-react";
 
 const PROFILE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7bAYv5QYZcia9BxhPhwv4f/khalifa-profile_3a7883a5.jpeg";
-const SUNRISE_ICON = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/sunrise-icon_d8dc8858.jpeg";
+// Sunrise/book icon removed per user request
 
 /* Inline SVG rosette pattern for hero background */
 function RosettePattern() {
@@ -80,28 +80,23 @@ export default function HeroSection() {
               خليفة جمعة الرميثي
             </h1>
 
-            {/* Slogan */}
+            {/* Slogan — with decorative border frame */}
             <div
-              className="mb-6"
+              className="mb-6 inline-block"
               style={{ animation: "heroFadeUp 0.6s ease 0.35s both" }}
             >
-              <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#87b07a] leading-tight">
-                الواقع ليس كما تقرآه
-              </p>
+              <div className="relative inline-block border-2 border-[#87b07a]/40 px-6 py-3 md:px-8 md:py-4">
+                {/* Corner accents */}
+                <span className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-[#8b2e3b]" />
+                <span className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-[#8b2e3b]" />
+                <span className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-[#8b2e3b]" />
+                <span className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-[#8b2e3b]" />
+                <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#87b07a] leading-tight">
+                  الواقع ليس كما تقرآه
+                </p>
+              </div>
             </div>
 
-            {/* Sunrise / Book icon */}
-            <div
-              className="flex justify-center md:justify-start mb-4"
-              style={{ animation: "heroFadeUp 0.6s ease 0.42s both" }}
-            >
-              <img
-                src={SUNRISE_ICON}
-                alt=""
-                className="w-14 h-14 object-contain opacity-70"
-                aria-hidden="true"
-              />
-            </div>
 
             {/* Tagline */}
             <p
