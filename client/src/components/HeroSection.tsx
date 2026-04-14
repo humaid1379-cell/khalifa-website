@@ -106,9 +106,9 @@ export default function HeroSection() {
               إعلامي و كاتب في الصحف و المجلات الخليجية و العربية. يكتب في السياسة والاقتصاد والشؤون الاجتماعية بأسلوب تحليلي ساخر.
             </p>
 
-            {/* Social Links — solid buttons, no dashed borders */}
+            {/* CTA Buttons — stacked vertically, centered, outline style */}
             <div
-              className="flex items-center gap-4 justify-center md:justify-start"
+              className="flex flex-col items-center gap-4"
               style={{ animation: "heroFadeUp 0.6s ease 0.5s both" }}
             >
               <a
@@ -117,7 +117,7 @@ export default function HeroSection() {
                   e.preventDefault();
                   document.querySelector("#articles")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="flex items-center gap-2 bg-[#8b2e3b] hover:bg-[#731f2c] text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
+                className="border-2 border-[#87b07a] bg-transparent hover:bg-[#87b07a]/10 text-[#3d5a45] flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
               >
                 اقرأ المقالات
               </a>
@@ -125,7 +125,7 @@ export default function HeroSection() {
                 href="https://instagram.com/kjalromaithi"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border-2 border-[#87b07a] hover:border-[#6a9166] hover:bg-[#87b07a]/10 text-[#87b07a] hover:text-[#6a9166] flex items-center gap-2 px-5 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
+                className="border-2 border-[#87b07a] bg-transparent hover:bg-[#87b07a]/10 text-[#3d5a45] flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
               >
                 <Instagram size={18} />
                 <span>تابعني على انستغرام</span>
