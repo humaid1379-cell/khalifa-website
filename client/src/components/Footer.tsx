@@ -1,6 +1,11 @@
 /*
  * Design: Kharij Al Nass — Warm editorial Arabic-first
- * Footer: Teal footer with copyright, social links, quick nav
+ * Footer: Dark green footer with copyright, social links, quick nav
+ *
+ * Fixes applied:
+ * - Flower motif enlarged to ~80px (#13)
+ * - All elements use clean solid styles, no dashed borders (#1)
+ * - Text colors updated for WCAG 4.5:1 contrast ratio on #3d5a45 bg
  */
 import { Instagram, MessageCircle, ChevronUp } from "lucide-react";
 
@@ -21,12 +26,12 @@ export default function Footer() {
             <h3 className="font-[Amiri] text-xl font-bold text-[#f5f0e1] mb-1">
               خليفة جمعة الرميثي
             </h3>
-            <p className="font-[Amiri] text-sm text-[#f5f0e1]/50">
+            <p className="font-[Amiri] text-sm text-[#c0d2c3]">
               كاتب وصحفي إماراتي
             </p>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Links — clean text buttons */}
           <div className="flex items-center gap-6">
             {[
               { label: "الرئيسية", href: "#hero" },
@@ -39,20 +44,20 @@ export default function Footer() {
                 onClick={() =>
                   document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="font-[Amiri] text-sm text-[#f5f0e1]/60 hover:text-[#f5f0e1] transition-colors"
+                className="font-[Amiri] text-sm text-[#c0d2c3] hover:text-[#f5f0e1] transition-colors"
               >
                 {link.label}
               </button>
             ))}
           </div>
 
-          {/* Social Icons */}
+          {/* Social Icons — solid circular buttons */}
           <div className="flex items-center gap-3">
             <a
               href="https://instagram.com/kjalromaithi"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-9 h-9 rounded-full bg-[#f5f0e1]/10 hover:bg-[#f5f0e1]/20 flex items-center justify-center transition-colors"
+              className="w-9 h-9 rounded-full bg-[#f5f0e1]/15 hover:bg-[#f5f0e1]/25 flex items-center justify-center transition-colors"
               aria-label="انستغرام"
             >
               <Instagram size={16} />
@@ -61,7 +66,7 @@ export default function Footer() {
               href="https://wa.me/971500000000"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-9 h-9 rounded-full bg-[#f5f0e1]/10 hover:bg-[#f5f0e1]/20 flex items-center justify-center transition-colors"
+              className="w-9 h-9 rounded-full bg-[#f5f0e1]/15 hover:bg-[#f5f0e1]/25 flex items-center justify-center transition-colors"
               aria-label="واتساب"
             >
               <MessageCircle size={16} />
@@ -69,30 +74,26 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Flower motif divider */}
-        <div className="flex justify-center mt-8 mb-2 opacity-20">
+        {/* Flower motif divider — enlarged to ~80px (#13) */}
+        <div className="flex justify-center mt-8 mb-4 opacity-30">
           <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/flower-motif_20551baa.webp"
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/flower-motif_8ce1a1cf.jpeg"
             alt=""
-            className="w-12 h-12 object-contain invert"
+            className="w-20 h-20 md:w-24 md:h-24 object-contain invert"
             aria-hidden="true"
-            loading="lazy"
-            width={389}
-            height={342}
-            decoding="async"
           />
         </div>
 
         {/* Bottom */}
-        <div className="pt-6 border-t border-[#f5f0e1]/10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="font-[Poppins] text-xs text-[#f5f0e1]/40">
+        <div className="pt-6 border-t border-[#f5f0e1]/15 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="font-[Poppins] text-xs text-[#c0d2c3]">
             &copy; {new Date().getFullYear()} خليفة جمعة الرميثي. جميع الحقوق محفوظة.
           </p>
 
-          {/* Back to top */}
+          {/* Back to top — clean text button */}
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-1 font-[Amiri] text-xs text-[#f5f0e1]/40 hover:text-[#f5f0e1]/70 transition-colors"
+            className="flex items-center gap-1 font-[Amiri] text-xs text-[#c0d2c3] hover:text-[#f5f0e1] transition-colors"
           >
             <ChevronUp size={14} />
             <span>العودة للأعلى</span>

@@ -85,26 +85,44 @@ async function apiRequest(url: string, options: RequestInit = {}): Promise<any> 
     headers["Authorization"] = `Bearer ${token}`;
   }
   const res = await fetch(url, { ...options, headers });
+  if (!res.ok) {
+    throw new Error(`API error: ${res.status} ${res.statusText}`);
+  }
   return res.json();
 }
+
+// ─── Simple in-memory cache for public article fetches ──────────────────────
+let articlesCache: { data: StoredArticle[]; timestamp: number } | null = null;
+const CACHE_TTL = 60_000; // 60 seconds
 
 // ─── Article CRUD (API-based) ────────────────────────────────────────────────
 
 /** Fetch all articles from the API */
 export async function fetchArticles(): Promise<StoredArticle[]> {
   try {
+    // Return cached data if still fresh
+    if (articlesCache && Date.now() - articlesCache.timestamp < CACHE_TTL) {
+      return articlesCache.data;
+    }
     const data = await apiRequest("/api/articles");
     if (data.success && Array.isArray(data.articles)) {
-      return data.articles.map((a: any) => ({
+      const articles = data.articles.map((a: any) => ({
         ...a,
         newspaper: a.newspaper || "",
         isHardcoded: false,
       }));
+      articlesCache = { data: articles, timestamp: Date.now() };
+      return articles;
     }
     return [];
   } catch {
     return [];
   }
+}
+
+/** Invalidate the articles cache (call after add/update/delete) */
+export function invalidateArticlesCache(): void {
+  articlesCache = null;
 }
 
 /** Fetch all articles, falling back to hardcoded if API fails */
@@ -137,6 +155,7 @@ export async function addArticle(article: StoredArticle): Promise<{ success: boo
       method: "POST",
       body: JSON.stringify(article),
     });
+    if (data.success) invalidateArticlesCache();
     return data;
   } catch (e: any) {
     return { success: false, error: e.message };
@@ -153,6 +172,7 @@ export async function updateArticle(
       method: "PUT",
       body: JSON.stringify(updates),
     });
+    if (data.success) invalidateArticlesCache();
     return data;
   } catch (e: any) {
     return { success: false, error: e.message };
@@ -165,6 +185,7 @@ export async function deleteArticle(id: string): Promise<{ success: boolean; err
     const data = await apiRequest(`/api/articles/${id}`, {
       method: "DELETE",
     });
+    if (data.success) invalidateArticlesCache();
     return data;
   } catch (e: any) {
     return { success: false, error: e.message };
