@@ -94,7 +94,7 @@ export default function Navbar() {
         <div className="md:hidden flex items-center justify-between w-full">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`p-2 transition-colors ${scrolled ? "text-[#f5f0e1]" : "text-[#455a5d]"}`}
+            className="p-2 transition-colors text-white"
             aria-label="القائمة"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
