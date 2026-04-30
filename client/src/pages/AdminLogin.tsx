@@ -39,7 +39,7 @@ export default function AdminLogin({ onSuccess }: Props) {
     <div
       className="min-h-screen flex items-center justify-center px-4"
       style={{
-        background: "linear-gradient(135deg, #6a9166 0%, #87b07a 50%, #6a9166 100%)",
+        background: "linear-gradient(135deg, #6a9199 0%, #87b0b6 50%, #6a9199 100%)",
       }}
     >
       {/* Decorative pattern overlay */}
@@ -64,8 +64,8 @@ export default function AdminLogin({ onSuccess }: Props) {
         <div className="bg-[#faf8f2] rounded-2xl shadow-2xl p-8 md:p-10">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-[#87b07a]/15 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock size={28} className="text-[#87b07a]" />
+            <div className="w-16 h-16 bg-[#87b0b6]/15 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Lock size={28} className="text-[#87b0b6]" />
             </div>
             <h1 className="font-[Amiri] text-2xl font-bold text-[#3a3a32] mb-2">
               لوحة التحكم
@@ -94,7 +94,7 @@ export default function AdminLogin({ onSuccess }: Props) {
                     setError("");
                   }}
                   placeholder="أدخل كلمة المرور"
-                  className="w-full pr-4 pl-12 py-3 rounded-xl border-2 border-[#d4d1b8] bg-[#f5f0e1] font-[Amiri] text-[#3a3a32] placeholder:text-[#6b6b5e] focus:outline-none focus:border-[#87b07a] transition-colors text-base"
+                  className="w-full pr-4 pl-12 py-3 rounded-xl border-2 border-[#d4d1b8] bg-[#f5f0e1] font-[Amiri] text-[#3a3a32] placeholder:text-[#6b6b5e] focus:outline-none focus:border-[#87b0b6] transition-colors text-base"
                   autoFocus
                   dir="ltr"
                 />
@@ -119,7 +119,7 @@ export default function AdminLogin({ onSuccess }: Props) {
             <button
               type="submit"
               disabled={loading || !password}
-              className="w-full py-3 rounded-xl bg-[#87b07a] text-white font-[Amiri] font-medium text-base hover:bg-[#6a9166] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="w-full py-3 rounded-xl bg-[#87b0b6] text-white font-[Amiri] font-medium text-base hover:bg-[#6a9199] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               {loading ? (
                 <span className="inline-flex items-center gap-2">

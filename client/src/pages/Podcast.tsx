@@ -20,7 +20,7 @@ export default function PodcastPage() {
       <main className="flex-1">
         <section
           className="relative py-32 md:py-48 overflow-hidden flex items-center justify-center"
-          style={{ backgroundColor: "#87b07a", minHeight: "80vh" }}
+          style={{ backgroundColor: "#87b0b6", minHeight: "80vh" }}
         >
           {/* Decorative rosette pattern overlay */}
           <div
@@ -31,7 +31,7 @@ export default function PodcastPage() {
           <div className="container relative z-10">
             {/* Section Header */}
             <div className="text-center mb-10">
-              <p className="font-[Amiri] text-4xl md:text-6xl font-bold text-[#3d5a45] mb-6">
+              <p className="font-[Amiri] text-4xl md:text-6xl font-bold text-[#455a5d] mb-6">
                 البودكاست
               </p>
 
@@ -57,7 +57,7 @@ export default function PodcastPage() {
               {/* Back to home */}
               <button
                 onClick={() => navigate("/")}
-                className="mt-12 inline-flex items-center gap-2 border-2 border-[#3d5a45] text-[#3d5a45] font-bold px-6 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-base hover:bg-[#3d5a45] hover:text-[#f5f0e1]"
+                className="mt-12 inline-flex items-center gap-2 border-2 border-[#455a5d] text-[#455a5d] font-bold px-6 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-base hover:bg-[#455a5d] hover:text-[#f5f0e1]"
               >
                 ← العودة للرئيسية
               </button>

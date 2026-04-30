@@ -45,7 +45,7 @@ export default function HeroSection() {
             style={{ animation: "heroSlideIn 0.8s ease 0.3s both" }}
           >
             <div className="relative">
-              <div className="w-52 h-64 md:w-64 md:h-80 rounded-2xl overflow-hidden border-2 border-[#87b07a]/30 shadow-2xl">
+              <div className="w-52 h-64 md:w-64 md:h-80 rounded-2xl overflow-hidden border-2 border-[#87b0b6]/30 shadow-2xl">
                 <img
                   src={PROFILE_IMG}
                   alt="خليفة جمعة الرميثي"
@@ -55,7 +55,7 @@ export default function HeroSection() {
                 />
               </div>
               {/* Decorative frame */}
-              <div className="absolute -top-3 -right-3 w-52 h-64 md:w-64 md:h-80 rounded-2xl border-2 border-[#87b07a]/20 -z-10" />
+              <div className="absolute -top-3 -right-3 w-52 h-64 md:w-64 md:h-80 rounded-2xl border-2 border-[#87b0b6]/20 -z-10" />
               {/* Red dot removed — fix #7 */}
             </div>
           </div>
@@ -74,7 +74,7 @@ export default function HeroSection() {
 
             {/* Name */}
             <h1
-              className="font-[Amiri] text-2xl md:text-3xl lg:text-4xl font-bold text-[#3d5a45] leading-tight mb-4"
+              className="font-[Amiri] text-2xl md:text-3xl lg:text-4xl font-bold text-[#455a5d] leading-tight mb-4"
               style={{ animation: "heroFadeUp 0.7s ease 0.2s both" }}
             >
               خليفة جمعة الرميثي
@@ -85,13 +85,13 @@ export default function HeroSection() {
               className="mb-6 inline-block"
               style={{ animation: "heroFadeUp 0.6s ease 0.35s both" }}
             >
-              <div className="relative inline-block border-2 border-[#87b07a]/40 px-6 py-3 md:px-8 md:py-4">
+              <div className="relative inline-block border-2 border-[#87b0b6]/40 px-6 py-3 md:px-8 md:py-4">
                 {/* Corner accents */}
                 <span className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-[#8b2e3b]" />
                 <span className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-[#8b2e3b]" />
                 <span className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-[#8b2e3b]" />
                 <span className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-[#8b2e3b]" />
-                <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#87b07a] leading-tight">
+                <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#87b0b6] leading-tight">
                   الواقع ليس كما تقرآه
                 </p>
               </div>
@@ -100,7 +100,7 @@ export default function HeroSection() {
 
             {/* Tagline */}
             <p
-              className="font-[Amiri] text-base md:text-lg text-[#4a6b50] max-w-lg mb-8 leading-relaxed"
+              className="font-[Amiri] text-base md:text-lg text-[#4a7275] max-w-lg mb-8 leading-relaxed"
               style={{ animation: "heroFadeUp 0.6s ease 0.45s both" }}
             >
               إعلامي و كاتب في الصحف و المجلات الخليجية و العربية. يكتب في السياسة والاقتصاد والشؤون الاجتماعية بأسلوب تحليلي ساخر.
@@ -117,7 +117,7 @@ export default function HeroSection() {
                   e.preventDefault();
                   document.querySelector("#articles")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="border-2 border-[#87b07a] bg-transparent hover:bg-[#87b07a]/10 text-[#3d5a45] flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
+                className="border-2 border-[#87b0b6] bg-transparent hover:bg-[#87b0b6]/10 text-[#455a5d] flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
               >
                 اقرأ المقالات
               </a>
@@ -125,7 +125,7 @@ export default function HeroSection() {
                 href="https://instagram.com/kjalromaithi"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border-2 border-[#87b07a] bg-transparent hover:bg-[#87b07a]/10 text-[#3d5a45] flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
+                className="border-2 border-[#87b0b6] bg-transparent hover:bg-[#87b0b6]/10 text-[#455a5d] flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
               >
                 <Instagram size={18} />
                 <span>تابعني على انستغرام</span>

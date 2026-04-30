@@ -5,7 +5,7 @@
  * Fixes applied:
  * - Flower motif enlarged to ~80px (#13)
  * - All elements use clean solid styles, no dashed borders (#1)
- * - Text colors updated for WCAG 4.5:1 contrast ratio on #3d5a45 bg
+ * - Text colors updated for WCAG 4.5:1 contrast ratio on #455a5d bg
  */
 import { Instagram, MessageCircle, ChevronUp } from "lucide-react";
 
@@ -15,9 +15,9 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#3d5a45] text-[#f5f0e1]">
+    <footer className="bg-[#455a5d] text-[#f5f0e1]">
       {/* Top divider */}
-      <div className="h-1 bg-gradient-to-l from-[#87b07a] via-[#8b2e3b] to-[#87b07a]" />
+      <div className="h-1 bg-gradient-to-l from-[#87b0b6] via-[#8b2e3b] to-[#87b0b6]" />
 
       <div className="container py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">

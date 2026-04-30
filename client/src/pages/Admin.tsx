@@ -19,7 +19,7 @@ export default function Admin() {
 
   if (checking) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#87b07a]">
+      <div className="min-h-screen flex flex-col bg-[#87b0b6]">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
           <div className="w-8 h-8 border-3 border-[#f5f0e1]/30 border-t-[#f5f0e1] rounded-full animate-spin" />

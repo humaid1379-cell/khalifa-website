@@ -55,7 +55,7 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#3d5a45] backdrop-blur-md shadow-lg"
+          ? "bg-[#455a5d] backdrop-blur-md shadow-lg"
           : "bg-transparent"
       }`}
     >
@@ -81,7 +81,7 @@ export default function Navbar() {
               className={`font-[Amiri] text-sm transition-colors relative group ${
                 scrolled
                   ? "text-[#f5f0e1]/90 hover:text-[#f5f0e1]"
-                  : "text-[#3d5a45]/80 hover:text-[#3d5a45]"
+                  : "text-[#455a5d]/80 hover:text-[#455a5d]"
               }`}
             >
               {link.label}
@@ -94,7 +94,7 @@ export default function Navbar() {
         <div className="md:hidden flex items-center justify-between w-full">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`p-2 transition-colors ${scrolled ? "text-[#f5f0e1]" : "text-[#3d5a45]"}`}
+            className={`p-2 transition-colors ${scrolled ? "text-[#f5f0e1]" : "text-[#455a5d]"}`}
             aria-label="القائمة"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -107,7 +107,7 @@ export default function Navbar() {
 
       {/* Mobile Menu — full height with scroll so nothing is cut off */}
       <div
-        className={`md:hidden transition-all duration-300 bg-[#3d5a45] border-t border-[#f5f0e1]/20 ${
+        className={`md:hidden transition-all duration-300 bg-[#455a5d] border-t border-[#f5f0e1]/20 ${
           isOpen ? "block" : "hidden"
         }`}
         style={{ maxHeight: "calc(100vh - 4rem)", overflowY: "auto" }}

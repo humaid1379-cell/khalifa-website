@@ -30,17 +30,17 @@ export default function ContactSection() {
       <div className="container">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-14">
-          <h2 className="font-[Amiri] text-5xl md:text-7xl font-bold text-[#3d5a45] mb-4">
+          <h2 className="font-[Amiri] text-5xl md:text-7xl font-bold text-[#455a5d] mb-4">
             تواصل معي
           </h2>
           {/* Double light blue line divider */}
           <div className="flex justify-center mb-6">
             <div className="relative h-[6px] w-48">
-              <div className="absolute left-0 right-0 top-0 h-[2px]" style={{ backgroundColor: '#87b07a' }} />
-              <div className="absolute left-0 right-0 bottom-0 h-[2px]" style={{ backgroundColor: '#87b07a' }} />
+              <div className="absolute left-0 right-0 top-0 h-[2px]" style={{ backgroundColor: '#87b0b6' }} />
+              <div className="absolute left-0 right-0 bottom-0 h-[2px]" style={{ backgroundColor: '#87b0b6' }} />
             </div>
           </div>
-          <p className="font-[Amiri] text-[#4a6b50] max-w-2xl mx-auto leading-relaxed">
+          <p className="font-[Amiri] text-[#4a7275] max-w-2xl mx-auto leading-relaxed">
             يسعدني التواصل معكم عبر أي من القنوات التالية
           </p>
         </AnimatedSection>
@@ -61,12 +61,12 @@ export default function ContactSection() {
                 </div>
 
                 {/* Label */}
-                <h3 className="font-[Amiri] text-lg font-bold text-[#3d5a45] mb-2">
+                <h3 className="font-[Amiri] text-lg font-bold text-[#455a5d] mb-2">
                   {method.label}
                 </h3>
 
                 {/* Value */}
-                <p className="font-[Poppins] text-sm text-[#4a6b50]" dir="ltr">
+                <p className="font-[Poppins] text-sm text-[#4a7275]" dir="ltr">
                   {method.value}
                 </p>
               </a>
@@ -76,7 +76,7 @@ export default function ContactSection() {
 
         {/* WhatsApp CTA */}
         <AnimatedSection delay={300} className="text-center mt-12">
-          <p className="font-[Amiri] text-[#4a6b50] text-sm mb-4">
+          <p className="font-[Amiri] text-[#4a7275] text-sm mb-4">
             للاشتراك في المقال الأسبوعي عبر واتساب
           </p>
           <a

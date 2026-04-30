@@ -126,9 +126,9 @@ export default function Archive() {
       <div className="absolute inset-0 bg-[#f5f0e1]/85 pointer-events-none" />
 
       {/* Page Header — teal */}
-      <div className="relative z-10 bg-[#87b07a] text-white py-14 md:py-20">
+      <div className="relative z-10 bg-[#87b0b6] text-white py-14 md:py-20">
         <div className="container">
-          <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4 text-[#3d5a45] text-center mt-4 md:mt-6">
+          <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4 text-[#455a5d] text-center mt-4 md:mt-6">
             أرشيف المقالات
           </h1>
           {/* Double white line divider */}
@@ -153,7 +153,7 @@ export default function Archive() {
             <div className="flex-1 relative">
               <Search
                 size={18}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#87b07a]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#87b0b6]"
               />
               <input
                 type="text"
@@ -163,7 +163,7 @@ export default function Archive() {
                   setSearchQuery(e.target.value);
                   resetPage();
                 }}
-                className="w-full pr-10 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f5f0e1] font-[Amiri] text-sm text-[#3d5a45] placeholder:text-[#4a6b50] focus:outline-none focus:border-[#87b07a] focus:ring-1 focus:ring-[#87b07a] transition-colors"
+                className="w-full pr-10 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f5f0e1] font-[Amiri] text-sm text-[#455a5d] placeholder:text-[#4a7275] focus:outline-none focus:border-[#87b0b6] focus:ring-1 focus:ring-[#87b0b6] transition-colors"
               />
             </div>
 
@@ -171,7 +171,7 @@ export default function Archive() {
             <div className="relative min-w-[160px]">
               <Tag
                 size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#87b07a] pointer-events-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#87b0b6] pointer-events-none"
               />
               <select
                 value={selectedCategory}
@@ -179,7 +179,7 @@ export default function Archive() {
                   setSelectedCategory(e.target.value);
                   resetPage();
                 }}
-                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f5f0e1] font-[Amiri] text-sm text-[#3d5a45] focus:outline-none focus:border-[#87b07a] appearance-none cursor-pointer"
+                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f5f0e1] font-[Amiri] text-sm text-[#455a5d] focus:outline-none focus:border-[#87b0b6] appearance-none cursor-pointer"
               >
                 <option value="الكل">كل التصنيفات</option>
                 {categories.map((cat) => (
@@ -194,7 +194,7 @@ export default function Archive() {
             <div className="relative min-w-[140px]">
               <Calendar
                 size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#87b07a] pointer-events-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#87b0b6] pointer-events-none"
               />
               <select
                 value={selectedYear}
@@ -202,7 +202,7 @@ export default function Archive() {
                   setSelectedYear(e.target.value);
                   resetPage();
                 }}
-                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f5f0e1] font-[Amiri] text-sm text-[#3d5a45] focus:outline-none focus:border-[#87b07a] appearance-none cursor-pointer"
+                className="w-full pr-9 pl-4 py-2.5 rounded-lg border border-[#d4d1b8] bg-[#f5f0e1] font-[Amiri] text-sm text-[#455a5d] focus:outline-none focus:border-[#87b0b6] appearance-none cursor-pointer"
               >
                 <option value="الكل">كل السنوات</option>
                 {years.map((year) => (
@@ -215,7 +215,7 @@ export default function Archive() {
           </div>
 
           {/* Results count */}
-          <div className="mt-3 font-[Amiri] text-xs text-[#4a6b50]">
+          <div className="mt-3 font-[Amiri] text-xs text-[#4a7275]">
             {loading
               ? "جاري التحميل..."
               : `${filteredArticles.length} مقال`}
@@ -225,8 +225,8 @@ export default function Archive() {
         {/* Loading */}
         {loading && (
           <div className="flex items-center justify-center py-20">
-            <Loader2 size={28} className="animate-spin text-[#87b07a]" />
-            <span className="mr-3 font-[Amiri] text-[#4a6b50]">
+            <Loader2 size={28} className="animate-spin text-[#87b0b6]" />
+            <span className="mr-3 font-[Amiri] text-[#4a7275]">
               جاري تحميل المقالات...
             </span>
           </div>
@@ -241,25 +241,25 @@ export default function Archive() {
                 onClick={() => setSelectedArticle(article)}
                 className="w-full text-right bg-[#faf8f2] rounded-xl overflow-hidden shadow-sm border border-[#d4d1b8] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
               >
-                <div className="h-1 bg-[#87b07a] group-hover:bg-[#6a9166] transition-colors" />
+                <div className="h-1 bg-[#87b0b6] group-hover:bg-[#6a9199] transition-colors" />
                 <div className="p-5 md:p-6">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="font-[Amiri] text-xs bg-[#87b07a]/15 text-[#6a9166] px-2.5 py-1 rounded-full">
+                    <span className="font-[Amiri] text-xs bg-[#87b0b6]/15 text-[#6a9199] px-2.5 py-1 rounded-full">
                       {article.category}
                     </span>
-                    <span className="font-[Amiri] text-xs text-[#4a6b50]">
+                    <span className="font-[Amiri] text-xs text-[#4a7275]">
                       {formatDate(article.date)}
                     </span>
                   </div>
-                  <h3 className="font-[Amiri] text-lg font-bold text-[#3d5a45] mb-3 leading-relaxed group-hover:text-[#87b07a] transition-colors line-clamp-2">
+                  <h3 className="font-[Amiri] text-lg font-bold text-[#455a5d] mb-3 leading-relaxed group-hover:text-[#87b0b6] transition-colors line-clamp-2">
                     {article.title}
                   </h3>
                   {article.newspaper && (
-                    <p className="font-[Amiri] text-xs text-[#4a6b50] mb-2">
+                    <p className="font-[Amiri] text-xs text-[#4a7275] mb-2">
                       {article.newspaper}
                     </p>
                   )}
-                  <p className="font-[Amiri] text-sm text-[#4a6b50] leading-relaxed line-clamp-3">
+                  <p className="font-[Amiri] text-sm text-[#4a7275] leading-relaxed line-clamp-3">
                     {article.excerpt}
                   </p>
                   <div className="mt-4 font-[Amiri] text-sm text-[#8b2e3b] group-hover:text-[#731f2c] flex items-center gap-1">
@@ -274,7 +274,7 @@ export default function Archive() {
 
         {!loading && paginatedArticles.length === 0 && (
           <div className="text-center py-20">
-            <p className="font-[Amiri] text-[#4a6b50] text-lg">
+            <p className="font-[Amiri] text-[#4a7275] text-lg">
               {allArticles.length === 0
                 ? "لا توجد مقالات في الأرشيف حتى الآن"
                 : "لا توجد مقالات مطابقة لبحثك"}
@@ -288,7 +288,7 @@ export default function Archive() {
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="w-10 h-10 rounded-lg border border-[#d4d1b8] bg-[#faf8f2] flex items-center justify-center text-[#87b07a] hover:bg-[#87b07a]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="w-10 h-10 rounded-lg border border-[#d4d1b8] bg-[#faf8f2] flex items-center justify-center text-[#87b0b6] hover:bg-[#87b0b6]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRight size={18} />
             </button>
@@ -299,8 +299,8 @@ export default function Archive() {
                 onClick={() => setCurrentPage(page)}
                 className={`w-10 h-10 rounded-lg font-[Amiri] text-sm transition-colors ${
                   currentPage === page
-                    ? "bg-[#87b07a] text-white shadow-md"
-                    : "border border-[#d4d1b8] bg-[#faf8f2] text-[#87b07a] hover:bg-[#87b07a]/10"
+                    ? "bg-[#87b0b6] text-white shadow-md"
+                    : "border border-[#d4d1b8] bg-[#faf8f2] text-[#87b0b6] hover:bg-[#87b0b6]/10"
                 }`}
               >
                 {page}
@@ -310,7 +310,7 @@ export default function Archive() {
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="w-10 h-10 rounded-lg border border-[#d4d1b8] bg-[#faf8f2] flex items-center justify-center text-[#87b07a] hover:bg-[#87b07a]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="w-10 h-10 rounded-lg border border-[#d4d1b8] bg-[#faf8f2] flex items-center justify-center text-[#87b0b6] hover:bg-[#87b0b6]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft size={18} />
             </button>
@@ -320,7 +320,7 @@ export default function Archive() {
         {/* Back to home button — below content */}
         <div className="flex justify-center mt-12 mb-4">
           <Link href="/">
-            <span className="inline-flex items-center gap-1.5 border-2 border-[#87b07a] text-[#3d5a45] font-bold px-6 py-3 rounded-lg font-[Amiri] text-sm cursor-pointer transition-all hover:bg-[#87b07a] hover:text-white">
+            <span className="inline-flex items-center gap-1.5 border-2 border-[#87b0b6] text-[#455a5d] font-bold px-6 py-3 rounded-lg font-[Amiri] text-sm cursor-pointer transition-all hover:bg-[#87b0b6] hover:text-white">
               <ArrowRight size={16} />
               <span>العودة إلى الرئيسية</span>
             </span>

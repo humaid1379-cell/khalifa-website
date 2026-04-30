@@ -10,12 +10,12 @@ export default function NotFound() {
       <Navbar />
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center px-6">
-          <h1 className="font-[Amiri] text-8xl font-bold text-[#87b07a] mb-4">404</h1>
+          <h1 className="font-[Amiri] text-8xl font-bold text-[#87b0b6] mb-4">404</h1>
           <div className="divider-double mx-auto mb-6" />
-          <h2 className="font-[Amiri] text-2xl font-bold text-[#3d5a45] mb-4">
+          <h2 className="font-[Amiri] text-2xl font-bold text-[#455a5d] mb-4">
             الصفحة غير موجودة
           </h2>
-          <p className="font-[Amiri] text-[#4a6b50] mb-8 leading-relaxed max-w-md mx-auto">
+          <p className="font-[Amiri] text-[#4a7275] mb-8 leading-relaxed max-w-md mx-auto">
             عذراً، الصفحة التي تبحث عنها غير موجودة. ربما تم نقلها أو حذفها.
           </p>
           <button

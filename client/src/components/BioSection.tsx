@@ -28,17 +28,17 @@ export default function BioSection() {
       <div className="container">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-10 md:mb-14">
-          <h2 className="font-[Amiri] text-5xl md:text-7xl font-bold text-[#3d5a45] mb-4">
+          <h2 className="font-[Amiri] text-5xl md:text-7xl font-bold text-[#455a5d] mb-4">
             السيرة الذاتية
           </h2>
           {/* Double light blue line divider */}
           <div className="flex justify-center mb-6">
             <div className="relative h-[6px] w-48">
-              <div className="absolute left-0 right-0 top-0 h-[2px]" style={{ backgroundColor: '#87b07a' }} />
-              <div className="absolute left-0 right-0 bottom-0 h-[2px]" style={{ backgroundColor: '#87b07a' }} />
+              <div className="absolute left-0 right-0 top-0 h-[2px]" style={{ backgroundColor: '#87b0b6' }} />
+              <div className="absolute left-0 right-0 bottom-0 h-[2px]" style={{ backgroundColor: '#87b0b6' }} />
             </div>
           </div>
-          <p className="font-[Amiri] text-[#4a6b50] max-w-2xl mx-auto leading-relaxed">
+          <p className="font-[Amiri] text-[#4a7275] max-w-2xl mx-auto leading-relaxed">
             مسيرة مهنية متميزة تجمع بين التعليم العالمي والخبرة المؤسسية والشغف الإعلامي
           </p>
         </AnimatedSection>
@@ -62,10 +62,10 @@ export default function BioSection() {
                     <span className="inline-block font-[Amiri] text-xs text-[#8b2e3b] bg-[#8b2e3b]/10 px-3 py-1 rounded-full mb-2">
                       {item.year}
                     </span>
-                    <h3 className="font-[Amiri] text-lg md:text-xl font-bold text-[#3d5a45] mb-2 leading-snug">
+                    <h3 className="font-[Amiri] text-lg md:text-xl font-bold text-[#455a5d] mb-2 leading-snug">
                       {item.title}
                     </h3>
-                    <p className="font-[Amiri] text-[#4a6b50] leading-relaxed text-sm">
+                    <p className="font-[Amiri] text-[#4a7275] leading-relaxed text-sm">
                       {item.description}
                     </p>
                   </div>
@@ -77,10 +77,10 @@ export default function BioSection() {
 
         {/* Bio Paragraph */}
         <AnimatedSection delay={400} className="mt-10 md:mt-14 bg-[#faf8f2] rounded-xl p-6 md:p-8 border border-[#d4d1b8] max-w-2xl">
-          <p className="font-[Amiri] text-[#4a6b50] leading-relaxed text-base">
+          <p className="font-[Amiri] text-[#4a7275] leading-relaxed text-base">
             تخرج من جامعة Hope في الولايات المتحدة الامريكية بتخصص ادارة دولية . وحاصل على ماجستير تنفيذي من جامعة هارفارد في القيادة والتطوير . ويعمل رئيس تنفيذي في إحدى المؤسسات الاستثمارية الإماراتية.
           </p>
-          <p className="font-[Amiri] text-[#4a6b50] leading-relaxed text-base mt-4">
+          <p className="font-[Amiri] text-[#4a7275] leading-relaxed text-base mt-4">
             يجمع بين الخبرة المؤسسية والادارة الدولية والاهتمام الإعلامي. يكتب بانتظام في صحف إماراتية وخليجية وعربية، مقالاته متنوعة تغطي السياسة والاقتصاد والرياضة والشؤون الاجتماعية. عُرف بأسلوبه التحليلي الساخر، وقدّم مساهمات لافتة في تعزيز الحوار العام حول قضايا منوعة في الاقتصاد والتنمية الاجتماعية والرياضة في المنطقة.
           </p>
         </AnimatedSection>
