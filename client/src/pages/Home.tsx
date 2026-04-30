@@ -1,10 +1,17 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
-import BioSection from "@/components/BioSection";
-import ArticlesSection from "@/components/ArticlesSection";
-import PodcastSection from "@/components/PodcastSection";
-import ContactSection from "@/components/ContactSection";
-import Footer from "@/components/Footer";
+import { lazy, Suspense } from "react";
+
+/* Lazy load below-the-fold sections — only HeroSection + Navbar are critical */
+const BioSection = lazy(() => import("@/components/BioSection"));
+const ArticlesSection = lazy(() => import("@/components/ArticlesSection"));
+const PodcastSection = lazy(() => import("@/components/PodcastSection"));
+const ContactSection = lazy(() => import("@/components/ContactSection"));
+const Footer = lazy(() => import("@/components/Footer"));
+
+function SectionFallback() {
+  return <div className="min-h-[200px]" />;
+}
 
 export default function Home() {
   return (
@@ -12,12 +19,22 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <HeroSection />
-        <BioSection />
-        <ArticlesSection />
-        <PodcastSection />
-        <ContactSection />
+        <Suspense fallback={<SectionFallback />}>
+          <BioSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <ArticlesSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <PodcastSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <ContactSection />
+        </Suspense>
       </main>
-      <Footer />
+      <Suspense fallback={<SectionFallback />}>
+        <Footer />
+      </Suspense>
     </div>
   );
 }

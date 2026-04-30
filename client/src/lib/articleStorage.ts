@@ -97,24 +97,38 @@ const CACHE_TTL = 60_000; // 60 seconds
 
 // ─── Article CRUD (API-based) ────────────────────────────────────────────────
 
-/** Fetch all articles from the API */
+/** Fetch all articles from the API with timeout */
 export async function fetchArticles(): Promise<StoredArticle[]> {
   try {
     // Return cached data if still fresh
     if (articlesCache && Date.now() - articlesCache.timestamp < CACHE_TTL) {
       return articlesCache.data;
     }
-    const data = await apiRequest("/api/articles");
-    if (data.success && Array.isArray(data.articles)) {
-      const articles = data.articles.map((a: any) => ({
-        ...a,
-        newspaper: a.newspaper || "",
-        isHardcoded: false,
-      }));
-      articlesCache = { data: articles, timestamp: Date.now() };
-      return articles;
+    // Use AbortController to timeout after 3s — prevents long waits on 500 errors
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
+    try {
+      const token = getAuthToken();
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+      const res = await fetch("/api/articles", { headers, signal: controller.signal });
+      clearTimeout(timeout);
+      if (!res.ok) return [];
+      const data = await res.json();
+      if (data.success && Array.isArray(data.articles)) {
+        const articles = data.articles.map((a: any) => ({
+          ...a,
+          newspaper: a.newspaper || "",
+          isHardcoded: false,
+        }));
+        articlesCache = { data: articles, timestamp: Date.now() };
+        return articles;
+      }
+      return [];
+    } catch {
+      clearTimeout(timeout);
+      return [];
     }
-    return [];
   } catch {
     return [];
   }

@@ -80,6 +80,8 @@ export default function Footer() {
             src="https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/flower-motif_8ce1a1cf.jpeg"
             alt=""
             className="w-20 h-20 md:w-24 md:h-24 object-contain invert"
+            loading="lazy"
+            decoding="async"
             aria-hidden="true"
           />
         </div>

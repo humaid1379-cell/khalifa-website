@@ -150,7 +150,14 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusDebugCollector()];
+// Only include jsxLocPlugin in dev mode — it adds ~15KB of data-loc attributes to production
+const isDev = process.env.NODE_ENV !== 'production';
+const plugins = [
+  react(),
+  tailwindcss(),
+  ...(isDev ? [jsxLocPlugin()] : []),
+  vitePluginManusDebugCollector(),
+];
 
 export default defineConfig({
   plugins,
@@ -166,14 +173,14 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    cssMinify: 'lightningcss',
+    minify: 'esbuild',
+    target: 'es2020',
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/scheduler')) {
             return 'react-vendor';
-          }
-          if (id.includes('node_modules/framer-motion')) {
-            return 'motion';
           }
           if (id.includes('node_modules/lucide-react')) {
             return 'icons';
@@ -181,7 +188,7 @@ export default defineConfig({
           if (id.includes('node_modules/@radix-ui')) {
             return 'radix-ui';
           }
-          if (id.includes('node_modules/wouter') || id.includes('node_modules/clsx') || id.includes('node_modules/class-variance-authority') || id.includes('node_modules/tailwind-merge')) {
+          if (id.includes('node_modules/wouter') || id.includes('node_modules/clsx') || id.includes('node_modules/class-variance-authority') || id.includes('node_modules/tailwind-merge') || id.includes('node_modules/sonner')) {
             return 'utils';
           }
         },
