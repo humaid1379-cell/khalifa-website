@@ -127,7 +127,7 @@ body {
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: #f5f0e1; }
 ::-webkit-scrollbar-thumb { background: #87b0b6; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #6a9199; }
+::-webkit-scrollbar-thumb:hover { background: #87b0b6; }
 
 /* ─── Selection ──────────────────────────────────────────────────── */
 ::selection {

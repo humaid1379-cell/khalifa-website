@@ -26,7 +26,7 @@ export default function Footer() {
             <h3 className="font-[Amiri] text-xl font-bold text-[#f5f0e1] mb-1">
               خليفة جمعة الرميثي
             </h3>
-            <p className="font-[Amiri] text-sm text-[#c0d2c3]">
+            <p className="font-[Amiri] text-sm text-[#87b0b6]">
               كاتب وصحفي إماراتي
             </p>
           </div>
@@ -44,7 +44,7 @@ export default function Footer() {
                 onClick={() =>
                   document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="font-[Amiri] text-sm text-[#c0d2c3] hover:text-[#f5f0e1] transition-colors"
+                className="font-[Amiri] text-sm text-[#87b0b6] hover:text-[#f5f0e1] transition-colors"
               >
                 {link.label}
               </button>
@@ -88,14 +88,14 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="pt-6 border-t border-[#f5f0e1]/15 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="font-[Poppins] text-xs text-[#c0d2c3]">
+          <p className="font-[Poppins] text-xs text-[#87b0b6]">
             &copy; {new Date().getFullYear()} خليفة جمعة الرميثي. جميع الحقوق محفوظة.
           </p>
 
           {/* Back to top — clean text button */}
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-1 font-[Amiri] text-xs text-[#c0d2c3] hover:text-[#f5f0e1] transition-colors"
+            className="flex items-center gap-1 font-[Amiri] text-xs text-[#87b0b6] hover:text-[#f5f0e1] transition-colors"
           >
             <ChevronUp size={14} />
             <span>العودة للأعلى</span>

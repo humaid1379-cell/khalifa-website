@@ -104,7 +104,7 @@ export default function ArticlesSection() {
             أحدث المقالات
           </h2>
           <div className="divider-double mx-auto mb-6" />
-          <p className="font-[Amiri] text-[#4a7275] max-w-2xl mx-auto leading-relaxed">
+          <p className="font-[Amiri] text-[#455a5d] max-w-2xl mx-auto leading-relaxed">
             آخر ما نُشر من مقالات وآراء
           </p>
         </AnimatedSection>
@@ -113,19 +113,19 @@ export default function ArticlesSection() {
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-[#faf8f2] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15">
+              <div key={i} className="bg-[#f5f0e1] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15">
                 <div className="h-1 bg-[#87b0b6]/30" />
                 <div className="p-5 md:p-6 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="h-5 w-16 bg-[#87b0b6]/15 rounded-full animate-pulse" />
-                    <div className="h-4 w-24 bg-[#e8e4cf] rounded animate-pulse" />
+                    <div className="h-4 w-24 bg-[#87b0b6] rounded animate-pulse" />
                   </div>
-                  <div className="h-6 w-full bg-[#e8e4cf] rounded animate-pulse" />
-                  <div className="h-5 w-3/4 bg-[#e8e4cf] rounded animate-pulse" />
+                  <div className="h-6 w-full bg-[#87b0b6] rounded animate-pulse" />
+                  <div className="h-5 w-3/4 bg-[#87b0b6] rounded animate-pulse" />
                   <div className="space-y-2 pt-1">
-                    <div className="h-4 w-full bg-[#e8e4cf]/60 rounded animate-pulse" />
-                    <div className="h-4 w-full bg-[#e8e4cf]/60 rounded animate-pulse" />
-                    <div className="h-4 w-2/3 bg-[#e8e4cf]/60 rounded animate-pulse" />
+                    <div className="h-4 w-full bg-[#87b0b6]/60 rounded animate-pulse" />
+                    <div className="h-4 w-full bg-[#87b0b6]/60 rounded animate-pulse" />
+                    <div className="h-4 w-2/3 bg-[#87b0b6]/60 rounded animate-pulse" />
                   </div>
                   <div className="h-4 w-20 bg-[#87b0b6]/15 rounded animate-pulse mt-2" />
                 </div>
@@ -141,18 +141,18 @@ export default function ArticlesSection() {
               <AnimatedSection key={article.id} delay={i * 60}>
                 <button
                   onClick={() => setSelectedArticle(article)}
-                  className={`${recentArticles.length === 1 ? 'w-full max-w-md' : 'w-full'} text-right bg-[#faf8f2] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group`}
+                  className={`${recentArticles.length === 1 ? 'w-full max-w-md' : 'w-full'} text-right bg-[#f5f0e1] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group`}
                 >
                   {/* Category bar — teal */}
-                  <div className="h-1 bg-[#87b0b6] group-hover:bg-[#6a9199] transition-colors" />
+                  <div className="h-1 bg-[#87b0b6] group-hover:bg-[#87b0b6] transition-colors" />
 
                   <div className="p-5 md:p-6">
                     {/* Category & Date */}
                     <div className="flex items-center justify-between mb-3">
-                      <span className="font-[Amiri] text-xs bg-[#87b0b6]/15 text-[#6a9199] px-2.5 py-1 rounded-full">
+                      <span className="font-[Amiri] text-xs bg-[#87b0b6]/15 text-[#87b0b6] px-2.5 py-1 rounded-full">
                         {article.category}
                       </span>
-                      <span className="font-[Amiri] text-xs text-[#4a7275]">
+                      <span className="font-[Amiri] text-xs text-[#455a5d]">
                         {formatDate(article.date)}
                       </span>
                     </div>
@@ -164,18 +164,18 @@ export default function ArticlesSection() {
 
                     {/* Newspaper name if present */}
                     {article.newspaper && (
-                      <p className="font-[Amiri] text-xs text-[#4a7275] mb-2">
+                      <p className="font-[Amiri] text-xs text-[#455a5d] mb-2">
                         {article.newspaper}
                       </p>
                     )}
 
                     {/* Excerpt */}
-                    <p className="font-[Amiri] text-sm text-[#4a7275] leading-relaxed line-clamp-3">
+                    <p className="font-[Amiri] text-sm text-[#455a5d] leading-relaxed line-clamp-3">
                       {article.excerpt}
                     </p>
 
                     {/* Read more */}
-                    <div className="mt-4 font-[Amiri] text-sm text-[#8b2e3b] group-hover:text-[#731f2c] flex items-center gap-1">
+                    <div className="mt-4 font-[Amiri] text-sm text-[#8b2e3b] group-hover:text-[#8b2e3b] flex items-center gap-1">
                       <span>اقرأ المزيد</span>
                       <ChevronLeft size={14} />
                     </div>
@@ -188,7 +188,7 @@ export default function ArticlesSection() {
 
         {!loading && recentArticles.length === 0 && (
           <div className="text-center py-16">
-            <p className="font-[Amiri] text-[#4a7275] text-lg">
+            <p className="font-[Amiri] text-[#455a5d] text-lg">
               لا توجد مقالات حتى الآن
             </p>
           </div>
@@ -198,7 +198,7 @@ export default function ArticlesSection() {
         {!loading && (
           <AnimatedSection delay={300} className="flex justify-center mt-4">
             <Link href="/archive">
-              <span className="inline-flex items-center gap-2 bg-[#87b0b6] text-white font-[Amiri] text-sm font-medium px-7 py-3 rounded-xl hover:bg-[#6a9199] transition-colors shadow-md cursor-pointer">
+              <span className="inline-flex items-center gap-2 bg-[#87b0b6] text-white font-[Amiri] text-sm font-medium px-7 py-3 rounded-xl hover:bg-[#87b0b6] transition-colors shadow-md cursor-pointer">
                 {hasMore ? (
                   <>
                     <span>عرض جميع المقالات ({allArticles.length})</span>
@@ -269,7 +269,7 @@ export function ArticleModal({
     >
       <div
         ref={innerRef}
-        className="bg-[#faf8f2] rounded-2xl w-full max-w-3xl max-h-[85vh] overflow-hidden shadow-2xl"
+        className="bg-[#f5f0e1] rounded-2xl w-full max-w-3xl max-h-[85vh] overflow-hidden shadow-2xl"
         style={{
           opacity: visible ? 1 : 0,
           transform: visible ? "scale(1) translateY(0)" : "scale(0.95) translateY(20px)",
@@ -288,7 +288,7 @@ export function ArticleModal({
           </button>
 
           <div className="flex items-center gap-3 mb-3 flex-wrap">
-            <span className="font-[Amiri] text-xs bg-[#6a9199] text-white px-3 py-1 rounded-full">
+            <span className="font-[Amiri] text-xs bg-[#87b0b6] text-white px-3 py-1 rounded-full">
               {article.category}
             </span>
             <span className="font-[Amiri] text-xs text-white/70">
@@ -313,7 +313,7 @@ export function ArticleModal({
           </div>
 
           {/* Author attribution */}
-          <div className="mt-8 pt-6 border-t border-[#d4d1b8]">
+          <div className="mt-8 pt-6 border-t border-[#87b0b6]">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-[#87b0b6]/15 flex items-center justify-center">
                 <span className="font-[Amiri] text-[#87b0b6] font-bold text-sm">خ</span>
@@ -322,7 +322,7 @@ export function ArticleModal({
                 <p className="font-[Amiri] text-sm font-semibold text-[#455a5d]">
                   خليفة جمعة الرميثي
                 </p>
-                <p className="font-[Amiri] text-xs text-[#4a7275]">
+                <p className="font-[Amiri] text-xs text-[#455a5d]">
                   كاتب وصحفي
                 </p>
               </div>

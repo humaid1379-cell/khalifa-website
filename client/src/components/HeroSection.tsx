@@ -91,7 +91,7 @@ export default function HeroSection() {
 
             {/* Tagline */}
             <p
-              className="font-[Amiri] text-base md:text-lg text-[#c8dfe2] max-w-lg mb-8 leading-relaxed"
+              className="font-[Amiri] text-base md:text-lg text-[#87b0b6] max-w-lg mb-8 leading-relaxed"
               style={{ animation: "heroFadeUp 0.6s ease 0.45s both" }}
             >
               إعلامي و كاتب في الصحف و المجلات الخليجية و العربية. يكتب في السياسة والاقتصاد والشؤون الاجتماعية بأسلوب تحليلي ساخر.
