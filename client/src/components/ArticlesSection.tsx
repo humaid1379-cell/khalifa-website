@@ -3,9 +3,14 @@
  * Main articles section: shows only the 5 NEWEST articles by date
  * Full archive is at /archive
  * Fetches from Cloudflare D1 API, falls back to one example article
+ *
+ * Fixes applied:
+ * - Article cards use solid borders, not dashed (#1)
+ * - Single-card layout centered (#9)
+ * - Archive link arrow uses ArrowRight for RTL (#10)
  */
 import { useState, useMemo, useEffect, useRef } from "react";
-import { X, ChevronLeft, ArrowLeft } from "lucide-react";
+import { X, ChevronLeft, ArrowRight } from "lucide-react";
 import { fetchAllArticles, type StoredArticle } from "@/lib/articleStorage";
 import AnimatedSection from "./AnimatedSection";
 import { Link } from "wouter";
@@ -64,7 +69,19 @@ export default function ArticlesSection() {
     };
   }, [selectedArticle]);
 
-  const ROSETTE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/rosette-pattern_3324a349.webp";
+  const ROSETTE_SVG = `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2387b0b6' opacity='0.18'%3E%3Crect x='52' y='38' width='16' height='16' rx='2' transform='rotate(45 60 46)'/%3E%3Crect x='52' y='66' width='16' height='16' rx='2' transform='rotate(45 60 74)'/%3E%3Crect x='38' y='52' width='16' height='16' rx='2' transform='rotate(45 46 60)'/%3E%3Crect x='66' y='52' width='16' height='16' rx='2' transform='rotate(45 74 60)'/%3E%3Crect x='40' y='40' width='12' height='12' rx='2' transform='rotate(30 46 46)'/%3E%3Crect x='68' y='40' width='12' height='12' rx='2' transform='rotate(60 74 46)'/%3E%3Crect x='40' y='68' width='12' height='12' rx='2' transform='rotate(60 46 74)'/%3E%3Crect x='68' y='68' width='12' height='12' rx='2' transform='rotate(30 74 74)'/%3E%3C/g%3E%3C/svg%3E")`;
+
+  /* Determine grid classes based on article count for centering (#9) */
+  const getGridClasses = () => {
+    const count = recentArticles.length;
+    if (count === 1) {
+      return "flex justify-center mb-10";
+    }
+    if (count === 2) {
+      return "grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 max-w-3xl mx-auto";
+    }
+    return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10";
+  };
 
   return (
     <section
@@ -72,7 +89,7 @@ export default function ArticlesSection() {
       className="py-20 md:py-28 relative"
       style={{
         backgroundColor: '#f5f0e1',
-        backgroundImage: `url(${ROSETTE_IMG})`,
+        backgroundImage: ROSETTE_SVG,
         backgroundRepeat: 'repeat',
         backgroundSize: '120px 120px',
       }}
@@ -83,16 +100,10 @@ export default function ArticlesSection() {
       <div className="container relative z-10">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-12">
-          <h2 className="font-[Amiri] text-5xl md:text-7xl font-bold text-[#455a5d] mb-4">
+          <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#87b0b6] mb-4">
             أحدث المقالات
           </h2>
-          {/* Double light blue line divider */}
-          <div className="flex justify-center mb-6">
-            <div className="relative h-[6px] w-48">
-              <div className="absolute left-0 right-0 top-0 h-[2px]" style={{ backgroundColor: '#87b0b6' }} />
-              <div className="absolute left-0 right-0 bottom-0 h-[2px]" style={{ backgroundColor: '#87b0b6' }} />
-            </div>
-          </div>
+          <div className="divider-double mx-auto mb-6" />
           <p className="font-[Amiri] text-[#4a7275] max-w-2xl mx-auto leading-relaxed">
             آخر ما نُشر من مقالات وآراء
           </p>
@@ -102,7 +113,7 @@ export default function ArticlesSection() {
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-[#faf8f2] rounded-xl overflow-hidden shadow-sm border border-[#d4d1b8]">
+              <div key={i} className="bg-[#faf8f2] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15">
                 <div className="h-1 bg-[#87b0b6]/30" />
                 <div className="p-5 md:p-6 space-y-3">
                   <div className="flex items-center justify-between">
@@ -123,14 +134,14 @@ export default function ArticlesSection() {
           </div>
         )}
 
-        {/* Articles Grid — 5 newest */}
+        {/* Articles Grid — centered when few articles (#9), solid borders (#1) */}
         {!loading && recentArticles.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+          <div className={getGridClasses()}>
             {recentArticles.map((article, i) => (
               <AnimatedSection key={article.id} delay={i * 60}>
                 <button
                   onClick={() => setSelectedArticle(article)}
-                  className="w-full text-right bg-[#faf8f2] rounded-xl overflow-hidden shadow-sm border border-[#d4d1b8] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                  className={`${recentArticles.length === 1 ? 'w-full max-w-md' : 'w-full'} text-right bg-[#faf8f2] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group`}
                 >
                   {/* Category bar — teal */}
                   <div className="h-1 bg-[#87b0b6] group-hover:bg-[#6a9199] transition-colors" />
@@ -183,7 +194,7 @@ export default function ArticlesSection() {
           </div>
         )}
 
-        {/* Archive link */}
+        {/* Archive link — solid fill button, arrow fixed for RTL */}
         {!loading && (
           <AnimatedSection delay={300} className="flex justify-center mt-4">
             <Link href="/archive">
@@ -191,12 +202,12 @@ export default function ArticlesSection() {
                 {hasMore ? (
                   <>
                     <span>عرض جميع المقالات ({allArticles.length})</span>
-                    <ArrowLeft size={16} />
+                    <ArrowRight size={16} className="rotate-180" />
                   </>
                 ) : (
                   <>
                     <span>أرشيف المقالات</span>
-                    <ArrowLeft size={16} />
+                    <ArrowRight size={16} className="rotate-180" />
                   </>
                 )}
               </span>
