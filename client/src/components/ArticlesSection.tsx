@@ -95,7 +95,7 @@ export default function ArticlesSection() {
       }}
     >
       {/* Overlay for readability */}
-      <div className="absolute inset-0 bg-[#f5f0e1]/88" />
+      <div className="absolute inset-0 bg-[#f5f0e1]/75" />
 
       <div className="container relative z-10">
         {/* Section Header */}

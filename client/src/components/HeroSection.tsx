@@ -16,7 +16,7 @@ const PROFILE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7b
 /* Inline SVG rosette pattern for hero background */
 function RosettePattern() {
   return (
-    <div className="absolute inset-0 opacity-[0.12]" style={{
+    <div className="absolute inset-0 opacity-[0.20]" style={{
       backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2387b0b6'%3E%3Crect x='52' y='38' width='16' height='16' rx='2' transform='rotate(45 60 46)'/%3E%3Crect x='52' y='66' width='16' height='16' rx='2' transform='rotate(45 60 74)'/%3E%3Crect x='38' y='52' width='16' height='16' rx='2' transform='rotate(45 46 60)'/%3E%3Crect x='66' y='52' width='16' height='16' rx='2' transform='rotate(45 74 60)'/%3E%3Crect x='40' y='40' width='12' height='12' rx='2' transform='rotate(30 46 46)'/%3E%3Crect x='68' y='40' width='12' height='12' rx='2' transform='rotate(60 74 46)'/%3E%3Crect x='40' y='68' width='12' height='12' rx='2' transform='rotate(60 46 74)'/%3E%3Crect x='68' y='68' width='12' height='12' rx='2' transform='rotate(30 74 74)'/%3E%3C/g%3E%3C/svg%3E")`,
       backgroundRepeat: 'repeat',
     }} />
@@ -33,8 +33,8 @@ export default function HeroSection() {
       {/* Decorative rosette pattern background */}
       <RosettePattern />
 
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-l from-[#f5f0e1] via-[#f5f0e1]/95 to-[#e8e5c8]/90" />
+      {/* Subtle gradient overlay — kept very light so pattern shows through */}
+      <div className="absolute inset-0 bg-gradient-to-l from-[#f5f0e1]/60 via-transparent to-transparent" />
 
       {/* Content */}
       <div className="container relative z-10 py-24 md:py-0">
