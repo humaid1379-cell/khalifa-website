@@ -22,12 +22,12 @@ class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", padding: "2rem", background: "#f5f0e1" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", padding: "2rem", background: "#f1efd6" }}>
           <div style={{ textAlign: "center", maxWidth: "600px" }}>
             <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem", color: "#455a5d", fontFamily: "'Amiri', serif" }}>حدث خطأ غير متوقع</h2>
             <button
               onClick={() => window.location.reload()}
-              style={{ padding: "0.75rem 1.5rem", background: "#8b2e3b", color: "#fff", border: "none", borderRadius: "0.5rem", cursor: "pointer", fontSize: "1rem", fontFamily: "'Amiri', serif" }}
+              style={{ padding: "0.75rem 1.5rem", background: "#bf4240", color: "#fff", border: "none", borderRadius: "0.5rem", cursor: "pointer", fontSize: "1rem", fontFamily: "'Amiri', serif" }}
             >
               إعادة تحميل الصفحة
             </button>

@@ -54,14 +54,14 @@ export default function AdminLogin({ onSuccess }: Props) {
         {/* Back to site link */}
         <a
           href="/"
-          className="inline-flex items-center gap-2 text-[#f5f0e1] hover:text-white font-[Amiri] text-sm mb-6 transition-colors"
+          className="inline-flex items-center gap-2 text-[#f1efd6] hover:text-white font-[Amiri] text-sm mb-6 transition-colors"
         >
           <ArrowRight size={16} />
           <span>العودة إلى الموقع</span>
         </a>
 
         {/* Login Card */}
-        <div className="bg-[#f5f0e1] rounded-2xl shadow-2xl p-8 md:p-10">
+        <div className="bg-[#f1efd6] rounded-2xl shadow-2xl p-8 md:p-10">
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-[#87b0b6]/15 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -94,7 +94,7 @@ export default function AdminLogin({ onSuccess }: Props) {
                     setError("");
                   }}
                   placeholder="أدخل كلمة المرور"
-                  className="w-full pr-4 pl-12 py-3 rounded-xl border-2 border-[#87b0b6] bg-[#f5f0e1] font-[Amiri] text-[#455a5d] placeholder:text-[#455a5d] focus:outline-none focus:border-[#87b0b6] transition-colors text-base"
+                  className="w-full pr-4 pl-12 py-3 rounded-xl border-2 border-[#87b0b6] bg-[#f1efd6] font-[Amiri] text-[#455a5d] placeholder:text-[#455a5d] focus:outline-none focus:border-[#87b0b6] transition-colors text-base"
                   autoFocus
                   dir="ltr"
                 />
@@ -109,8 +109,8 @@ export default function AdminLogin({ onSuccess }: Props) {
 
               {/* Error message */}
               {error && (
-                <p className="mt-2 font-[Amiri] text-sm text-[#8b2e3b] flex items-center gap-1">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#8b2e3b]" />
+                <p className="mt-2 font-[Amiri] text-sm text-[#bf4240] flex items-center gap-1">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#bf4240]" />
                   {error}
                 </p>
               )}
@@ -134,7 +134,7 @@ export default function AdminLogin({ onSuccess }: Props) {
         </div>
 
         {/* Footer */}
-        <p className="text-center mt-6 font-[Amiri] text-xs text-[#f5f0e1]/60">
+        <p className="text-center mt-6 font-[Amiri] text-xs text-[#f1efd6]/60">
           خليفة جمعة الرميثي — لوحة إدارة المقالات
         </p>
       </div>

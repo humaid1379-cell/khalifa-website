@@ -1,7 +1,7 @@
 /*
  * Design: Kharij Al Nass — Warm editorial Arabic-first
  * Contact: Clean section with social links, WhatsApp, Instagram
- * Colors: #f5f0e1 (bg), #87b0b6 (border/accent), #455a5d (text), #8b2e3b (CTA)
+ * Colors: #f1efd6 (bg), #87b0b6 (border/accent), #455a5d (text), #bf4240 (CTA)
  */
 import { Instagram, MessageCircle, Send } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
@@ -23,7 +23,7 @@ const contactMethods = [
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="py-20 md:py-28 bg-[#f5f0e1]">
+    <section id="contact" className="py-20 md:py-28 bg-[#f1efd6]">
       <div className="container">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-14">
@@ -74,7 +74,7 @@ export default function ContactSection() {
             href="https://wa.me/971500000000"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-[#8b2e3b] hover:bg-[#8b2e3b]/85 text-white font-[Amiri] text-sm px-6 py-3 rounded-lg transition-colors shadow-md"
+            className="inline-flex items-center gap-2 bg-[#bf4240] hover:bg-[#bf4240]/85 text-white font-[Amiri] text-sm px-6 py-3 rounded-lg transition-colors shadow-md"
           >
             <Send size={16} />
             <span>اشترك الآن</span>

@@ -69,7 +69,7 @@ export default function ArticlesSection() {
     };
   }, [selectedArticle]);
 
-  const ROSETTE_SVG = `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2387b0b6' opacity='0.18'%3E%3Crect x='52' y='38' width='16' height='16' rx='2' transform='rotate(45 60 46)'/%3E%3Crect x='52' y='66' width='16' height='16' rx='2' transform='rotate(45 60 74)'/%3E%3Crect x='38' y='52' width='16' height='16' rx='2' transform='rotate(45 46 60)'/%3E%3Crect x='66' y='52' width='16' height='16' rx='2' transform='rotate(45 74 60)'/%3E%3Crect x='40' y='40' width='12' height='12' rx='2' transform='rotate(30 46 46)'/%3E%3Crect x='68' y='40' width='12' height='12' rx='2' transform='rotate(60 74 46)'/%3E%3Crect x='40' y='68' width='12' height='12' rx='2' transform='rotate(60 46 74)'/%3E%3Crect x='68' y='68' width='12' height='12' rx='2' transform='rotate(30 74 74)'/%3E%3C/g%3E%3C/svg%3E")`;
+  const PATTERN_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/pattern1_b9a20e8e.png";
 
   /* Determine grid classes based on article count for centering (#9) */
   const getGridClasses = () => {
@@ -88,14 +88,14 @@ export default function ArticlesSection() {
       id="articles"
       className="py-20 md:py-28 relative"
       style={{
-        backgroundColor: '#f5f0e1',
-        backgroundImage: ROSETTE_SVG,
+        backgroundColor: '#f1efd6',
+        backgroundImage: `url("${PATTERN_URL}")`,
         backgroundRepeat: 'repeat',
-        backgroundSize: '120px 120px',
+        backgroundSize: '300px',
       }}
     >
       {/* Overlay for readability */}
-      <div className="absolute inset-0 bg-[#f5f0e1]/75" />
+      <div className="absolute inset-0 bg-[#f1efd6]/75" />
 
       <div className="container relative z-10">
         {/* Section Header */}
@@ -113,7 +113,7 @@ export default function ArticlesSection() {
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-[#f5f0e1] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15">
+              <div key={i} className="bg-[#f1efd6] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15">
                 <div className="h-1 bg-[#87b0b6]/30" />
                 <div className="p-5 md:p-6 space-y-3">
                   <div className="flex items-center justify-between">
@@ -141,7 +141,7 @@ export default function ArticlesSection() {
               <AnimatedSection key={article.id} delay={i * 60}>
                 <button
                   onClick={() => setSelectedArticle(article)}
-                  className={`${recentArticles.length === 1 ? 'w-full max-w-md' : 'w-full'} text-right bg-[#f5f0e1] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group`}
+                  className={`${recentArticles.length === 1 ? 'w-full max-w-md' : 'w-full'} text-right bg-[#f1efd6] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group`}
                 >
                   {/* Category bar — teal */}
                   <div className="h-1 bg-[#87b0b6] group-hover:bg-[#87b0b6] transition-colors" />
@@ -175,7 +175,7 @@ export default function ArticlesSection() {
                     </p>
 
                     {/* Read more */}
-                    <div className="mt-4 font-[Amiri] text-sm text-[#8b2e3b] group-hover:text-[#8b2e3b] flex items-center gap-1">
+                    <div className="mt-4 font-[Amiri] text-sm text-[#bf4240] group-hover:text-[#bf4240] flex items-center gap-1">
                       <span>اقرأ المزيد</span>
                       <ChevronLeft size={14} />
                     </div>
@@ -269,7 +269,7 @@ export function ArticleModal({
     >
       <div
         ref={innerRef}
-        className="bg-[#f5f0e1] rounded-2xl w-full max-w-3xl max-h-[85vh] overflow-hidden shadow-2xl"
+        className="bg-[#f1efd6] rounded-2xl w-full max-w-3xl max-h-[85vh] overflow-hidden shadow-2xl"
         style={{
           opacity: visible ? 1 : 0,
           transform: visible ? "scale(1) translateY(0)" : "scale(0.95) translateY(20px)",

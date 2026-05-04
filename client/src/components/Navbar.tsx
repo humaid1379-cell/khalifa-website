@@ -1,7 +1,8 @@
 /*
- * Design: Kharij Al Nass — Warm editorial Arabic-first
+ * Design: Kharij Al Nass — Warm editorial Arabic-first (Final 2026 branding)
  * Navbar: Sticky top nav with cream/teal branding
- * Logo (IMG_2207) shown in navbar and podcast section
+ * Logo switches color: beige on dark scrolled bg, beige on transparent hero bg
+ * Brand colors: #f1efd6 (beige), #bf4240 (red), #87b0b6 (blue), #455a5d (dark teal)
  */
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
@@ -64,11 +65,11 @@ export default function Navbar() {
         {/* Logo — right side (RTL: visually leading) */}
         <div className="hidden md:flex items-center">
           <button
-            onClick={() => handleClick("/podcast", true)}
+            onClick={() => handleClick("/", false)}
             className="group transition-transform duration-300 hover:scale-105"
             aria-label="خارج النص"
           >
-            <KharijLogo variant="navbar" />
+            <KharijLogo variant="navbar" color="beige" />
           </button>
         </div>
 
@@ -80,12 +81,12 @@ export default function Navbar() {
               onClick={() => handleClick(link.href, link.isRoute)}
               className={`font-[Amiri] text-sm transition-colors relative group ${
                 scrolled
-                  ? "text-[#f5f0e1]/90 hover:text-[#f5f0e1]"
+                  ? "text-[#f1efd6]/90 hover:text-[#f1efd6]"
                   : "text-[#455a5d]/80 hover:text-[#455a5d]"
               }`}
             >
               {link.label}
-              <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-[#8b2e3b] transition-all duration-300 group-hover:w-full" />
+              <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-[#bf4240] transition-all duration-300 group-hover:w-full" />
             </button>
           ))}
         </div>
@@ -99,15 +100,15 @@ export default function Navbar() {
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-          <button onClick={() => handleClick("/podcast", true)} aria-label="خارج النص">
-            <KharijLogo variant="navbar" />
+          <button onClick={() => handleClick("/", false)} aria-label="خارج النص">
+            <KharijLogo variant="navbar" color="beige" />
           </button>
         </div>
       </div>
 
       {/* Mobile Menu — full height with scroll so nothing is cut off */}
       <div
-        className={`md:hidden transition-all duration-300 bg-[#455a5d] border-t border-[#f5f0e1]/20 ${
+        className={`md:hidden transition-all duration-300 bg-[#455a5d] border-t border-[#f1efd6]/20 ${
           isOpen ? "block" : "hidden"
         }`}
         style={{ maxHeight: "calc(100vh - 4rem)", overflowY: "auto" }}
@@ -117,7 +118,7 @@ export default function Navbar() {
             <button
               key={link.href}
               onClick={() => handleClick(link.href, link.isRoute)}
-              className="font-[Amiri] text-lg text-[#f5f0e1]/90 hover:text-[#8b2e3b] text-right py-3 px-2 border-b border-[#f5f0e1]/20 transition-colors w-full"
+              className="font-[Amiri] text-lg text-[#f1efd6]/90 hover:text-[#bf4240] text-right py-3 px-2 border-b border-[#f1efd6]/20 transition-colors w-full"
             >
               {link.label}
             </button>

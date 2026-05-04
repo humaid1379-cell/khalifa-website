@@ -1,7 +1,8 @@
 /*
- * Design: Kharij Al Nass — Warm editorial Arabic-first
+ * Design: Kharij Al Nass — Warm editorial Arabic-first (Final 2026 branding)
  * Hero: Full-width section with Arabic calligraphy background, profile image, name, tagline
  * Dark teal calligraphy background with cream/white text for contrast
+ * Brand colors: #f1efd6 (beige), #bf4240 (red), #87b0b6 (blue), #455a5d (dark teal)
  */
 import { Instagram } from "lucide-react";
 
@@ -58,7 +59,7 @@ export default function HeroSection() {
               className="inline-block mb-4"
               style={{ animation: "heroFadeUp 0.6s ease 0.1s both" }}
             >
-              <span className="font-[Amiri] text-[#f5f0e1] text-base tracking-wider font-bold">
+              <span className="font-[Amiri] text-[#f1efd6] text-base tracking-wider font-bold">
                 كاتب ومحلل
               </span>
             </div>
@@ -78,11 +79,11 @@ export default function HeroSection() {
             >
               <div className="relative inline-block border-2 border-[#87b0b6]/60 px-6 py-3 md:px-8 md:py-4">
                 {/* Corner accents */}
-                <span className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-[#f5f0e1]" />
-                <span className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-[#f5f0e1]" />
-                <span className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-[#f5f0e1]" />
-                <span className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-[#f5f0e1]" />
-                <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#f5f0e1] leading-tight">
+                <span className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-[#f1efd6]" />
+                <span className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-[#f1efd6]" />
+                <span className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-[#f1efd6]" />
+                <span className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-[#f1efd6]" />
+                <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#f1efd6] leading-tight">
                   الواقع ليس كما تقرآه
                 </p>
               </div>
@@ -126,8 +127,8 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Bottom fade to cream */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#f5f0e1] to-transparent" />
+      {/* Bottom fade to beige */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#f1efd6] to-transparent" />
     </section>
   );
 }

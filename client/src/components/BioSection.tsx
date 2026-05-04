@@ -24,7 +24,7 @@ const timeline = [
 
 export default function BioSection() {
   return (
-    <section id="bio" className="py-12 md:py-24 bg-[#f5f0e1]">
+    <section id="bio" className="py-12 md:py-24 bg-[#f1efd6]">
       <div className="container">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-10 md:mb-14">
@@ -45,15 +45,15 @@ export default function BioSection() {
                 <div className="flex gap-4 md:gap-6">
                   {/* Timeline dot and line */}
                   <div className="flex flex-col items-center flex-shrink-0">
-                    <div className="w-3.5 h-3.5 md:w-4 md:h-4 rounded-full bg-[#8b2e3b] shadow-md mt-1" />
+                    <div className="w-3.5 h-3.5 md:w-4 md:h-4 rounded-full bg-[#bf4240] shadow-md mt-1" />
                     {i < timeline.length - 1 && (
-                      <div className="w-0.5 flex-1 min-h-[40px] bg-gradient-to-b from-[#8b2e3b] to-[#8b2e3b]/30 mt-2" />
+                      <div className="w-0.5 flex-1 min-h-[40px] bg-gradient-to-b from-[#bf4240] to-[#bf4240]/30 mt-2" />
                     )}
                   </div>
 
                   {/* Content */}
                   <div className="pb-2 md:pb-4 flex-1 min-w-0">
-                    <span className="inline-block font-[Amiri] text-xs text-[#8b2e3b] bg-[#8b2e3b]/10 px-3 py-1 rounded-full mb-2">
+                    <span className="inline-block font-[Amiri] text-xs text-[#bf4240] bg-[#bf4240]/10 px-3 py-1 rounded-full mb-2">
                       {item.year}
                     </span>
                     <h3 className="font-[Amiri] text-lg md:text-xl font-bold text-[#455a5d] mb-2 leading-snug">
@@ -70,7 +70,7 @@ export default function BioSection() {
         </div>
 
         {/* Bio Paragraph */}
-        <AnimatedSection delay={400} className="mt-10 md:mt-14 bg-[#f5f0e1] rounded-xl p-6 md:p-8 border border-[#87b0b6] max-w-2xl">
+        <AnimatedSection delay={400} className="mt-10 md:mt-14 bg-[#f1efd6] rounded-xl p-6 md:p-8 border border-[#87b0b6] max-w-2xl">
           <p className="font-[Amiri] text-[#455a5d] leading-relaxed text-base">
             تخرج من جامعة Hope في الولايات المتحدة الامريكية بتخصص ادارة دولية . وحاصل على ماجستير تنفيذي من جامعة هارفارد في القيادة والتطوير . ويعمل رئيس تنفيذي في إحدى المؤسسات الاستثمارية الإماراتية.
           </p>
