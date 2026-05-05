@@ -1,7 +1,7 @@
 /*
  * Design: Kharij Al Nass — Warm editorial Arabic-first (Final 2026 branding)
  * Navbar: Sticky top nav with cream/teal branding
- * Logo switches color: beige on dark scrolled bg, beige on transparent hero bg
+ * Logo always beige; dir="ltr" on container ensures menu-left, logo-right visually
  * Brand colors: #f1efd6 (beige), #bf4240 (red), #87b0b6 (blue), #455a5d (dark teal)
  */
 import { useState, useEffect } from "react";
@@ -60,7 +60,8 @@ export default function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <div className="container flex items-center justify-between h-16 md:h-20">
+      {/* dir="ltr" ensures flex order is left-to-right visually, overriding global RTL */}
+      <div className="container flex items-center justify-between h-16 md:h-20" dir="ltr">
 
         {/* Desktop Nav Links — left side */}
         <div className="hidden md:flex items-center gap-8">
@@ -80,18 +81,18 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Logo — right side (RTL: visually leading) */}
+        {/* Logo — right side, always beige */}
         <div className="hidden md:flex items-center">
           <button
             onClick={() => handleClick("/", false)}
             className="group transition-transform duration-300 hover:scale-105"
             aria-label="خارج النص"
           >
-            <KharijLogo variant="navbar" color={scrolled ? "blue" : "beige"} />
+            <KharijLogo variant="navbar" color="beige" />
           </button>
         </div>
 
-        {/* Mobile: logo + hamburger */}
+        {/* Mobile: hamburger on left, logo on right */}
         <div className="md:hidden flex items-center justify-between w-full">
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -101,7 +102,7 @@ export default function Navbar() {
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
           <button onClick={() => handleClick("/", false)} aria-label="خارج النص">
-            <KharijLogo variant="navbar" color={scrolled ? "blue" : "beige"} />
+            <KharijLogo variant="navbar" color="beige" />
           </button>
         </div>
       </div>
