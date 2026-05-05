@@ -55,13 +55,13 @@ export default function HeroSection() {
 
           {/* Text Content */}
           <div className="flex-1 text-center md:text-right order-2 md:order-1">
-            {/* Small label */}
+            {/* Small label — emptied, kept for layout spacing */}
             <div
               className="inline-block mb-4"
               style={{ animation: "heroFadeUp 0.6s ease 0.1s both" }}
             >
               <span className="font-[Amiri] text-[#f1efd6] text-base tracking-wider font-bold">
-                كاتب ومحلل
+                &nbsp;
               </span>
             </div>
 
@@ -73,10 +73,18 @@ export default function HeroSection() {
               خليفة جمعة الرميثي
             </h1>
 
-            {/* Slogan — with decorative border frame */}
-            <div
-              className="mb-6 inline-block"
+            {/* Tagline — moved above slogan */}
+            <p
+              className="font-[Amiri] text-base md:text-lg text-white font-bold max-w-lg mb-6 leading-relaxed"
               style={{ animation: "heroFadeUp 0.6s ease 0.35s both" }}
+            >
+              إعلامي و كاتب في الصحف و المجلات الخليجية و العربية. يكتب في السياسة والاقتصاد والشؤون الاجتماعية بأسلوب تحليلي ساخر.
+            </p>
+
+            {/* Slogan — moved below tagline, with decorative border frame */}
+            <div
+              className="mb-8 inline-block"
+              style={{ animation: "heroFadeUp 0.6s ease 0.45s both" }}
             >
               <div className="relative inline-block border-2 border-[#87b0b6]/60 px-6 py-3 md:px-8 md:py-4">
                 {/* Corner accents */}
@@ -89,15 +97,6 @@ export default function HeroSection() {
                 </p>
               </div>
             </div>
-
-
-            {/* Tagline */}
-            <p
-              className="font-[Amiri] text-base md:text-lg text-white font-bold max-w-lg mb-8 leading-relaxed"
-              style={{ animation: "heroFadeUp 0.6s ease 0.45s both" }}
-            >
-              إعلامي و كاتب في الصحف و المجلات الخليجية و العربية. يكتب في السياسة والاقتصاد والشؤون الاجتماعية بأسلوب تحليلي ساخر.
-            </p>
 
             {/* CTA Buttons — stacked vertically, centered, outline style */}
             <div
