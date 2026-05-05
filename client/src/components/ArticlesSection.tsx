@@ -89,13 +89,8 @@ export default function ArticlesSection() {
       className="py-20 md:py-28 relative"
       style={{
         backgroundColor: '#f1efd6',
-        backgroundImage: `url("${PATTERN_URL}")`,
-        backgroundRepeat: 'repeat',
-        backgroundSize: '300px',
       }}
     >
-      {/* Overlay for readability */}
-      <div className="absolute inset-0 bg-[#f1efd6]/75" />
 
       <div className="container relative z-10">
         {/* Section Header */}
