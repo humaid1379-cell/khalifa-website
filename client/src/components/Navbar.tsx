@@ -62,18 +62,7 @@ export default function Navbar() {
     >
       <div className="container flex items-center justify-between h-16 md:h-20">
 
-        {/* Logo — right side (RTL: visually leading) */}
-        <div className="hidden md:flex items-center">
-          <button
-            onClick={() => handleClick("/", false)}
-            className="group transition-transform duration-300 hover:scale-105"
-            aria-label="خارج النص"
-          >
-            <KharijLogo variant="navbar" color="beige" />
-          </button>
-        </div>
-
-        {/* Desktop Nav Links */}
+        {/* Desktop Nav Links — left side */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <button
@@ -89,6 +78,17 @@ export default function Navbar() {
               <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-[#bf4240] transition-all duration-300 group-hover:w-full" />
             </button>
           ))}
+        </div>
+
+        {/* Logo — right side (RTL: visually leading) */}
+        <div className="hidden md:flex items-center">
+          <button
+            onClick={() => handleClick("/", false)}
+            className="group transition-transform duration-300 hover:scale-105"
+            aria-label="خارج النص"
+          >
+            <KharijLogo variant="navbar" color="beige" />
+          </button>
         </div>
 
         {/* Mobile: logo + hamburger */}
