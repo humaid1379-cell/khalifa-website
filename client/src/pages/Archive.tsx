@@ -24,6 +24,7 @@ import { fetchAllArticles, type StoredArticle } from "@/lib/articleStorage";
 import { categories as defaultCategories } from "@/data/articles";
 import { ArticleModal } from "@/components/ArticlesSection";
 import { Link } from "wouter";
+import Navbar from "@/components/Navbar";
 
 const ARTICLES_PER_PAGE = 9;
 
@@ -136,13 +137,13 @@ export default function Archive() {
 
   return (
     <div
-      className="min-h-screen rosette-pattern"
+      className="min-h-screen"
       style={{ backgroundColor: '#f1efd6' }}
     >
-      <div className="absolute inset-0 bg-[#f1efd6]/85 pointer-events-none" />
+      <Navbar />
 
-      {/* Page Header — teal */}
-      <div className="relative z-10 bg-[#87b0b6] text-white py-14 md:py-20">
+      {/* Page Header — teal, padded top to clear fixed navbar */}
+      <div className="bg-[#87b0b6] text-white pt-32 md:pt-36 pb-14 md:pb-20">
         <div className="container">
           {/* Back link — arrow direction fixed for RTL (#10) */}
           <Link href="/">
