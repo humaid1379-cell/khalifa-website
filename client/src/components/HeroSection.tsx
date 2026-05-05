@@ -86,7 +86,7 @@ export default function HeroSection() {
               className="mb-8 inline-block"
               style={{ animation: "heroFadeUp 0.6s ease 0.45s both" }}
             >
-              <div className="relative inline-block border-2 border-[#87b0b6]/60 px-6 py-3 md:px-8 md:py-4">
+              <div className="relative inline-block border-2 border-[#455a5d] px-6 py-3 md:px-8 md:py-4">
                 {/* Corner accents */}
                 <span className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-[#f1efd6]" />
                 <span className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-[#f1efd6]" />
@@ -109,7 +109,7 @@ export default function HeroSection() {
                   e.preventDefault();
                   document.querySelector("#articles")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="border-2 border-[#87b0b6] bg-transparent hover:bg-[#87b0b6]/20 text-white flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
+                className="border-2 border-[#455a5d] bg-transparent hover:bg-[#455a5d]/20 text-white flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
               >
                 اقرأ المقالات
               </a>
@@ -117,7 +117,7 @@ export default function HeroSection() {
                 href="https://instagram.com/kjalromaithi"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border-2 border-[#87b0b6] bg-transparent hover:bg-[#87b0b6]/20 text-white flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
+                className="border-2 border-[#455a5d] bg-transparent hover:bg-[#455a5d]/20 text-white flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
               >
                 <Instagram size={18} />
                 <span>تابعني على انستغرام</span>
