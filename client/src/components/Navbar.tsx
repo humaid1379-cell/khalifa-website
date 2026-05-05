@@ -87,7 +87,7 @@ export default function Navbar() {
             className="group transition-transform duration-300 hover:scale-105"
             aria-label="خارج النص"
           >
-            <KharijLogo variant="navbar" color="beige" />
+            <KharijLogo variant="navbar" color={scrolled ? "blue" : "beige"} />
           </button>
         </div>
 
@@ -101,7 +101,7 @@ export default function Navbar() {
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
           <button onClick={() => handleClick("/", false)} aria-label="خارج النص">
-            <KharijLogo variant="navbar" color="beige" />
+            <KharijLogo variant="navbar" color={scrolled ? "blue" : "beige"} />
           </button>
         </div>
       </div>
