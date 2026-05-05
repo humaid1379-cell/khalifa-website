@@ -23,6 +23,7 @@ export default function HeroSection() {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
+          opacity: 0.3,
         }}
       />
 
