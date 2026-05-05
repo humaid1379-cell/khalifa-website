@@ -1,7 +1,7 @@
 /*
  * Design: Kharij Al Nass — Warm editorial Arabic-first (Final 2026 branding)
  * Navbar: Sticky top nav with cream/teal branding
- * Logo always beige; dir="ltr" on container ensures menu-left, logo-right visually
+ * Permanently visible with solid dark teal background (#455a5d)
  * Brand colors: #f1efd6 (beige), #bf4240 (red), #87b0b6 (blue), #455a5d (dark teal)
  */
 import { useState, useEffect } from "react";
@@ -20,14 +20,7 @@ const navLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [location, navigate] = useLocation();
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Close menu on route change
   useEffect(() => {
@@ -54,11 +47,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-[#455a5d] backdrop-blur-md shadow-lg"
-          : "bg-transparent"
-      }`}
+      className="fixed top-0 right-0 left-0 z-50 bg-[#455a5d] backdrop-blur-md shadow-lg transition-all duration-300"
     >
       {/* dir="ltr" ensures flex order is left-to-right visually, overriding global RTL */}
       <div className="container flex items-center justify-between h-16 md:h-20" dir="ltr">
@@ -69,11 +58,7 @@ export default function Navbar() {
             <button
               key={link.href}
               onClick={() => handleClick(link.href, link.isRoute)}
-              className={`font-[Amiri] text-sm transition-colors relative group ${
-                scrolled
-                  ? "text-[#f1efd6]/90 hover:text-[#f1efd6]"
-                  : "text-[#455a5d]/80 hover:text-[#455a5d]"
-              }`}
+              className="font-[Amiri] text-sm transition-colors relative group text-[#f1efd6]/90 hover:text-[#f1efd6]"
             >
               {link.label}
               <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-[#bf4240] transition-all duration-300 group-hover:w-full" />
