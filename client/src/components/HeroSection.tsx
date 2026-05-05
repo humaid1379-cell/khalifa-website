@@ -1,8 +1,8 @@
 /*
  * Design: Kharij Al Nass — Warm editorial Arabic-first (Final 2026 branding)
  * Hero: Full-width section with Arabic calligraphy background, profile image, name, tagline
- * Dark teal calligraphy background with cream/white text for contrast
- * Brand colors: #f1efd6 (beige), #bf4240 (red), #87b0b6 (blue), #455a5d (dark teal)
+ * Cream background (#f1efd6) with calligraphy at 30% opacity; on-brand text colors
+ * Brand colors: #f1efd6 (beige), #bf4240 (red), #87b0b6 (teal), #455a5d (dark teal)
  */
 import { Instagram } from "lucide-react";
 
@@ -14,8 +14,9 @@ export default function HeroSection() {
     <section
       id="hero"
       className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden"
+      style={{ backgroundColor: '#f1efd6' }}
     >
-      {/* Arabic calligraphy background image */}
+      {/* Arabic calligraphy background image at 30% opacity */}
       <div
         className="absolute inset-0"
         style={{
@@ -26,9 +27,6 @@ export default function HeroSection() {
           opacity: 0.3,
         }}
       />
-
-      {/* Overlay for text readability — semi-transparent dark teal */}
-      <div className="absolute inset-0 bg-[#455a5d]/40" />
 
       {/* Content */}
       <div className="container relative z-10 py-24 md:py-0">
@@ -55,19 +53,19 @@ export default function HeroSection() {
 
           {/* Text Content */}
           <div className="flex-1 text-center md:text-right order-2 md:order-1">
-            {/* Small label */}
+            {/* Small label — teal */}
             <div
               className="inline-block mb-4"
               style={{ animation: "heroFadeUp 0.6s ease 0.1s both" }}
             >
-              <span className="font-[Amiri] text-[#f1efd6] text-base tracking-wider font-bold">
+              <span className="font-[Amiri] text-[#87b0b6] text-base tracking-wider font-bold">
                 كاتب ومحلل
               </span>
             </div>
 
-            {/* Name */}
+            {/* Name — dark teal */}
             <h1
-              className="font-[Amiri] text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight mb-4"
+              className="font-[Amiri] text-2xl md:text-3xl lg:text-4xl font-bold text-[#455a5d] leading-tight mb-4"
               style={{ animation: "heroFadeUp 0.7s ease 0.2s both" }}
             >
               خليفة جمعة الرميثي
@@ -79,27 +77,27 @@ export default function HeroSection() {
               style={{ animation: "heroFadeUp 0.6s ease 0.35s both" }}
             >
               <div className="relative inline-block border-2 border-[#87b0b6]/60 px-6 py-3 md:px-8 md:py-4">
-                {/* Corner accents */}
-                <span className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-[#f1efd6]" />
-                <span className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-[#f1efd6]" />
-                <span className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-[#f1efd6]" />
-                <span className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-[#f1efd6]" />
-                <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#f1efd6] leading-tight">
+                {/* Corner accents — dark teal */}
+                <span className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-[#455a5d]" />
+                <span className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-[#455a5d]" />
+                <span className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-[#455a5d]" />
+                <span className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-[#455a5d]" />
+                {/* Slogan text — dark teal */}
+                <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#455a5d] leading-tight">
                   الواقع ليس كما تقرآه
                 </p>
               </div>
             </div>
 
-
-            {/* Tagline */}
+            {/* Tagline — teal */}
             <p
-              className="font-[Amiri] text-base md:text-lg text-white font-bold max-w-lg mb-8 leading-relaxed"
+              className="font-[Amiri] text-base md:text-lg text-[#87b0b6] font-bold max-w-lg mb-8 leading-relaxed"
               style={{ animation: "heroFadeUp 0.6s ease 0.45s both" }}
             >
               إعلامي و كاتب في الصحف و المجلات الخليجية و العربية. يكتب في السياسة والاقتصاد والشؤون الاجتماعية بأسلوب تحليلي ساخر.
             </p>
 
-            {/* CTA Buttons — stacked vertically, centered, outline style */}
+            {/* CTA Buttons — dark teal border, dark teal text */}
             <div
               className="flex flex-col items-center gap-4"
               style={{ animation: "heroFadeUp 0.6s ease 0.5s both" }}
@@ -110,7 +108,7 @@ export default function HeroSection() {
                   e.preventDefault();
                   document.querySelector("#articles")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="border-2 border-[#87b0b6] bg-transparent hover:bg-[#87b0b6]/20 text-white flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
+                className="border-2 border-[#455a5d] bg-transparent hover:bg-[#455a5d]/10 text-[#455a5d] flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
               >
                 اقرأ المقالات
               </a>
@@ -118,7 +116,7 @@ export default function HeroSection() {
                 href="https://instagram.com/kjalromaithi"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border-2 border-[#87b0b6] bg-transparent hover:bg-[#87b0b6]/20 text-white flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
+                className="border-2 border-[#87b0b6] bg-transparent hover:bg-[#87b0b6]/10 text-[#87b0b6] flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
               >
                 <Instagram size={18} />
                 <span>تابعني على انستغرام</span>
