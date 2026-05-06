@@ -39,7 +39,14 @@ export default function HeroSection() {
             style={{ animation: "heroSlideIn 0.8s ease 0.3s both" }}
           >
             <div className="relative">
-              <div className="w-52 h-64 md:w-64 md:h-80 overflow-hidden" style={{ backgroundColor: '#f1efd6' }}>
+              <div
+                className="w-52 h-64 md:w-64 md:h-80 overflow-hidden"
+                style={{
+                  backgroundColor: '#f1efd6',
+                  maskImage: 'radial-gradient(ellipse 75% 85% at 50% 45%, black 55%, transparent 100%)',
+                  WebkitMaskImage: 'radial-gradient(ellipse 75% 85% at 50% 45%, black 55%, transparent 100%)',
+                }}
+              >
                 <img
                   src={PROFILE_IMG}
                   alt="خليفة جمعة الرميثي"
