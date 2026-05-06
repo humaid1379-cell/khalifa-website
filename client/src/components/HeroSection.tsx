@@ -6,7 +6,7 @@
  */
 import { Instagram } from "lucide-react";
 
-const PROFILE_IMG = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663135713175/nkQbRmDcAoZOyadX.jpg";
+const PROFILE_IMG = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663135713175/sdToEZNUHwHLZbKb.jpg";
 const CALLIGRAPHY_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/kharij-alnass-calligraphy-bg-jNhSnM3nVz85joMPP3VWgB.webp";
 
 export default function HeroSection() {
@@ -39,7 +39,7 @@ export default function HeroSection() {
             style={{ animation: "heroSlideIn 0.8s ease 0.3s both" }}
           >
             <div className="relative">
-              <div className="w-52 h-64 md:w-64 md:h-80 rounded-2xl overflow-hidden border-2 border-[#87b0b6]/50 shadow-2xl" style={{ backgroundColor: '#f1efd6' }}>
+              <div className="w-52 h-64 md:w-64 md:h-80 rounded-2xl overflow-hidden border-2 border-[#87b0b6]/50 shadow-2xl" style={{ backgroundColor: '#b5bdbe' }}>
                 <img
                   src={PROFILE_IMG}
                   alt="خليفة جمعة الرميثي"
