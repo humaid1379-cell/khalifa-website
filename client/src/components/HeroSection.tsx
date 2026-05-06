@@ -6,7 +6,7 @@
  */
 import { Instagram } from "lucide-react";
 
-const PROFILE_IMG = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663135713175/OWQRtlCdMWqlDyTn.jpg";
+const PROFILE_IMG = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663135713175/IqxAmPzTUURNZBJq.jpg";
 const CALLIGRAPHY_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/kharij-alnass-calligraphy-bg-jNhSnM3nVz85joMPP3VWgB.webp";
 
 export default function HeroSection() {
