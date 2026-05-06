@@ -39,7 +39,7 @@ export default function HeroSection() {
             style={{ animation: "heroSlideIn 0.8s ease 0.3s both" }}
           >
             <div className="relative">
-              <div className="w-52 h-64 md:w-64 md:h-80 rounded-2xl overflow-hidden border-2 border-[#87b0b6]/50 shadow-2xl" style={{ backgroundColor: '#f1efd6' }}>
+              <div className="w-52 h-64 md:w-64 md:h-80 overflow-hidden" style={{ backgroundColor: '#f1efd6' }}>
                 <img
                   src={PROFILE_IMG}
                   alt="خليفة جمعة الرميثي"
@@ -48,8 +48,7 @@ export default function HeroSection() {
                   fetchPriority="high"
                 />
               </div>
-              {/* Decorative frame */}
-              <div className="absolute -top-3 -right-3 w-52 h-64 md:w-64 md:h-80 rounded-2xl border-2 border-[#87b0b6]/30 -z-10" />
+
             </div>
           </div>
 
