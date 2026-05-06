@@ -113,15 +113,7 @@ export default function HeroSection() {
               >
                 اقرأ المقالات
               </a>
-              <a
-                href="https://instagram.com/kjalromaithi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border-2 border-[#455a5d] bg-transparent hover:bg-[#455a5d]/20 text-white flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
-              >
-                <Instagram size={18} />
-                <span>تابعني على انستغرام</span>
-              </a>
+
             </div>
           </div>
         </div>
