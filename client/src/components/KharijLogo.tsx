@@ -15,9 +15,9 @@
  */
 
 const LOGO_URLS = {
-  blue: "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/logo-blue_092e7b72.png",
-  beige: "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/logo-beige_856df9a8.png",
-  red: "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/logo-red_c0b78c3b.png",
+  blue: "/media/logo-blue_092e7b72.png",
+  beige: "/media/logo-beige_856df9a8.png",
+  red: "/media/logo-red_c0b78c3b.png",
 };
 
 interface KharijLogoProps {

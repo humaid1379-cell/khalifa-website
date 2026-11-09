@@ -1,352 +1,218 @@
-/*
- * Design: Kharij Al Nass — Warm editorial Arabic-first
- * Archive page: full searchable, filterable article archive
- * All articles from D1 database, sorted by date descending
- *
- * Fixes applied:
- * - Filter inputs use solid borders (#12)
- * - Article cards centered when only 1-2 articles (#9)
- * - Back button arrow direction fixed for RTL (#10)
- * - All borders are solid, no dashed borders (#1)
- * - Pagination buttons use solid borders (#1)
- */
-import { useState, useMemo, useEffect } from "react";
-import {
-  Search,
-  Calendar,
-  Tag,
-  ChevronLeft,
-  ChevronRight,
-  ArrowRight,
-  Loader2,
-} from "lucide-react";
-import { fetchAllArticles, type StoredArticle } from "@/lib/articleStorage";
-import { categories as defaultCategories } from "@/data/articles";
-import { ArticleModal } from "@/components/ArticlesSection";
+import { useMemo, useState } from "react";
+import { ArrowRight, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { Link } from "wouter";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import {
+  ArticleCard,
+  ArticlesLoading,
+  ArticlesState,
+} from "@/components/ArticleList";
+import { useArticles } from "@/hooks/useArticles";
+import { filterArticles } from "@/lib/articlePresentation";
 
-const ARTICLES_PER_PAGE = 9;
+const PAGE_SIZE = 9;
 
 export default function Archive() {
-  const [allArticles, setAllArticles] = useState<StoredArticle[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("الكل");
-  const [selectedYear, setSelectedYear] = useState("الكل");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedArticle, setSelectedArticle] = useState<StoredArticle | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      setLoading(true);
-      try {
-        const articles = await fetchAllArticles();
-        if (!cancelled) {
-          setAllArticles(
-            [...articles].sort(
-              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-            )
-          );
-        }
-      } catch {
-        // handled inside fetchAllArticles
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-
-  useEffect(() => {
-    if (selectedArticle) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [selectedArticle]);
-
-  const years = useMemo(
-    () =>
-      Array.from(
-        new Set(allArticles.map((a) => a.year ?? new Date(a.date).getFullYear()))
-      ).sort((a, b) => b - a),
-    [allArticles]
+  const { articles, loading, error, retry } = useArticles();
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("");
+  const [year, setYear] = useState("");
+  const [page, setPage] = useState(1);
+  const categories = useMemo(
+    () => Array.from(new Set(articles.map(a => a.category))),
+    [articles]
   );
-
-  const categories = useMemo(() => {
-    const storedCats = allArticles.map((a) => a.category).filter(Boolean);
-    return Array.from(new Set([...defaultCategories, ...storedCats]));
-  }, [allArticles]);
-
-  const filteredArticles = useMemo(() => {
-    return allArticles.filter((article) => {
-      const matchesSearch =
-        searchQuery === "" ||
-        article.title.includes(searchQuery) ||
-        article.excerpt.includes(searchQuery) ||
-        article.content.includes(searchQuery);
-      const matchesCategory =
-        selectedCategory === "الكل" || article.category === selectedCategory;
-      const articleYear = (article.year ?? new Date(article.date).getFullYear()).toString();
-      const matchesYear =
-        selectedYear === "الكل" || articleYear === selectedYear;
-      return matchesSearch && matchesCategory && matchesYear;
-    });
-  }, [searchQuery, selectedCategory, selectedYear, allArticles]);
-
-  const totalPages = Math.ceil(filteredArticles.length / ARTICLES_PER_PAGE);
-  const paginatedArticles = useMemo(() => {
-    const start = (currentPage - 1) * ARTICLES_PER_PAGE;
-    return filteredArticles.slice(start, start + ARTICLES_PER_PAGE);
-  }, [filteredArticles, currentPage]);
-
-  const resetPage = () => setCurrentPage(1);
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("ar-AE", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+  const years = useMemo(
+    () => Array.from(new Set(articles.map(a => a.date.slice(0, 4)))).sort().reverse(),
+    [articles]
+  );
+  const filtered = useMemo(
+    () => filterArticles(articles, query, category, year),
+    [articles, query, category, year]
+  );
+  const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pages);
+  const clear = () => {
+    setQuery("");
+    setCategory("");
+    setYear("");
+    setPage(1);
   };
-
-  /* Determine grid classes based on article count for centering (#9) */
-  const getGridClasses = () => {
-    const count = paginatedArticles.length;
-    if (count === 1) {
-      return "flex justify-center mb-10";
-    }
-    if (count === 2) {
-      return "grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 max-w-3xl mx-auto";
-    }
-    return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10";
+  const changePage = (next: number) => {
+    setPage(next);
+    document
+      .getElementById("archive-results")
+      ?.scrollIntoView({ behavior: "instant", block: "start" });
+    document.getElementById("archive-results")?.focus({ preventScroll: true });
   };
-
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: '#f1efd6' }}
-    >
+    <div className="min-h-screen">
       <Navbar />
-
-      {/* Page Header — teal, padded top to clear fixed navbar */}
-      <div className="bg-[#87b0b6] text-white pt-32 md:pt-36 pb-14 md:pb-20">
-        <div className="container">
-          {/* Back link — arrow direction fixed for RTL (#10) */}
-          <Link href="/">
-            <span className="inline-flex items-center gap-1.5 text-[#f1efd6] hover:text-white font-[Amiri] text-sm mb-6 cursor-pointer transition-colors">
-              <ArrowRight size={16} />
-              <span>العودة إلى الرئيسية</span>
-            </span>
-          </Link>
-
-          <h1 className="font-[Amiri] text-4xl md:text-5xl font-bold mb-4 text-[#f1efd6]">
-            أرشيف المقالات
-          </h1>
-          <div
-            className="w-16 h-0.5 mb-4"
-            style={{ background: "#f1efd6" }}
-          />
-          <p className="font-[Amiri] text-white/80 text-base max-w-xl leading-relaxed">
-            جميع المقالات والآراء المنشورة — مرتبة من الأحدث إلى الأقدم
-          </p>
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div className="relative z-10 container py-10 md:py-14">
-        {/* Search & Filters — solid borders (#12) */}
-        <div className="bg-[#f1efd6] rounded-xl p-4 md:p-6 shadow-sm border-2 border-[#87b0b6]/20 mb-10">
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search
-                size={18}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#87b0b6]"
-              />
-              <input
-                type="text"
-                placeholder="ابحث في المقالات..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  resetPage();
-                }}
-                className="w-full pr-10 pl-4 py-2.5 rounded-lg border-2 border-[#87b0b6]/25 bg-[#f1efd6] font-[Amiri] text-sm text-[#455a5d] placeholder:text-[#455a5d] focus:outline-none focus:border-[#87b0b6] focus:ring-1 focus:ring-[#87b0b6] transition-colors"
-              />
-            </div>
-
-            {/* Category Filter */}
-            <div className="relative min-w-[160px]">
-              <Tag
-                size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#87b0b6] pointer-events-none"
-              />
-              <select
-                value={selectedCategory}
-                onChange={(e) => {
-                  setSelectedCategory(e.target.value);
-                  resetPage();
-                }}
-                className="w-full pr-9 pl-4 py-2.5 rounded-lg border-2 border-[#87b0b6]/25 bg-[#f1efd6] font-[Amiri] text-sm text-[#455a5d] focus:outline-none focus:border-[#87b0b6] appearance-none cursor-pointer"
-              >
-                <option value="الكل">كل التصنيفات</option>
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Year Filter */}
-            <div className="relative min-w-[140px]">
-              <Calendar
-                size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#87b0b6] pointer-events-none"
-              />
-              <select
-                value={selectedYear}
-                onChange={(e) => {
-                  setSelectedYear(e.target.value);
-                  resetPage();
-                }}
-                className="w-full pr-9 pl-4 py-2.5 rounded-lg border-2 border-[#87b0b6]/25 bg-[#f1efd6] font-[Amiri] text-sm text-[#455a5d] focus:outline-none focus:border-[#87b0b6] appearance-none cursor-pointer"
-              >
-                <option value="الكل">كل السنوات</option>
-                {years.map((year) => (
-                  <option key={year} value={year.toString()}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Results count */}
-          <div className="mt-3 font-[Amiri] text-xs text-[#455a5d]">
-            {loading
-              ? "جاري التحميل..."
-              : `${filteredArticles.length} مقال`}
-          </div>
-        </div>
-
-        {/* Loading */}
-        {loading && (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 size={28} className="animate-spin text-[#87b0b6]" />
-            <span className="mr-3 font-[Amiri] text-[#455a5d]">
-              جاري تحميل المقالات...
-            </span>
-          </div>
-        )}
-
-        {/* Articles Grid — centered when few articles (#9) */}
-        {!loading && paginatedArticles.length > 0 && (
-          <div className={getGridClasses()}>
-            {paginatedArticles.map((article) => (
-              <button
-                key={article.id}
-                onClick={() => setSelectedArticle(article)}
-                className={`${paginatedArticles.length === 1 ? 'w-full max-w-md' : 'w-full'} text-right bg-[#f1efd6] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group`}
-              >
-                <div className="h-1 bg-[#87b0b6] group-hover:bg-[#87b0b6] transition-colors" />
-                <div className="p-5 md:p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-[Amiri] text-xs bg-[#87b0b6]/15 text-[#87b0b6] px-2.5 py-1 rounded-full">
-                      {article.category}
-                    </span>
-                    <span className="font-[Amiri] text-xs text-[#455a5d]">
-                      {formatDate(article.date)}
-                    </span>
-                  </div>
-                  <h3 className="font-[Amiri] text-lg font-bold text-[#455a5d] mb-3 leading-relaxed group-hover:text-[#87b0b6] transition-colors line-clamp-2">
-                    {article.title}
-                  </h3>
-                  {article.newspaper && (
-                    <p className="font-[Amiri] text-xs text-[#455a5d] mb-2">
-                      {article.newspaper}
-                    </p>
-                  )}
-                  <p className="font-[Amiri] text-sm text-[#455a5d] leading-relaxed line-clamp-3">
-                    {article.excerpt}
-                  </p>
-                  <div className="mt-4 font-[Amiri] text-sm text-[#bf4240] group-hover:text-[#bf4240] flex items-center gap-1">
-                    <span>اقرأ المزيد</span>
-                    <ChevronLeft size={14} />
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
-
-        {!loading && paginatedArticles.length === 0 && (
-          <div className="text-center py-20">
-            <p className="font-[Amiri] text-[#455a5d] text-lg">
-              {allArticles.length === 0
-                ? "لا توجد مقالات في الأرشيف حتى الآن"
-                : "لا توجد مقالات مطابقة لبحثك"}
+      <main id="main-content" tabIndex={-1}>
+        <header className="page-intro">
+          <div className="container">
+            <Link
+              href="/"
+              className="mb-8 inline-flex min-h-11 items-center gap-2 text-sm"
+            >
+              <ArrowRight size={16} aria-hidden="true" /> العودة إلى الرئيسية
+            </Link>
+            <p className="eyebrow">الكلمة تبقى</p>
+            <h1 className="section-title">أرشيف المقالات</h1>
+            <p className="section-copy mt-5">
+              مقالات وآراء، من الأحدث إلى الأقدم. ابحث عن موضوع يشغلك.
             </p>
           </div>
-        )}
-
-        {/* Pagination — solid borders (#1) */}
-        {!loading && totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-4">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="w-10 h-10 rounded-lg border-2 border-[#87b0b6]/25 bg-[#f1efd6] flex items-center justify-center text-[#87b0b6] hover:bg-[#87b0b6]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronRight size={18} />
-            </button>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`w-10 h-10 rounded-lg font-[Amiri] text-sm transition-colors ${
-                  currentPage === page
-                    ? "bg-[#87b0b6] text-white shadow-md"
-                    : "border-2 border-[#87b0b6]/25 bg-[#f1efd6] text-[#87b0b6] hover:bg-[#87b0b6]/10"
-                }`}
+        </header>
+        <div className="container section-spacing">
+          <form
+            role="search"
+            aria-label="البحث في المقالات"
+            onSubmit={e => e.preventDefault()}
+            className="archive-filters"
+          >
+            <div className="min-w-0 flex-1">
+              <label
+                htmlFor="article-search"
+                className="mb-2 block text-sm font-bold"
               >
-                {page}
+                ابحث في المقالات
+              </label>
+              <div className="relative">
+                <Search
+                  className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2"
+                  size={19}
+                  aria-hidden="true"
+                />
+                <input
+                  id="article-search"
+                  type="search"
+                  value={query}
+                  onChange={e => {
+                    setQuery(e.target.value);
+                    setPage(1);
+                  }}
+                  placeholder="عنوان، موضوع، أو كلمة…"
+                  className="archive-input article-search"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="article-category"
+                className="mb-2 block text-sm font-bold"
+              >
+                الموضوع
+              </label>
+              <select
+                id="article-category"
+                value={category}
+                className="archive-input"
+                onChange={e => {
+                  setCategory(e.target.value);
+                  setPage(1);
+                }}
+              >
+                <option value="">كل الموضوعات</option>
+                {categories.map(value => (
+                  <option key={value}>{value}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="article-year"
+                className="mb-2 block text-sm font-bold"
+              >
+                السنة
+              </label>
+              <select
+                id="article-year"
+                value={year}
+                className="archive-input"
+                onChange={e => {
+                  setYear(e.target.value);
+                  setPage(1);
+                }}
+              >
+                <option value="">كل السنوات</option>
+                {years.map(value => (
+                  <option key={value}>{value}</option>
+                ))}
+              </select>
+            </div>
+          </form>
+          <div className="mb-8 flex items-center justify-between gap-4 border-b border-[#455a5d]/20 pb-4">
+            <p role="status" aria-live="polite" className="text-sm">
+              {loading
+                ? "جارٍ تحميل المقالات…"
+                : error
+                  ? "المقالات غير متاحة حالياً"
+                  : `${filtered.length.toLocaleString("ar-AE")} من المقالات`}
+            </p>
+            {(query || category || year) && (
+              <button
+                type="button"
+                className="min-h-11 text-sm font-bold text-[#a33432] underline underline-offset-4"
+                onClick={clear}
+              >
+                مسح التصفية
               </button>
-            ))}
-
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              className="w-10 h-10 rounded-lg border-2 border-[#87b0b6]/25 bg-[#f1efd6] flex items-center justify-center text-[#87b0b6] hover:bg-[#87b0b6]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronLeft size={18} />
-            </button>
+            )}
           </div>
-        )}
-      </div>
-
-      {/* Article Modal */}
-      {selectedArticle && (
-        <ArticleModal
-          article={selectedArticle}
-          onClose={() => setSelectedArticle(null)}
-        />
-      )}
+          <section
+            id="archive-results"
+            aria-label="نتائج المقالات"
+            tabIndex={-1}
+            className="scroll-mt-28"
+          >
+            {loading ? (
+              <ArticlesLoading />
+            ) : error ? (
+              <ArticlesState error retry={retry} />
+            ) : filtered.length === 0 ? (
+              <ArticlesState filtered={articles.length > 0} reset={clear} />
+            ) : (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {filtered
+                  .slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+                  .map(article => (
+                    <ArticleCard key={article.id} article={article} />
+                  ))}
+              </div>
+            )}
+          </section>
+          {!loading && !error && pages > 1 && (
+            <nav
+              aria-label="صفحات المقالات"
+              className="mt-12 flex flex-wrap items-center justify-center gap-4"
+            >
+              <button
+                type="button"
+                className="editorial-button editorial-button--outline"
+                disabled={currentPage === 1}
+                onClick={() => changePage(currentPage - 1)}
+              >
+                <ChevronRight size={18} aria-hidden="true" /> السابقة
+              </button>
+              <span aria-live="polite">
+                {currentPage.toLocaleString("ar-AE")} /{" "}
+                {pages.toLocaleString("ar-AE")}
+              </span>
+              <button
+                type="button"
+                className="editorial-button editorial-button--outline"
+                disabled={currentPage === pages}
+                onClick={() => changePage(currentPage + 1)}
+              >
+                التالية <ChevronLeft size={18} aria-hidden="true" />
+              </button>
+            </nav>
+          )}
+        </div>
+      </main>
+      <Footer />
     </div>
   );
 }

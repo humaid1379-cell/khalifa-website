@@ -1,7 +1,3 @@
-/*
- * Admin Page — wraps login and dashboard
- * Checks auth state and shows appropriate view
- */
 import { useState, useEffect } from "react";
 import { isAdminAuthenticated } from "@/lib/articleStorage";
 import AdminLogin from "./AdminLogin";
@@ -10,23 +6,44 @@ import AdminDashboard from "./AdminDashboard";
 export default function Admin() {
   const [authenticated, setAuthenticated] = useState(false);
   const [checking, setChecking] = useState(true);
-
+  const [error, setError] = useState("");
   useEffect(() => {
-    setAuthenticated(isAdminAuthenticated());
-    setChecking(false);
+    let active = true;
+    isAdminAuthenticated()
+      .then(value => {
+        if (active) setAuthenticated(value);
+      })
+      .catch(reason => {
+        if (active)
+          setError(
+            reason instanceof Error ? reason.message : "تعذّر التحقق من الجلسة."
+          );
+      })
+      .finally(() => {
+        if (active) setChecking(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
-
-  if (checking) {
+  if (checking)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#87b0b6]">
-        <div className="w-8 h-8 border-3 border-[#f1efd6]/30 border-t-[#f1efd6] rounded-full animate-spin" />
-      </div>
+      <main
+        className="min-h-screen flex items-center justify-center bg-[#f1efd6]"
+        role="status"
+      >
+        <p>جاري التحقق من الجلسة…</p>
+      </main>
     );
-  }
-
-  if (!authenticated) {
-    return <AdminLogin onSuccess={() => setAuthenticated(true)} />;
-  }
-
+  if (!authenticated)
+    return (
+      <AdminLogin
+        initialError={error}
+        onSuccess={() => {
+          setError("");
+          setAuthenticated(true);
+        }}
+      />
+    );
   return <AdminDashboard onLogout={() => setAuthenticated(false)} />;
 }

@@ -1,125 +1,35 @@
-/*
- * Design: Kharij Al Nass — Warm editorial Arabic-first (Final 2026 branding)
- * Hero: Full-width section with Arabic calligraphy background, profile image, name, tagline
- * Dark teal calligraphy background with cream/white text for contrast
- * Brand colors: #f1efd6 (beige), #bf4240 (red), #87b0b6 (blue), #455a5d (dark teal)
- */
-import { Instagram } from "lucide-react";
-
-const PROFILE_IMG = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663135713175/YmbibFaRiUfZjDYH.jpg";
-const CALLIGRAPHY_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/kharij-alnass-calligraphy-bg-jNhSnM3nVz85joMPP3VWgB.webp";
+import { ArrowDown, ArrowLeft } from "lucide-react";
+import { SITE } from "@/config/site";
 
 export default function HeroSection() {
   return (
-    <section
-      id="hero"
-      className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden"
-    >
-      {/* Arabic calligraphy background image */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `url("${CALLIGRAPHY_BG}")`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          opacity: 0.1,
-        }}
-      />
-
-      {/* Overlay for text readability — semi-transparent dark teal */}
-      <div className="absolute inset-0 bg-[#455a5d]/40" />
-
-      {/* Content */}
-      <div className="container relative z-10 py-24 md:py-0">
-        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-10">
-          {/* Profile Image */}
-          <div
-            className="flex-shrink-0 order-1 md:order-2"
-            style={{ animation: "heroSlideIn 0.8s ease 0.3s both" }}
-          >
-            <div className="relative">
-              <div className="w-52 h-64 md:w-64 md:h-80 rounded-2xl overflow-hidden border-2 border-[#87b0b6]/50 shadow-2xl" style={{ backgroundColor: '#b5bdbe' }}>
-                <img
-                  src={PROFILE_IMG}
-                  alt="خليفة جمعة الرميثي"
-                  className="w-full h-full object-cover object-center"
-                  loading="eager"
-                  fetchPriority="high"
-                />
-              </div>
-
-            </div>
-          </div>
-
-          {/* Text Content */}
-          <div className="flex-1 text-center md:text-right order-2 md:order-1">
-            {/* Small label — emptied, kept for layout spacing */}
-            <div
-              className="inline-block mb-4"
-              style={{ animation: "heroFadeUp 0.6s ease 0.1s both" }}
-            >
-              <span className="font-[Amiri] text-[#f1efd6] text-base tracking-wider font-bold">
-                &nbsp;
-              </span>
-            </div>
-
-            {/* Name */}
-            <h1
-              className="font-[Amiri] text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight mb-4"
-              style={{ animation: "heroFadeUp 0.7s ease 0.2s both" }}
-            >
-              خليفة جمعة الرميثي
-            </h1>
-
-            {/* Tagline — moved above slogan */}
-            <p
-              className="font-[Amiri] text-base md:text-lg text-white font-bold max-w-lg mb-6 leading-relaxed"
-              style={{ animation: "heroFadeUp 0.6s ease 0.35s both" }}
-            >
-              إعلامي و كاتب في الصحف و المجلات الخليجية و العربية. يكتب في السياسة والاقتصاد والشؤون الاجتماعية بأسلوب تحليلي ساخر.
-            </p>
-
-            {/* Slogan — moved below tagline, with decorative border frame */}
-            <div
-              className="mb-8 inline-block"
-              style={{ animation: "heroFadeUp 0.6s ease 0.45s both" }}
-            >
-              <div className="relative inline-block border-2 border-[#455a5d] px-6 py-3 md:px-8 md:py-4">
-                {/* Corner accents */}
-                <span className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-[#f1efd6]" />
-                <span className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-[#f1efd6]" />
-                <span className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-[#f1efd6]" />
-                <span className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-[#f1efd6]" />
-                <p className="font-[Amiri] text-4xl md:text-6xl lg:text-7xl font-bold text-[#f1efd6] leading-tight">
-                  الواقع ليس كما تقرآه
-                </p>
-              </div>
-            </div>
-
-            {/* CTA Buttons — stacked vertically, centered, outline style */}
-            <div
-              className="flex flex-col items-center gap-4"
-              style={{ animation: "heroFadeUp 0.6s ease 0.5s both" }}
-            >
-              <a
-                href="#articles"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.querySelector("#articles")?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="border-2 border-[#455a5d] bg-transparent hover:bg-[#455a5d]/20 text-white flex items-center gap-2 px-8 py-2.5 rounded-lg transition-all duration-300 font-[Amiri] text-sm"
-              >
-                اقرأ المقالات
-              </a>
-
-            </div>
+    <section id="hero" className="editorial-hero" aria-labelledby="hero-title">
+      <div className="hero-calligraphy" style={{ backgroundImage: `url("${SITE.calligraphyUrl}")` }} aria-hidden="true" />
+      <div className="container hero-grid">
+        <div className="hero-copy">
+          <p className="eyebrow hero-eyebrow"><span /> كتابةٌ تنظر أبعد</p>
+          <h1 id="hero-title">{SITE.author}</h1>
+          <p className="hero-statement">الواقع ليس<br /><span>كما تقرأه.</span></p>
+          <p className="hero-description">
+            إعلامي وكاتب في الصحف والمجلات الخليجية والعربية.
+            يكتب في السياسة والاقتصاد والشؤون الاجتماعية بأسلوب تحليلي ساخر.
+          </p>
+          <div className="hero-actions">
+            <a href="#articles" className="editorial-button editorial-button--light">اقرأ المقالات <ArrowLeft size={18} aria-hidden="true" /></a>
+            <a href="#bio" className="hero-bio-link">تعرّف على الكاتب <ArrowDown size={16} aria-hidden="true" /></a>
           </div>
         </div>
+        <figure className="hero-portrait">
+          <div className="portrait-frame">
+            <img src={SITE.portraitUrl} alt={SITE.author} width={600} height={750} fetchPriority="high" loading="eager" decoding="async" />
+          </div>
+          <figcaption><span>كاتب وصحفي إماراتي</span><span lang="en" dir="ltr">KHALEEFA AL ROMAITHI</span></figcaption>
+        </figure>
       </div>
-
-      {/* Bottom fade to beige */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#f1efd6] to-transparent" />
+      <div className="container hero-bottom-line">
+        <span>سياسة <span aria-hidden="true">/</span> اقتصاد <span aria-hidden="true">/</span> مجتمع</span>
+        <a href="#articles">بين السطور، تبدأ الحكاية <ArrowDown size={15} aria-hidden="true" /></a>
+      </div>
     </section>
   );
 }

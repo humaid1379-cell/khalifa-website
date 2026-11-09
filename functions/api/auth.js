@@ -1,43 +1,53 @@
-/**
- * Cloudflare Pages Function — /api/auth
- * POST: Verify admin password and return a token
- */
+import {
+  authenticate,
+  checkLoginRate,
+  createSession,
+  passwordMatches,
+  revokeSession,
+  sessionCookie,
+} from "../_lib/auth.js";
+import {
+  errorResponse,
+  HttpError,
+  json,
+  readJson,
+  requireSameOrigin,
+} from "../_lib/http.js";
 
-const ADMIN_PASSWORD = "Khalifa@2025";
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
-
-function jsonResponse(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { "Content-Type": "application/json", ...CORS_HEADERS },
-  });
+export async function onRequestGet(context) {
+  try {
+    return json({ success: true, authenticated: await authenticate(context) });
+  } catch (error) {
+    return errorResponse(error);
+  }
 }
 
-// Handle CORS preflight
-export async function onRequestOptions() {
-  return new Response(null, { status: 204, headers: CORS_HEADERS });
-}
-
-// POST /api/auth — verify password
 export async function onRequestPost(context) {
   try {
-    const body = await context.request.json();
-    const { password } = body;
-
-    if (password === ADMIN_PASSWORD) {
-      return jsonResponse({
-        success: true,
-        token: ADMIN_PASSWORD, // Simple token-based auth
-        message: "تم تسجيل الدخول بنجاح",
-      });
-    }
-
-    return jsonResponse({ success: false, error: "كلمة المرور غير صحيحة" }, 401);
+    requireSameOrigin(context.request);
+    await checkLoginRate(context);
+    const { password } = await readJson(context.request, 4096);
+    if (typeof password !== "string" || password.length > 1024)
+      throw new HttpError(400, "بيانات تسجيل الدخول غير صالحة.");
+    if (!(await passwordMatches(password, context.env.ADMIN_PASSWORD)))
+      throw new HttpError(401, "كلمة المرور غير صحيحة.");
+    const token = await createSession(context);
+    return json({ success: true, authenticated: true }, 200, {
+      "Set-Cookie": sessionCookie(token),
+    });
   } catch (error) {
-    return jsonResponse({ success: false, error: error.message }, 500);
+    const response = errorResponse(error);
+    if (error?.status === 429) response.headers.set("Retry-After", "900");
+    return response;
+  }
+}
+
+export async function onRequestDelete(context) {
+  try {
+    requireSameOrigin(context.request);
+    await revokeSession(context);
+    return json({ success: true }, 200, { "Set-Cookie": sessionCookie("", 0) });
+  } catch (error) {
+    return errorResponse(error);
   }
 }

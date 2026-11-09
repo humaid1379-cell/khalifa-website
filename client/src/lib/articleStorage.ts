@@ -1,230 +1,182 @@
-/**
- * Article Storage — API-based article management via Cloudflare D1.
- * Admin auth uses localStorage for session persistence.
- * Articles are fetched from /api/articles (Cloudflare Pages Functions + D1).
- * Falls back to hardcoded articles if API is unavailable.
- */
-import { articles as hardcodedArticles, categories as defaultCategories, type Article } from "@/data/articles";
-
-const AUTH_KEY = "khalifa_admin_auth";
+/** Same-origin article API. Authentication stays in an HttpOnly cookie. */
+import { categories as defaultCategories, type Article } from "@/data/articles";
 
 export interface StoredArticle extends Article {
   newspaper?: string;
-  isHardcoded?: boolean;
   created_at?: string;
   updated_at?: string;
 }
 
-// ─── Auth ────────────────────────────────────────────────────────────────────
-
-export function isAdminAuthenticated(): boolean {
-  try {
-    const session = localStorage.getItem(AUTH_KEY);
-    if (!session) return false;
-    const { expiry, token } = JSON.parse(session);
-    return Date.now() < expiry && !!token;
-  } catch {
-    return false;
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public status: number
+  ) {
+    super(message);
+    this.name = "ApiError";
   }
 }
 
-export function getAuthToken(): string | null {
+function clearLegacyCredentials() {
   try {
-    const session = localStorage.getItem(AUTH_KEY);
-    if (!session) return null;
-    const { expiry, token } = JSON.parse(session);
-    if (Date.now() >= expiry) return null;
-    return token;
+    localStorage.removeItem("khalifa_admin_auth");
   } catch {
-    return null;
+    /* storage may be disabled */
   }
+}
+
+async function apiRequest(
+  url: string,
+  options: RequestInit = {}
+): Promise<any> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+  try {
+    const response = await fetch(url, {
+      ...options,
+      credentials: "same-origin",
+      signal: controller.signal,
+      headers: {
+        ...(options.body ? { "Content-Type": "application/json" } : {}),
+        ...options.headers,
+      },
+    });
+    let data: any;
+    try {
+      data = await response.json();
+    } catch {
+      throw new ApiError(
+        "الخدمة غير متاحة مؤقتاً. يرجى المحاولة مجدداً.",
+        response.status || 503
+      );
+    }
+    if (!response.ok || data.success !== true)
+      throw new ApiError(
+        data.error || "تعذّر إتمام الطلب. يرجى المحاولة مجدداً.",
+        response.status
+      );
+    return data;
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    throw new ApiError(
+      "تعذّر الاتصال بالخادم. تحقق من الاتصال وحاول مجدداً.",
+      0
+    );
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export async function isAdminAuthenticated(): Promise<boolean> {
+  clearLegacyCredentials();
+  const data = await apiRequest("/api/auth");
+  return data.authenticated === true;
 }
 
 export async function adminLogin(password: string): Promise<boolean> {
-  try {
-    const res = await fetch("/api/auth", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
-    });
-    const data = await res.json();
-    if (data.success && data.token) {
-      localStorage.setItem(
-        AUTH_KEY,
-        JSON.stringify({ expiry: Date.now() + 24 * 60 * 60 * 1000, token: data.token })
-      );
-      return true;
-    }
-    return false;
-  } catch {
-    // Fallback: if API is not available (local dev), use direct password check
-    if (password === "Khalifa@2025") {
-      localStorage.setItem(
-        AUTH_KEY,
-        JSON.stringify({ expiry: Date.now() + 24 * 60 * 60 * 1000, token: password })
-      );
-      return true;
-    }
-    return false;
-  }
+  clearLegacyCredentials();
+  const data = await apiRequest("/api/auth", {
+    method: "POST",
+    body: JSON.stringify({ password }),
+  });
+  return data.authenticated === true;
 }
 
-export function adminLogout(): void {
-  localStorage.removeItem(AUTH_KEY);
+export async function adminLogout(): Promise<void> {
+  await apiRequest("/api/auth", { method: "DELETE" });
+  clearLegacyCredentials();
+  invalidateArticlesCache();
 }
 
-// ─── API Helpers ─────────────────────────────────────────────────────────────
-
-async function apiRequest(url: string, options: RequestInit = {}): Promise<any> {
-  const token = getAuthToken();
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    ...(options.headers as Record<string, string> || {}),
-  };
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-  const res = await fetch(url, { ...options, headers });
-  if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`);
-  }
-  return res.json();
-}
-
-// ─── Simple in-memory cache for public article fetches ──────────────────────
 let articlesCache: { data: StoredArticle[]; timestamp: number } | null = null;
-const CACHE_TTL = 60_000; // 60 seconds
+let pendingArticles: Promise<StoredArticle[]> | null = null;
+let cacheVersion = 0;
+const CACHE_TTL = 30000;
 
-// ─── Article CRUD (API-based) ────────────────────────────────────────────────
-
-/** Fetch all articles from the API with timeout */
 export async function fetchArticles(): Promise<StoredArticle[]> {
+  if (articlesCache && Date.now() - articlesCache.timestamp < CACHE_TTL)
+    return articlesCache.data;
+  if (pendingArticles) return pendingArticles;
+  const version = cacheVersion;
+  const request = apiRequest("/api/articles").then(data => {
+    if (!Array.isArray(data.articles))
+      throw new ApiError("استجابة المقالات غير صالحة.", 502);
+    const articles: StoredArticle[] = data.articles;
+    if (version === cacheVersion)
+      articlesCache = { data: articles, timestamp: Date.now() };
+    return articles;
+  });
+  pendingArticles = request;
   try {
-    // Return cached data if still fresh
-    if (articlesCache && Date.now() - articlesCache.timestamp < CACHE_TTL) {
-      return articlesCache.data;
-    }
-    // Use AbortController to timeout after 3s — prevents long waits on 500 errors
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 3000);
-    try {
-      const token = getAuthToken();
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (token) headers["Authorization"] = `Bearer ${token}`;
-      const res = await fetch("/api/articles", { headers, signal: controller.signal });
-      clearTimeout(timeout);
-      if (!res.ok) return [];
-      const data = await res.json();
-      if (data.success && Array.isArray(data.articles)) {
-        const articles = data.articles.map((a: any) => ({
-          ...a,
-          newspaper: a.newspaper || "",
-          isHardcoded: false,
-        }));
-        articlesCache = { data: articles, timestamp: Date.now() };
-        return articles;
-      }
-      return [];
-    } catch {
-      clearTimeout(timeout);
-      return [];
-    }
-  } catch {
-    return [];
+    return await request;
+  } finally {
+    if (pendingArticles === request) pendingArticles = null;
   }
 }
 
-/** Invalidate the articles cache (call after add/update/delete) */
 export function invalidateArticlesCache(): void {
+  cacheVersion += 1;
   articlesCache = null;
+  pendingArticles = null;
 }
 
-/** Fetch all articles, falling back to hardcoded if API fails */
-export async function fetchAllArticles(): Promise<StoredArticle[]> {
+export const fetchAllArticles = fetchArticles;
+
+export async function fetchArticle(id: string): Promise<StoredArticle | null> {
   try {
-    const apiArticles = await fetchArticles();
-    if (apiArticles.length > 0) {
-      return apiArticles;
-    }
-    // If API returns empty, return hardcoded as fallback
-    return getHardcodedArticles();
-  } catch {
-    return getHardcodedArticles();
+    return (await apiRequest(`/api/articles/${encodeURIComponent(id)}`))
+      .article;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return null;
+    throw error;
   }
 }
 
-/** Get hardcoded articles (for fallback) */
-export function getHardcodedArticles(): StoredArticle[] {
-  return hardcodedArticles.map((a) => ({
-    ...a,
-    newspaper: "",
-    isHardcoded: true,
-  }));
+export interface MutationResult {
+  success: boolean;
+  error?: string;
+  status?: number;
 }
-
-/** Add a new article via API */
-export async function addArticle(article: StoredArticle): Promise<{ success: boolean; error?: string }> {
+async function mutate(
+  url: string,
+  options: RequestInit
+): Promise<MutationResult> {
   try {
-    const data = await apiRequest("/api/articles", {
-      method: "POST",
-      body: JSON.stringify(article),
-    });
-    if (data.success) invalidateArticlesCache();
-    return data;
-  } catch (e: any) {
-    return { success: false, error: e.message };
+    const result = await apiRequest(url, options);
+    invalidateArticlesCache();
+    return result;
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "تعذّر حفظ التغيير.",
+      status: error instanceof ApiError ? error.status : 0,
+    };
   }
 }
 
-/** Update an existing article via API */
-export async function updateArticle(
+export function addArticle(article: StoredArticle): Promise<MutationResult> {
+  return mutate("/api/articles", {
+    method: "POST",
+    body: JSON.stringify(article),
+  });
+}
+export function updateArticle(
   id: string,
   updates: Partial<StoredArticle>
-): Promise<{ success: boolean; error?: string }> {
-  try {
-    const data = await apiRequest(`/api/articles/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(updates),
-    });
-    if (data.success) invalidateArticlesCache();
-    return data;
-  } catch (e: any) {
-    return { success: false, error: e.message };
-  }
+): Promise<MutationResult> {
+  return mutate(`/api/articles/${encodeURIComponent(id)}`, {
+    method: "PUT",
+    body: JSON.stringify(updates),
+  });
 }
-
-/** Delete an article via API */
-export async function deleteArticle(id: string): Promise<{ success: boolean; error?: string }> {
-  try {
-    const data = await apiRequest(`/api/articles/${id}`, {
-      method: "DELETE",
-    });
-    if (data.success) invalidateArticlesCache();
-    return data;
-  } catch (e: any) {
-    return { success: false, error: e.message };
-  }
+export function deleteArticle(id: string): Promise<MutationResult> {
+  return mutate(`/api/articles/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });
 }
-
-/** Seed the database with hardcoded articles */
-export async function seedDatabase(): Promise<{ success: boolean; message?: string; error?: string }> {
-  try {
-    const data = await apiRequest("/api/seed", {
-      method: "POST",
-      body: JSON.stringify({ articles: hardcodedArticles }),
-    });
-    return data;
-  } catch (e: any) {
-    return { success: false, error: e.message };
-  }
-}
-
-/** Get all categories */
 export function getAllCategories(): string[] {
   return [...defaultCategories];
 }
-
-/** Generate a unique ID for new articles */
 export function generateId(): string {
-  return `art_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  return `art_${crypto.randomUUID()}`;
 }

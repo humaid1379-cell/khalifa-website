@@ -1,330 +1,48 @@
-/*
- * Design: Kharij Al Nass — Warm editorial Arabic-first
- * Main articles section: shows only the 5 NEWEST articles by date
- * Full archive is at /archive
- * Fetches from Cloudflare D1 API, falls back to one example article
- *
- * Fixes applied:
- * - Article cards use solid borders, not dashed (#1)
- * - Single-card layout centered (#9)
- * - Archive link arrow uses ArrowRight for RTL (#10)
- */
-import { useState, useMemo, useEffect, useRef } from "react";
-import { X, ChevronLeft, ArrowRight } from "lucide-react";
-import { fetchAllArticles, type StoredArticle } from "@/lib/articleStorage";
-import AnimatedSection from "./AnimatedSection";
+import { ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
-
-const MAX_RECENT = 5;
+import { useArticles } from "@/hooks/useArticles";
+import { ArticleCard, ArticlesLoading, ArticlesState } from "./ArticleList";
 
 export default function ArticlesSection() {
-  const [selectedArticle, setSelectedArticle] = useState<StoredArticle | null>(null);
-  const [allArticles, setAllArticles] = useState<StoredArticle[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      setLoading(true);
-      try {
-        const articles = await fetchAllArticles();
-        if (!cancelled) {
-          setAllArticles(articles);
-        }
-      } catch {
-        // fallback handled inside fetchAllArticles
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-    load();
-    return () => { cancelled = true; };
-  }, []);
-
-  const recentArticles = useMemo(() => {
-    return [...allArticles]
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, MAX_RECENT);
-  }, [allArticles]);
-
-  const hasMore = allArticles.length > MAX_RECENT;
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("ar-AE", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  useEffect(() => {
-    if (selectedArticle) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [selectedArticle]);
-
-  const PATTERN_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663135713175/7EAJf9X3KvFUwHgCUasNkN/pattern1_b9a20e8e.png";
-
-  /* Determine grid classes based on article count for centering (#9) */
-  const getGridClasses = () => {
-    const count = recentArticles.length;
-    if (count === 1) {
-      return "flex justify-center mb-10";
-    }
-    if (count === 2) {
-      return "grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 max-w-3xl mx-auto";
-    }
-    return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10";
-  };
-
+  const { articles, loading, error, retry } = useArticles();
   return (
     <section
       id="articles"
-      className="py-20 md:py-28 relative"
-      style={{
-        backgroundColor: '#f1efd6',
-      }}
+      className="section-spacing"
+      aria-labelledby="articles-title"
     >
-
-      <div className="container relative z-10">
-        {/* Section Header */}
-        <AnimatedSection className="text-center mb-12">
-          <h2 className="font-[Amiri] text-3xl md:text-4xl font-bold text-[#87b0b6] mb-4">
-            أحدث المقالات
-          </h2>
-          <div className="divider-double mx-auto mb-6" />
-          <p className="font-[Amiri] text-[#455a5d] max-w-2xl mx-auto leading-relaxed">
-            آخر ما نُشر من مقالات وآراء
-          </p>
-        </AnimatedSection>
-
-        {/* Skeleton loading state */}
-        {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-[#f1efd6] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15">
-                <div className="h-1 bg-[#87b0b6]/30" />
-                <div className="p-5 md:p-6 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="h-5 w-16 bg-[#87b0b6]/15 rounded-full animate-pulse" />
-                    <div className="h-4 w-24 bg-[#87b0b6] rounded animate-pulse" />
-                  </div>
-                  <div className="h-6 w-full bg-[#87b0b6] rounded animate-pulse" />
-                  <div className="h-5 w-3/4 bg-[#87b0b6] rounded animate-pulse" />
-                  <div className="space-y-2 pt-1">
-                    <div className="h-4 w-full bg-[#87b0b6]/60 rounded animate-pulse" />
-                    <div className="h-4 w-full bg-[#87b0b6]/60 rounded animate-pulse" />
-                    <div className="h-4 w-2/3 bg-[#87b0b6]/60 rounded animate-pulse" />
-                  </div>
-                  <div className="h-4 w-20 bg-[#87b0b6]/15 rounded animate-pulse mt-2" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Articles Grid — centered when few articles (#9), solid borders (#1) */}
-        {!loading && recentArticles.length > 0 && (
-          <div className={getGridClasses()}>
-            {recentArticles.map((article, i) => (
-              <AnimatedSection key={article.id} delay={i * 60}>
-                <button
-                  onClick={() => setSelectedArticle(article)}
-                  className={`${recentArticles.length === 1 ? 'w-full max-w-md' : 'w-full'} text-right bg-[#f1efd6] rounded-xl overflow-hidden shadow-sm border-2 border-[#87b0b6]/15 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group`}
-                >
-                  {/* Category bar — teal */}
-                  <div className="h-1 bg-[#87b0b6] group-hover:bg-[#87b0b6] transition-colors" />
-
-                  <div className="p-5 md:p-6">
-                    {/* Category & Date */}
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-[Amiri] text-xs bg-[#87b0b6]/15 text-[#87b0b6] px-2.5 py-1 rounded-full">
-                        {article.category}
-                      </span>
-                      <span className="font-[Amiri] text-xs text-[#455a5d]">
-                        {formatDate(article.date)}
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="font-[Amiri] text-lg font-bold text-[#455a5d] mb-3 leading-relaxed group-hover:text-[#87b0b6] transition-colors line-clamp-2">
-                      {article.title}
-                    </h3>
-
-                    {/* Newspaper name if present */}
-                    {article.newspaper && (
-                      <p className="font-[Amiri] text-xs text-[#455a5d] mb-2">
-                        {article.newspaper}
-                      </p>
-                    )}
-
-                    {/* Excerpt */}
-                    <p className="font-[Amiri] text-sm text-[#455a5d] leading-relaxed line-clamp-3">
-                      {article.excerpt}
-                    </p>
-
-                    {/* Read more */}
-                    <div className="mt-4 font-[Amiri] text-sm text-[#bf4240] group-hover:text-[#bf4240] flex items-center gap-1">
-                      <span>اقرأ المزيد</span>
-                      <ChevronLeft size={14} />
-                    </div>
-                  </div>
-                </button>
-              </AnimatedSection>
-            ))}
-          </div>
-        )}
-
-        {!loading && recentArticles.length === 0 && (
-          <div className="text-center py-16">
-            <p className="font-[Amiri] text-[#455a5d] text-lg">
-              لا توجد مقالات حتى الآن
+      <div className="container">
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-6 md:mb-14">
+          <div>
+            <p className="eyebrow">من خارج النص</p>
+            <h2 id="articles-title" className="section-title">
+              أحدث المقالات
+            </h2>
+            <p className="section-copy mt-4">
+              قراءات في السياسة والاقتصاد والمجتمع.
             </p>
           </div>
-        )}
-
-        {/* Archive link — solid fill button, arrow fixed for RTL */}
-        {!loading && (
-          <AnimatedSection delay={300} className="flex justify-center mt-4">
-            <Link href="/archive">
-              <span className="inline-flex items-center gap-2 bg-[#87b0b6] text-white font-[Amiri] text-sm font-medium px-7 py-3 rounded-xl hover:bg-[#87b0b6] transition-colors shadow-md cursor-pointer">
-                {hasMore ? (
-                  <>
-                    <span>عرض جميع المقالات ({allArticles.length})</span>
-                    <ArrowRight size={16} className="rotate-180" />
-                  </>
-                ) : (
-                  <>
-                    <span>أرشيف المقالات</span>
-                    <ArrowRight size={16} className="rotate-180" />
-                  </>
-                )}
-              </span>
-            </Link>
-          </AnimatedSection>
-        )}
-      </div>
-
-      {/* Article Modal */}
-      {selectedArticle && (
-        <ArticleModal
-          article={selectedArticle}
-          onClose={() => setSelectedArticle(null)}
-        />
-      )}
-    </section>
-  );
-}
-
-export function ArticleModal({
-  article,
-  onClose,
-}: {
-  article: StoredArticle;
-  onClose: () => void;
-}) {
-  const [visible, setVisible] = useState(false);
-  const innerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setVisible(true));
-    });
-  }, []);
-
-  const handleClose = () => {
-    setVisible(false);
-    setTimeout(onClose, 250);
-  };
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("ar-AE", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-      style={{
-        backgroundColor: visible ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0)",
-        backdropFilter: visible ? "blur(4px)" : "blur(0px)",
-        transition: "background-color 0.25s ease, backdrop-filter 0.25s ease",
-      }}
-      onClick={handleClose}
-    >
-      <div
-        ref={innerRef}
-        className="bg-[#f1efd6] rounded-2xl w-full max-w-3xl max-h-[85vh] overflow-hidden shadow-2xl"
-        style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? "scale(1) translateY(0)" : "scale(0.95) translateY(20px)",
-          transition: "opacity 0.3s ease, transform 0.3s ease",
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header — teal */}
-        <div className="bg-[#87b0b6] p-6 relative">
-          <button
-            onClick={handleClose}
-            className="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-            aria-label="إغلاق"
+          <Link
+            href="/archive"
+            className="editorial-button editorial-button--outline"
           >
-            <X size={18} />
-          </button>
-
-          <div className="flex items-center gap-3 mb-3 flex-wrap">
-            <span className="font-[Amiri] text-xs bg-[#87b0b6] text-white px-3 py-1 rounded-full">
-              {article.category}
-            </span>
-            <span className="font-[Amiri] text-xs text-white/70">
-              {formatDate(article.date)}
-            </span>
-            {article.newspaper && (
-              <span className="font-[Amiri] text-xs text-white/70">
-                — {article.newspaper}
-              </span>
-            )}
-          </div>
-
-          <h2 className="font-[Amiri] text-2xl md:text-3xl font-bold text-white leading-relaxed">
-            {article.title}
-          </h2>
+            أرشيف المقالات <ArrowLeft size={18} aria-hidden="true" />
+          </Link>
         </div>
-
-        {/* Content */}
-        <div className="p-6 md:p-8 overflow-y-auto max-h-[55vh]">
-          <div className="font-[Amiri] text-base text-[#455a5d] leading-[2] whitespace-pre-line">
-            {article.content}
+        {loading ? (
+          <ArticlesLoading />
+        ) : error ? (
+          <ArticlesState error retry={retry} />
+        ) : articles.length === 0 ? (
+          <ArticlesState />
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {articles.slice(0, 3).map(article => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
           </div>
-
-          {/* Author attribution */}
-          <div className="mt-8 pt-6 border-t border-[#87b0b6]">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#87b0b6]/15 flex items-center justify-center">
-                <span className="font-[Amiri] text-[#87b0b6] font-bold text-sm">خ</span>
-              </div>
-              <div>
-                <p className="font-[Amiri] text-sm font-semibold text-[#455a5d]">
-                  خليفة جمعة الرميثي
-                </p>
-                <p className="font-[Amiri] text-xs text-[#455a5d]">
-                  كاتب وصحفي
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
-    </div>
+    </section>
   );
 }

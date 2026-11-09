@@ -13,10 +13,20 @@ CREATE TABLE IF NOT EXISTS articles (
   updated_at TEXT DEFAULT (datetime('now'))
 );
 
--- NOTE: If you created the table before April 2026, the 'year' column may not exist.
--- Run this to add it (safe to run even if it already exists in newer SQLite versions):
--- ALTER TABLE articles ADD COLUMN year INTEGER;
+-- Article years are computed from date by the API; no year column is required.
 
 -- Index for faster queries
 CREATE INDEX IF NOT EXISTS idx_articles_category ON articles(category);
 CREATE INDEX IF NOT EXISTS idx_articles_date ON articles(date DESC);
+-- Additive migration. Does not modify or delete article content.
+CREATE TABLE IF NOT EXISTS admin_sessions (
+  token_hash TEXT PRIMARY KEY,
+  expires_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_admin_sessions_expiry ON admin_sessions(expires_at);
+CREATE TABLE IF NOT EXISTS admin_login_attempts (
+  ip_hash TEXT PRIMARY KEY,
+  window_start INTEGER NOT NULL,
+  attempts INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS idx_admin_login_attempts_window ON admin_login_attempts(window_start);
