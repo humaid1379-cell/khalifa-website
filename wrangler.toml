@@ -1,11 +1,12 @@
-# Cloudflare Pages configuration
-# D1 database binding for article storage
-# The database_id must be set after creating the D1 database in the Cloudflare dashboard
+# Local development only. Production Pages bindings remain dashboard-managed.
+# Intentionally omit pages_build_output_dir: adding it makes this file authoritative
+# for deployment and would overwrite the existing dashboard configuration.
+# See README.md before deploying. This UUID is for an isolated LOCAL database.
 
 name = "khalifa-website"
 compatibility_date = "2024-12-01"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "khalifa-articles"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_name = "khalifa-local"
+database_id = "00000000-0000-0000-0000-000000000001"

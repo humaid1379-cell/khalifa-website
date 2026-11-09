@@ -1,0 +1,126 @@
+.article-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 2rem;
+  border: 1px solid #455a5d30;
+  background: #faf9ed;
+  border-radius: 3px;
+  overflow-wrap: anywhere;
+}
+.article-card-footer {
+  margin-top: auto;
+  padding-top: 1.25rem;
+}
+.article-excerpt {
+  margin-bottom: 1.75rem;
+}
+.article-title-link {
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+.article-title-link:hover {
+  color: #a33432;
+}
+.article-category {
+  border-inline-start: 2px solid #bf4240;
+  padding-inline-start: 0.6rem;
+  font-weight: 700;
+}
+.article-state {
+  padding: clamp(2.5rem, 7vw, 5rem) 1.5rem;
+  text-align: center;
+  border: 1px solid #455a5d25;
+  background: #faf9ed;
+}
+.article-skeleton {
+  min-height: 260px;
+  border: 1px solid #455a5d20;
+  padding: 2rem;
+}
+.article-skeleton div {
+  height: 20px;
+  background: #455a5d12;
+  margin-bottom: 24px;
+}
+.article-skeleton div:nth-child(2) {
+  height: 48px;
+  width: 80%;
+}
+.article-skeleton div:nth-child(3) {
+  height: 72px;
+}
+.archive-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.archive-input {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.75rem 1rem;
+  background: #faf9ed;
+  border: 1px solid #455a5d50;
+  border-radius: 3px;
+  font: inherit;
+  font-size: 1rem;
+}
+.archive-input.article-search {
+  padding-right: 3rem;
+}
+.archive-input::placeholder {
+  color: #677772;
+}
+.reader-content {
+  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  line-height: 2.15;
+  overflow-wrap: anywhere;
+}
+.reader-content p {
+  white-space: pre-line;
+}
+.reader-content p + p {
+  margin-top: 1.5em;
+}
+.reader-shell {
+  width: min(100%, 780px);
+  margin-inline: auto;
+}
+.reader-title {
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  line-height: 1.5;
+  font-weight: 700;
+}
+@media (max-width: 640px) {
+  .archive-filters > div {
+    flex: 1 1 100%;
+  }
+  .article-card {
+    padding: 1.5rem;
+  }
+}
+@media print {
+  nav,
+  footer,
+  .reader-actions,
+  .skip-link,
+  .site-header {
+    display: none !important;
+  }
+  .page-intro {
+    padding-top: 2rem !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .reader-content,
+  .reader-title {
+    color: black !important;
+  }
+}

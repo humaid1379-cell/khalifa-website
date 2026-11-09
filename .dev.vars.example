@@ -1,0 +1,4 @@
+# LOCAL DEVELOPMENT ONLY. Create .dev.vars and set your own values.
+# Never reuse local values in production and never commit .dev.vars.
+ADMIN_PASSWORD=""
+SESSION_SECRET=""

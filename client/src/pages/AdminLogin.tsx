@@ -8,12 +8,13 @@ import { adminLogin } from "@/lib/articleStorage";
 
 interface Props {
   onSuccess: () => void;
+  initialError?: string;
 }
 
-export default function AdminLogin({ onSuccess }: Props) {
+export default function AdminLogin({ onSuccess, initialError = "" }: Props) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(initialError);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -29,8 +30,8 @@ export default function AdminLogin({ onSuccess }: Props) {
         setError("كلمة المرور غير صحيحة");
         setLoading(false);
       }
-    } catch {
-      setError("حدث خطأ في الاتصال");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "حدث خطأ في الاتصال");
       setLoading(false);
     }
   };
@@ -39,7 +40,8 @@ export default function AdminLogin({ onSuccess }: Props) {
     <div
       className="min-h-screen flex items-center justify-center px-4"
       style={{
-        background: "linear-gradient(135deg, #87b0b6 0%, #87b0b6 50%, #87b0b6 100%)",
+        background:
+          "linear-gradient(135deg, #87b0b6 0%, #87b0b6 50%, #87b0b6 100%)",
       }}
     >
       {/* Decorative pattern overlay */}
@@ -89,17 +91,26 @@ export default function AdminLogin({ onSuccess }: Props) {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(e) => {
+                  onChange={e => {
                     setPassword(e.target.value);
                     setError("");
                   }}
                   placeholder="أدخل كلمة المرور"
                   className="w-full pr-4 pl-12 py-3 rounded-xl border-2 border-[#87b0b6] bg-[#f1efd6] font-[Amiri] text-[#455a5d] placeholder:text-[#455a5d] focus:outline-none focus:border-[#87b0b6] transition-colors text-base"
+                  autoComplete="current-password"
+                  required
+                  maxLength={1024}
+                  aria-invalid={Boolean(error)}
+                  aria-describedby={error ? "login-error" : undefined}
                   autoFocus
                   dir="ltr"
                 />
                 <button
                   type="button"
+                  aria-label={
+                    showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"
+                  }
+                  aria-pressed={showPassword}
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-[#455a5d] hover:text-[#455a5d] transition-colors"
                 >
@@ -109,7 +120,11 @@ export default function AdminLogin({ onSuccess }: Props) {
 
               {/* Error message */}
               {error && (
-                <p className="mt-2 font-[Amiri] text-sm text-[#bf4240] flex items-center gap-1">
+                <p
+                  id="login-error"
+                  role="alert"
+                  className="mt-2 font-[Amiri] text-sm text-[#bf4240] flex items-center gap-1"
+                >
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#bf4240]" />
                   {error}
                 </p>
@@ -134,7 +149,7 @@ export default function AdminLogin({ onSuccess }: Props) {
         </div>
 
         {/* Footer */}
-        <p className="text-center mt-6 font-[Amiri] text-xs text-[#f1efd6]/60">
+        <p className="text-center mt-6 font-[Amiri] text-xs text-[#455a5d]">
           خليفة جمعة الرميثي — لوحة إدارة المقالات
         </p>
       </div>

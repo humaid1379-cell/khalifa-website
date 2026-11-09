@@ -1,40 +1,40 @@
-/*
- * Admin Dashboard — Arabic RTL, green theme
- * Full CRUD for articles via Cloudflare D1 API
- * Includes seed button to populate database with initial articles
- */
-import { useState, useMemo, useEffect, useCallback } from "react";
 import {
-  Plus,
-  Search,
-  Edit3,
-  Trash2,
-  LogOut,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type FormEvent,
+} from "react";
+import {
   ArrowRight,
-  X,
-  Save,
+  Edit3,
   FileText,
-  LayoutDashboard,
-  ChevronLeft,
-  ChevronRight,
-  Database,
-  RefreshCw,
   Loader2,
+  LogOut,
+  Plus,
+  RefreshCw,
+  Search,
+  Trash2,
 } from "lucide-react";
 import {
-  fetchArticles,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   addArticle,
-  updateArticle,
-  deleteArticle,
-  getAllCategories,
-  generateId,
+  adminLogin,
   adminLogout,
-  seedDatabase,
-  getHardcodedArticles,
+  deleteArticle,
+  fetchArticles,
+  generateId,
+  getAllCategories,
+  invalidateArticlesCache,
+  updateArticle,
+  type MutationResult,
   type StoredArticle,
 } from "@/lib/articleStorage";
-
-const ITEMS_PER_PAGE = 10;
 
 interface ArticleForm {
   title: string;
@@ -44,715 +44,630 @@ interface ArticleForm {
   excerpt: string;
   content: string;
 }
-
-const emptyForm: ArticleForm = {
+const createEmptyForm = (): ArticleForm => ({
   title: "",
   newspaper: "",
-  date: new Date().toISOString().split("T")[0],
+  date: new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Dubai",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date()),
   category: "رأي",
   excerpt: "",
   content: "",
-};
+});
+const fieldClass =
+  "w-full rounded-xl border border-[#455a5d]/30 bg-white px-4 py-3 text-base text-[#243c3f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#455a5d]";
+const actionClass =
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-bold transition-colors disabled:cursor-wait disabled:opacity-50";
+const formatDate = (date: string) =>
+  new Date(`${date.slice(0, 10)}T12:00:00Z`).toLocaleDateString("ar-AE", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
 export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [articles, setArticles] = useState<StoredArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [loadError, setLoadError] = useState("");
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [form, setForm] = useState<ArticleForm>(emptyForm);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [draftId, setDraftId] = useState(generateId);
+  const [form, setForm] = useState<ArticleForm>(createEmptyForm);
+  const [initialForm, setInitialForm] = useState<ArticleForm>(createEmptyForm);
+  const [deleteTarget, setDeleteTarget] = useState<StoredArticle | null>(null);
   const [saving, setSaving] = useState(false);
-  const [seeding, setSeeding] = useState(false);
-
+  const [notice, setNotice] = useState("");
+  const [error, setError] = useState("");
+  const [sessionExpired, setSessionExpired] = useState(false);
+  const [password, setPassword] = useState("");
+  const [reauthError, setReauthError] = useState("");
+  const [reauthLoading, setReauthLoading] = useState(false);
+  const dirty =
+    showForm && JSON.stringify(form) !== JSON.stringify(initialForm);
   const categories = getAllCategories();
-
-  // Load articles from API on mount
   const loadArticles = useCallback(async () => {
     setLoading(true);
+    setLoadError("");
+    invalidateArticlesCache();
     try {
-      const apiArticles = await fetchArticles();
-      setArticles(apiArticles);
-    } catch {
-      setErrorMsg("فشل في تحميل المقالات");
+      setArticles(await fetchArticles());
+    } catch (reason) {
+      setLoadError(
+        reason instanceof Error ? reason.message : "تعذّر تحميل المقالات."
+      );
     } finally {
       setLoading(false);
     }
   }, []);
-
   useEffect(() => {
-    loadArticles();
+    void loadArticles();
   }, [loadArticles]);
-
-  // Filter by search
-  const filteredArticles = useMemo(() => {
-    if (!searchQuery) return articles;
-    const q = searchQuery.toLowerCase();
-    return articles.filter(
-      (a) =>
-        a.title.includes(q) ||
-        a.excerpt.includes(q) ||
-        (a.newspaper && a.newspaper.includes(q))
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
+  const filtered = useMemo(() => {
+    const term = query.trim().toLocaleLowerCase("ar");
+    return articles.filter(article =>
+      [article.title, article.excerpt, article.newspaper || ""].some(value =>
+        value.toLocaleLowerCase("ar").includes(term)
+      )
     );
-  }, [articles, searchQuery]);
+  }, [articles, query]);
+  const pages = Math.max(1, Math.ceil(filtered.length / 10));
+  const currentPage = Math.min(page, pages);
+  const visible = filtered.slice((currentPage - 1) * 10, currentPage * 10);
 
-  const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE);
-  const paginatedArticles = useMemo(() => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredArticles.slice(start, start + ITEMS_PER_PAGE);
-  }, [filteredArticles, currentPage]);
-
-  const showSuccess = (msg: string) => {
-    setSuccessMsg(msg);
-    setTimeout(() => setSuccessMsg(""), 3000);
-  };
-
-  const showError = (msg: string) => {
-    setErrorMsg(msg);
-    setTimeout(() => setErrorMsg(""), 4000);
-  };
-
-  const handleAdd = () => {
-    setEditingId(null);
-    setForm(emptyForm);
+  const openEditor = (article?: StoredArticle) => {
+    const next = article
+      ? {
+          title: article.title,
+          newspaper: article.newspaper || "",
+          date: article.date.slice(0, 10),
+          category: article.category,
+          excerpt: article.excerpt,
+          content: article.content,
+        }
+      : createEmptyForm();
+    setForm(next);
+    setInitialForm(next);
+    setEditingId(article?.id || null);
+    setDraftId(generateId());
+    setError("");
     setShowForm(true);
   };
-
-  const handleEdit = (article: StoredArticle) => {
-    setEditingId(article.id);
-    setForm({
-      title: article.title,
-      newspaper: article.newspaper || "",
-      date: article.date,
-      category: article.category,
-      excerpt: article.excerpt,
-      content: article.content,
-    });
-    setShowForm(true);
+  const closeEditor = () => {
+    if (
+      saving ||
+      (dirty && !window.confirm("لديك تغييرات لم تُحفظ. هل تريد إغلاق المحرر؟"))
+    )
+      return;
+    setShowForm(false);
+    setError("");
   };
-
-  const handleSave = async () => {
-    if (!form.title.trim() || !form.content.trim()) return;
+  const mutationFailed = (result: MutationResult) => {
+    setError(result.error || "تعذّر حفظ التغيير.");
+    if (result.status === 401) {
+      setSessionExpired(true);
+      setReauthError("");
+    }
+  };
+  const handleSave = async (event: FormEvent) => {
+    event.preventDefault();
+    if (saving) return;
     setSaving(true);
-
-    const year = new Date(form.date).getFullYear();
-
+    setError("");
+    setNotice("");
+    const value = {
+      ...form,
+      title: form.title.trim(),
+      content: form.content.trim(),
+      excerpt: form.excerpt.trim() || form.content.trim().slice(0, 150),
+      year: Number(form.date.slice(0, 4)),
+    };
     try {
-      if (editingId) {
-        const result = await updateArticle(editingId, {
-          title: form.title.trim(),
-          newspaper: form.newspaper.trim(),
-          date: form.date,
-          category: form.category,
-          excerpt: form.excerpt.trim() || form.content.trim().substring(0, 150) + "...",
-          content: form.content.trim(),
-          year,
-        });
-        if (result.success) {
-          showSuccess("تم تحديث المقال بنجاح");
-        } else {
-          showError(result.error || "فشل في تحديث المقال");
-        }
-      } else {
-        const newArticle: StoredArticle = {
-          id: generateId(),
-          title: form.title.trim(),
-          newspaper: form.newspaper.trim(),
-          date: form.date,
-          category: form.category,
-          excerpt: form.excerpt.trim() || form.content.trim().substring(0, 150) + "...",
-          content: form.content.trim(),
-          year,
-        };
-        const result = await addArticle(newArticle);
-        if (result.success) {
-          showSuccess("تم إضافة المقال بنجاح");
-        } else {
-          showError(result.error || "فشل في إضافة المقال");
-        }
+      const result = editingId
+        ? await updateArticle(editingId, value)
+        : await addArticle({ ...value, id: draftId });
+      if (!result.success) {
+        mutationFailed(result);
+        return;
       }
-
-      await loadArticles();
       setShowForm(false);
-      setEditingId(null);
-      setForm(emptyForm);
-    } catch {
-      showError("حدث خطأ في الاتصال بالخادم");
+      setInitialForm(form);
+      setNotice(editingId ? "تم تحديث المقال بنجاح." : "تم نشر المقال بنجاح.");
+      await loadArticles();
     } finally {
       setSaving(false);
     }
   };
-
-  const handleDelete = async (id: string) => {
+  const handleDelete = async () => {
+    if (!deleteTarget || saving) return;
     setSaving(true);
+    setError("");
     try {
-      const result = await deleteArticle(id);
-      if (result.success) {
-        showSuccess("تم حذف المقال بنجاح");
-        await loadArticles();
-      } else {
-        showError(result.error || "فشل في حذف المقال");
+      const result = await deleteArticle(deleteTarget.id);
+      if (!result.success) {
+        mutationFailed(result);
+        return;
       }
-    } catch {
-      showError("حدث خطأ في الاتصال بالخادم");
+      setDeleteTarget(null);
+      setNotice("تم حذف المقال.");
+      await loadArticles();
     } finally {
       setSaving(false);
-      setDeleteConfirm(null);
     }
   };
-
-  const handleSeed = async () => {
-    setSeeding(true);
+  const handleLogout = async () => {
+    if (
+      dirty &&
+      !window.confirm("لديك تغييرات لم تُحفظ. هل تريد تسجيل الخروج؟")
+    )
+      return;
+    setSaving(true);
+    setError("");
     try {
-      const result = await seedDatabase();
-      if (result.success) {
-        showSuccess(result.message || "تم تعبئة قاعدة البيانات بنجاح");
-        await loadArticles();
-      } else {
-        showError(result.error || "فشل في تعبئة قاعدة البيانات");
-      }
-    } catch {
-      showError("حدث خطأ في الاتصال بالخادم");
+      await adminLogout();
+      onLogout();
+    } catch (reason) {
+      setError(
+        reason instanceof Error ? reason.message : "تعذّر تسجيل الخروج."
+      );
     } finally {
-      setSeeding(false);
+      setSaving(false);
     }
   };
-
-  const handleLogout = () => {
-    adminLogout();
-    onLogout();
-  };
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("ar-AE", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+  const reauthenticate = async (event: FormEvent) => {
+    event.preventDefault();
+    setReauthLoading(true);
+    setReauthError("");
+    try {
+      await adminLogin(password);
+      setPassword("");
+      setSessionExpired(false);
+      setError("");
+      setNotice("تم تجديد الجلسة. يمكنك الآن حفظ المقال.");
+    } catch (reason) {
+      setReauthError(
+        reason instanceof Error ? reason.message : "تعذّر تسجيل الدخول."
+      );
+    } finally {
+      setReauthLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f0e1]">
-      {/* Top Bar */}
-      <header className="bg-[#455a5d] text-white sticky top-0 z-40 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <LayoutDashboard size={22} className="text-[#87b0b6]" />
-            <h1 className="font-[Amiri] text-xl font-bold">لوحة إدارة المقالات</h1>
+    <div className="min-h-screen bg-[#f1efd6] text-[#243c3f]" dir="rtl">
+      <header className="bg-[#455a5d] text-white">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-5">
+          <div>
+            <p className="mb-1 text-xs text-[#f1efd6]">خارج النص</p>
+            <h1 className="text-2xl font-bold">إدارة المقالات</h1>
           </div>
-          <div className="flex items-center gap-3">
-            <a
-              href="/"
-              className="hidden md:inline-flex items-center gap-1.5 text-[#87b0b6] hover:text-white font-[Amiri] text-sm transition-colors"
-            >
-              <ArrowRight size={14} />
-              <span>الموقع</span>
+          <div className="flex gap-2">
+            <a href="/" className={`${actionClass} text-white`}>
+              <ArrowRight size={16} />
+              الموقع
             </a>
             <button
+              disabled={saving}
               onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 text-red-300 hover:text-red-100 font-[Amiri] text-sm transition-colors"
+              className={`${actionClass} border border-white/40`}
             >
-              <LogOut size={14} />
-              <span>خروج</span>
+              <LogOut size={16} />
+              خروج
             </button>
           </div>
         </div>
       </header>
-
-      {/* Success toast */}
-      {successMsg && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#455a5d] text-white px-6 py-3 rounded-xl shadow-xl font-[Amiri] text-sm animate-[fadeIn_0.3s_ease]">
-          {successMsg}
-        </div>
-      )}
-
-      {/* Error toast */}
-      {errorMsg && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white px-6 py-3 rounded-xl shadow-xl font-[Amiri] text-sm animate-[fadeIn_0.3s_ease]">
-          {errorMsg}
-        </div>
-      )}
-
-      <main className="max-w-7xl mx-auto px-4 md:px-6 py-6">
-        {/* Stats Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <StatCard
-            label="إجمالي المقالات"
-            value={articles.length}
-            icon={<FileText size={20} />}
-          />
-          <StatCard
-            label="التصنيفات"
-            value={categories.length}
-            icon={<FileText size={20} />}
-          />
-          <div className="col-span-2 md:col-span-2 flex gap-4">
-            <button
-              onClick={handleSeed}
-              disabled={seeding}
-              className="flex-1 bg-white rounded-xl p-4 shadow-sm border border-[#87b0b6] hover:border-[#87b0b6] transition-colors cursor-pointer"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#87b0b6/15] flex items-center justify-center text-[#87b0b6]">
-                  {seeding ? <Loader2 size={20} className="animate-spin" /> : <Database size={20} />}
-                </div>
-                <div className="text-right">
-                  <p className="font-[Amiri] text-sm font-bold text-[#455a5d]">
-                    {seeding ? "جاري التعبئة..." : "تعبئة قاعدة البيانات"}
-                  </p>
-                  <p className="font-[Amiri] text-xs text-[#455a5d]">إضافة المقالات النموذجية</p>
-                </div>
-              </div>
-            </button>
-            <button
-              onClick={loadArticles}
-              disabled={loading}
-              className="bg-white rounded-xl p-4 shadow-sm border border-[#87b0b6] hover:border-[#87b0b6] transition-colors cursor-pointer"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#87b0b6/15] flex items-center justify-center text-[#87b0b6]">
-                  <RefreshCw size={20} className={loading ? "animate-spin" : ""} />
-                </div>
-                <div className="text-right">
-                  <p className="font-[Amiri] text-sm font-bold text-[#455a5d]">تحديث</p>
-                  <p className="font-[Amiri] text-xs text-[#455a5d]">إعادة تحميل</p>
-                </div>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        {/* Toolbar */}
-        <div className="bg-white rounded-xl p-4 shadow-sm border border-[#87b0b6] mb-6">
-          <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search
-                size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#455a5d]"
-              />
-              <input
-                type="text"
-                placeholder="ابحث في المقالات..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="w-full pr-10 pl-4 py-2.5 rounded-lg border border-[#87b0b6] bg-[#f5f0e1] font-[Amiri] text-sm text-[#455a5d] placeholder:text-[#455a5d] focus:outline-none focus:border-[#87b0b6] focus:ring-1 focus:ring-[#87b0b6] transition-colors"
-              />
-            </div>
-
-            {/* Add button */}
-            <button
-              onClick={handleAdd}
-              className="inline-flex items-center justify-center gap-2 bg-[#455a5d] text-white px-5 py-2.5 rounded-lg font-[Amiri] text-sm font-medium hover:bg-[#87b0b6] transition-colors shadow-md"
-            >
-              <Plus size={18} />
-              <span>إضافة مقال جديد</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Loading state */}
-        {loading && (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 size={32} className="animate-spin text-[#87b0b6]" />
-            <span className="mr-3 font-[Amiri] text-[#455a5d]">جاري تحميل المقالات...</span>
-          </div>
+      <main className="mx-auto max-w-6xl px-5 py-8">
+        {notice && (
+          <p
+            role="status"
+            className="mb-5 rounded-xl border border-[#455a5d]/20 bg-white p-4"
+          >
+            {notice}
+          </p>
         )}
-
-        {/* Articles Table */}
-        {!loading && (
-          <div className="bg-white rounded-xl shadow-sm border border-[#87b0b6] overflow-hidden">
-            {/* Desktop Table */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-[#87b0b6] border-b border-[#87b0b6]">
-                    <th className="text-right px-4 py-3 font-[Amiri] text-xs font-semibold text-[#455a5d] uppercase tracking-wider">
-                      العنوان
-                    </th>
-                    <th className="text-right px-4 py-3 font-[Amiri] text-xs font-semibold text-[#455a5d] uppercase tracking-wider">
-                      الصحيفة
-                    </th>
-                    <th className="text-right px-4 py-3 font-[Amiri] text-xs font-semibold text-[#455a5d] uppercase tracking-wider">
-                      التصنيف
-                    </th>
-                    <th className="text-right px-4 py-3 font-[Amiri] text-xs font-semibold text-[#455a5d] uppercase tracking-wider">
-                      التاريخ
-                    </th>
-                    <th className="text-center px-4 py-3 font-[Amiri] text-xs font-semibold text-[#455a5d] uppercase tracking-wider">
-                      إجراءات
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paginatedArticles.map((article, i) => (
-                    <tr
+        {error && !showForm && !deleteTarget && (
+          <p
+            role="alert"
+            className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-red-800"
+          >
+            {error}
+          </p>
+        )}
+        <div className="mb-7 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">مكتبة المقالات</h2>
+            <p className="mt-2 text-sm">
+              {loadError
+                ? "تعذّر تحديث المكتبة"
+                : `${articles.length.toLocaleString("ar-AE")} مقال منشور`}
+            </p>
+          </div>
+          <button
+            onClick={() => openEditor()}
+            className={`${actionClass} bg-[#455a5d] text-white hover:bg-[#243c3f]`}
+          >
+            <Plus size={18} />
+            إضافة مقال جديد
+          </button>
+        </div>
+        <div className="mb-6 flex gap-3">
+          <div className="relative flex-1">
+            <Search
+              className="absolute right-4 top-3.5"
+              size={18}
+              aria-hidden="true"
+            />
+            <input
+              className={`${fieldClass} pr-11`}
+              aria-label="البحث في المقالات"
+              placeholder="ابحث بعنوان المقال أو الصحيفة…"
+              value={query}
+              onChange={event => {
+                setQuery(event.target.value);
+                setPage(1);
+              }}
+            />
+          </div>
+          <button
+            className={`${actionClass} border border-[#455a5d]/30 bg-white`}
+            disabled={loading}
+            onClick={loadArticles}
+            aria-label="تحديث المقالات"
+          >
+            <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
+          </button>
+        </div>
+        {loading ? (
+          <p role="status" className="py-16 text-center">
+            جاري تحميل المقالات…
+          </p>
+        ) : loadError ? (
+          <div
+            role="alert"
+            className="rounded-2xl border border-red-200 bg-white p-8"
+          >
+            <h3 className="mb-2 text-xl font-bold">تعذّر تحميل المقالات</h3>
+            <p>{loadError}</p>
+            <button
+              className={`${actionClass} mt-4 bg-[#455a5d] text-white`}
+              onClick={loadArticles}
+            >
+              إعادة المحاولة
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="overflow-hidden rounded-2xl border border-[#455a5d]/20 bg-white">
+              {visible.length ? (
+                <ul className="divide-y divide-[#455a5d]/15">
+                  {visible.map(article => (
+                    <li
                       key={article.id}
-                      className={`border-b border-[#87b0b6] hover:bg-[#f5f0e1] transition-colors ${
-                        i % 2 === 0 ? "bg-white" : "bg-[#f5f0e1]"
-                      }`}
+                      className="flex flex-wrap items-center justify-between gap-4 p-5 md:p-6"
                     >
-                      <td className="px-4 py-3">
-                        <p className="font-[Amiri] text-sm text-[#455a5d] font-medium line-clamp-1 max-w-xs">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="break-words text-xl font-bold">
                           {article.title}
+                        </h3>
+                        <p className="mt-2 text-sm text-[#455a5d]">
+                          {article.category} · {formatDate(article.date)}
+                          {article.newspaper ? ` · ${article.newspaper}` : ""}
                         </p>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="font-[Amiri] text-xs text-[#455a5d]">
-                          {article.newspaper || "—"}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="inline-block font-[Amiri] text-xs bg-[#87b0b6/15] text-[#87b0b6] px-2 py-0.5 rounded-full">
-                          {article.category}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="font-[Amiri] text-xs text-[#455a5d]">
-                          {formatDate(article.date)}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center justify-center gap-2">
-                          <button
-                            onClick={() => handleEdit(article)}
-                            className="p-1.5 rounded-lg text-[#87b0b6] hover:bg-[#87b0b6/15] transition-colors"
-                            title="تعديل"
-                          >
-                            <Edit3 size={15} />
-                          </button>
-                          <button
-                            onClick={() => setDeleteConfirm(article.id)}
-                            className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
-                            title="حذف"
-                          >
-                            <Trash2 size={15} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          className={`${actionClass} border border-[#455a5d]/25`}
+                          onClick={() => openEditor(article)}
+                          aria-label={`تعديل ${article.title}`}
+                        >
+                          <Edit3 size={16} />
+                          تعديل
+                        </button>
+                        <button
+                          className={`${actionClass} text-red-800 hover:bg-red-50`}
+                          onClick={() => {
+                            setDeleteTarget(article);
+                            setError("");
+                          }}
+                          aria-label={`حذف ${article.title}`}
+                        >
+                          <Trash2 size={16} />
+                          حذف
+                        </button>
+                      </div>
+                    </li>
                   ))}
-                  {paginatedArticles.length === 0 && (
-                    <tr>
-                      <td colSpan={5} className="text-center py-12">
-                        <p className="font-[Amiri] text-[#455a5d]">
-                          {articles.length === 0
-                            ? "لا توجد مقالات في قاعدة البيانات. اضغط على \"تعبئة قاعدة البيانات\" لإضافة المقالات النموذجية."
-                            : "لا توجد مقالات مطابقة للبحث"}
-                        </p>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Mobile Cards */}
-            <div className="md:hidden divide-y divide-[#87b0b6]">
-              {paginatedArticles.map((article) => (
-                <div key={article.id} className="p-4">
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="font-[Amiri] text-sm font-medium text-[#455a5d] line-clamp-2 flex-1">
-                      {article.title}
-                    </h3>
-                    <div className="flex items-center gap-1 shrink-0">
-                      <button
-                        onClick={() => handleEdit(article)}
-                        className="p-1.5 rounded-lg text-[#87b0b6] hover:bg-[#87b0b6/15]"
-                      >
-                        <Edit3 size={14} />
-                      </button>
-                      <button
-                        onClick={() => setDeleteConfirm(article.id)}
-                        className="p-1.5 rounded-lg text-red-500 hover:bg-red-50"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <span className="font-[Amiri] text-xs bg-[#87b0b6/15] text-[#87b0b6] px-2 py-0.5 rounded-full">
-                      {article.category}
-                    </span>
-                    <span className="font-[Amiri] text-xs text-[#455a5d]">
-                      {formatDate(article.date)}
-                    </span>
-                    {article.newspaper && (
-                      <span className="font-[Amiri] text-xs text-[#455a5d]">
-                        {article.newspaper}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-              {paginatedArticles.length === 0 && (
-                <div className="text-center py-12">
-                  <p className="font-[Amiri] text-[#455a5d]">
-                    {articles.length === 0
-                      ? "لا توجد مقالات. اضغط على \"تعبئة قاعدة البيانات\" أعلاه."
-                      : "لا توجد مقالات مطابقة"}
+                </ul>
+              ) : (
+                <div className="px-6 py-16 text-center">
+                  <FileText className="mx-auto mb-4" size={32} />
+                  <h3 className="text-xl font-bold">
+                    {query ? "لا توجد نتائج مطابقة" : "المكتبة جاهزة لأول مقال"}
+                  </h3>
+                  <p className="mt-3">
+                    {query
+                      ? "جرّب كلمات أخرى في البحث."
+                      : "أضف مقالك من الزر أعلاه، وسيظهر على الموقع بعد حفظه."}
                   </p>
                 </div>
               )}
             </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 p-4 border-t border-[#87b0b6]">
+            {pages > 1 && (
+              <nav
+                className="mt-6 flex items-center justify-center gap-4"
+                aria-label="صفحات المقالات"
+              >
                 <button
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  className={`${actionClass} border border-[#455a5d]/30`}
                   disabled={currentPage === 1}
-                  className="w-8 h-8 rounded-lg border border-[#87b0b6] flex items-center justify-center text-[#87b0b6] hover:bg-[#87b0b6/15] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  onClick={() => setPage(currentPage - 1)}
                 >
-                  <ChevronRight size={16} />
+                  السابق
                 </button>
-                <span className="font-[Amiri] text-sm text-[#455a5d]">
-                  {currentPage} / {totalPages}
-                </span>
+                <p>
+                  {currentPage} / {pages}
+                </p>
                 <button
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="w-8 h-8 rounded-lg border border-[#87b0b6] flex items-center justify-center text-[#87b0b6] hover:bg-[#87b0b6/15] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className={`${actionClass} border border-[#455a5d]/30`}
+                  disabled={currentPage === pages}
+                  onClick={() => setPage(currentPage + 1)}
                 >
-                  <ChevronLeft size={16} />
+                  التالي
                 </button>
-              </div>
+              </nav>
             )}
-          </div>
+          </>
         )}
       </main>
-
-      {/* Article Form Modal */}
-      {showForm && (
-        <ArticleFormModal
-          form={form}
-          setForm={setForm}
-          categories={categories}
-          isEditing={!!editingId}
-          onSave={handleSave}
-          saving={saving}
-          onClose={() => {
-            setShowForm(false);
-            setEditingId(null);
-            setForm(emptyForm);
-          }}
-        />
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {deleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
-            <h3 className="font-[Amiri] text-xl font-bold text-[#455a5d] mb-3">
-              تأكيد الحذف
-            </h3>
-            <p className="font-[Amiri] text-sm text-[#455a5d] mb-6">
-              هل أنت متأكد من حذف هذا المقال؟ لا يمكن التراجع عن هذا الإجراء.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => handleDelete(deleteConfirm)}
-                disabled={saving}
-                className="flex-1 py-2.5 rounded-xl bg-red-600 text-white font-[Amiri] text-sm font-medium hover:bg-red-700 disabled:opacity-50 transition-colors"
+      <Dialog
+        open={showForm}
+        onOpenChange={open => {
+          if (!open) closeEditor();
+        }}
+      >
+        <DialogContent
+          dir="rtl"
+          showCloseButton={false}
+          className="max-h-[90dvh] overflow-y-auto bg-[#f1efd6] sm:max-w-2xl"
+          onInteractOutside={event => event.preventDefault()}
+        >
+          <DialogTitle className="text-2xl font-bold">
+            {editingId ? "تعديل المقال" : "مقال جديد"}
+          </DialogTitle>
+          <DialogDescription className="text-[#455a5d]">
+            سيظهر المقال للقراء بعد الحفظ. الحقول المعلّمة بنجمة مطلوبة.
+          </DialogDescription>
+          <form onSubmit={handleSave} className="space-y-5">
+            {error && (
+              <p role="alert" className="rounded-xl bg-red-50 p-3 text-red-800">
+                {error}
+              </p>
+            )}
+            <Field label="عنوان المقال *" id="article-title">
+              <input
+                id="article-title"
+                className={fieldClass}
+                required
+                maxLength={300}
+                value={form.title}
+                onChange={event =>
+                  setForm({ ...form, title: event.target.value })
+                }
+              />
+            </Field>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field label="الصحيفة أو المجلة" id="article-newspaper">
+                <input
+                  id="article-newspaper"
+                  className={fieldClass}
+                  maxLength={300}
+                  value={form.newspaper}
+                  onChange={event =>
+                    setForm({ ...form, newspaper: event.target.value })
+                  }
+                />
+              </Field>
+              <Field label="تاريخ النشر *" id="article-date">
+                <input
+                  id="article-date"
+                  type="date"
+                  dir="ltr"
+                  className={fieldClass}
+                  required
+                  value={form.date}
+                  onChange={event =>
+                    setForm({ ...form, date: event.target.value })
+                  }
+                />
+              </Field>
+            </div>
+            <Field label="التصنيف *" id="article-category">
+              <select
+                id="article-category"
+                className={fieldClass}
+                required
+                value={form.category}
+                onChange={event =>
+                  setForm({ ...form, category: event.target.value })
+                }
               >
-                {saving ? "جاري الحذف..." : "حذف"}
+                {Array.from(new Set([form.category, ...categories]))
+                  .filter(Boolean)
+                  .map(category => (
+                    <option key={category}>{category}</option>
+                  ))}
+              </select>
+            </Field>
+            <Field label="مقتطف قصير (اختياري)" id="article-excerpt">
+              <textarea
+                id="article-excerpt"
+                className={fieldClass}
+                rows={3}
+                maxLength={1500}
+                value={form.excerpt}
+                onChange={event =>
+                  setForm({ ...form, excerpt: event.target.value })
+                }
+              />
+            </Field>
+            <Field label="نص المقال *" id="article-content">
+              <textarea
+                id="article-content"
+                className={`${fieldClass} leading-loose`}
+                rows={12}
+                required
+                maxLength={100000}
+                value={form.content}
+                onChange={event =>
+                  setForm({ ...form, content: event.target.value })
+                }
+              />
+            </Field>
+            <div className="flex flex-wrap gap-3 border-t border-[#455a5d]/20 pt-5">
+              <button
+                type="submit"
+                disabled={saving || !form.title.trim() || !form.content.trim()}
+                className={`${actionClass} bg-[#455a5d] text-white`}
+              >
+                {saving && <Loader2 size={16} className="animate-spin" />}
+                {saving
+                  ? "جاري الحفظ…"
+                  : editingId
+                    ? "حفظ التعديلات"
+                    : "نشر المقال"}
               </button>
               <button
-                onClick={() => setDeleteConfirm(null)}
-                className="flex-1 py-2.5 rounded-xl border-2 border-[#87b0b6] text-[#455a5d] font-[Amiri] text-sm font-medium hover:bg-[#f5f0e1] transition-colors"
+                type="button"
+                disabled={saving}
+                onClick={closeEditor}
+                className={`${actionClass} border border-[#455a5d]/30`}
               >
                 إلغاء
               </button>
             </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+      <Dialog
+        open={Boolean(deleteTarget)}
+        onOpenChange={open => {
+          if (!open && !saving) setDeleteTarget(null);
+        }}
+      >
+        <DialogContent
+          dir="rtl"
+          showCloseButton={false}
+          className="bg-[#f1efd6]"
+        >
+          <DialogTitle>حذف المقال</DialogTitle>
+          <DialogDescription className="text-[#455a5d]">
+            هل تريد حذف «{deleteTarget?.title}»؟ لا يمكن التراجع عن الحذف.
+          </DialogDescription>
+          {error && (
+            <p role="alert" className="text-red-800">
+              {error}
+            </p>
+          )}
+          <div className="flex gap-3">
+            <button
+              autoFocus
+              disabled={saving}
+              className={`${actionClass} border border-[#455a5d]/30`}
+              onClick={() => setDeleteTarget(null)}
+            >
+              إلغاء
+            </button>
+            <button
+              disabled={saving}
+              className={`${actionClass} bg-red-800 text-white`}
+              onClick={handleDelete}
+            >
+              {saving ? "جاري الحذف…" : "حذف المقال"}
+            </button>
           </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
+      <Dialog open={sessionExpired} onOpenChange={setSessionExpired}>
+        <DialogContent
+          dir="rtl"
+          showCloseButton={false}
+          className="bg-[#f1efd6]"
+          onInteractOutside={event => event.preventDefault()}
+        >
+          <DialogTitle>تجديد جلسة الدخول</DialogTitle>
+          <DialogDescription className="text-[#455a5d]">
+            انتهت الجلسة. نص المقال باقٍ في المحرر. سجّل الدخول ثم احفظه مجدداً.
+          </DialogDescription>
+          <form onSubmit={reauthenticate} className="space-y-4">
+            <Field label="كلمة المرور" id="reauth-password">
+              <input
+                id="reauth-password"
+                className={fieldClass}
+                type="password"
+                dir="ltr"
+                autoComplete="current-password"
+                required
+                maxLength={1024}
+                value={password}
+                onChange={event => setPassword(event.target.value)}
+              />
+            </Field>
+            {reauthError && (
+              <p role="alert" className="text-red-800">
+                {reauthError}
+              </p>
+            )}
+            <div className="flex gap-3">
+              <button
+                disabled={reauthLoading}
+                className={`${actionClass} bg-[#455a5d] text-white`}
+              >
+                {reauthLoading ? "جاري التحقق…" : "تسجيل الدخول"}
+              </button>
+              <button
+                type="button"
+                className={`${actionClass} border border-[#455a5d]/30`}
+                onClick={() => setSessionExpired(false)}
+              >
+                العودة للمحرر
+              </button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
 
-// ─── Sub-components ──────────────────────────────────────────────────────────
-
-function StatCard({
+function Field({
   label,
-  value,
-  icon,
+  id,
+  children,
 }: {
   label: string;
-  value: number;
-  icon: React.ReactNode;
+  id: string;
+  children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm border border-[#87b0b6]">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-lg bg-[#87b0b6/15] flex items-center justify-center text-[#87b0b6]">
-          {icon}
-        </div>
-        <div>
-          <p className="font-[Amiri] text-2xl font-bold text-[#455a5d]">{value}</p>
-          <p className="font-[Amiri] text-xs text-[#455a5d]">{label}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ArticleFormModal({
-  form,
-  setForm,
-  categories,
-  isEditing,
-  onSave,
-  saving,
-  onClose,
-}: {
-  form: ArticleForm;
-  setForm: (f: ArticleForm) => void;
-  categories: string[];
-  isEditing: boolean;
-  onSave: () => void;
-  saving: boolean;
-  onClose: () => void;
-}) {
-  const isValid = form.title.trim() && form.content.trim();
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 bg-black/50 overflow-y-auto">
-      <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl my-8">
-        {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-[#87b0b6]">
-          <h2 className="font-[Amiri] text-xl font-bold text-[#455a5d]">
-            {isEditing ? "تعديل المقال" : "إضافة مقال جديد"}
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-lg text-[#455a5d] hover:bg-[#87b0b6] transition-colors"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        {/* Form Body */}
-        <div className="p-5 space-y-4">
-          {/* Title */}
-          <div>
-            <label className="block font-[Amiri] text-sm font-medium text-[#455a5d] mb-1.5">
-              عنوان المقال <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-              placeholder="أدخل عنوان المقال"
-              className="w-full px-4 py-2.5 rounded-xl border-2 border-[#87b0b6] bg-[#f5f0e1] font-[Amiri] text-sm text-[#455a5d] placeholder:text-[#455a5d] focus:outline-none focus:border-[#87b0b6] transition-colors"
-            />
-          </div>
-
-          {/* Newspaper + Date row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block font-[Amiri] text-sm font-medium text-[#455a5d] mb-1.5">
-                اسم الصحيفة / المجلة
-              </label>
-              <input
-                type="text"
-                value={form.newspaper}
-                onChange={(e) => setForm({ ...form, newspaper: e.target.value })}
-                placeholder="مثال: جريدة الاتحاد"
-                className="w-full px-4 py-2.5 rounded-xl border-2 border-[#87b0b6] bg-[#f5f0e1] font-[Amiri] text-sm text-[#455a5d] placeholder:text-[#455a5d] focus:outline-none focus:border-[#87b0b6] transition-colors"
-              />
-            </div>
-            <div>
-              <label className="block font-[Amiri] text-sm font-medium text-[#455a5d] mb-1.5">
-                تاريخ النشر
-              </label>
-              <input
-                type="date"
-                value={form.date}
-                onChange={(e) => setForm({ ...form, date: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl border-2 border-[#87b0b6] bg-[#f5f0e1] font-[Amiri] text-sm text-[#455a5d] focus:outline-none focus:border-[#87b0b6] transition-colors"
-                dir="ltr"
-              />
-            </div>
-          </div>
-
-          {/* Category */}
-          <div>
-            <label className="block font-[Amiri] text-sm font-medium text-[#455a5d] mb-1.5">
-              التصنيف
-            </label>
-            <select
-              value={form.category}
-              onChange={(e) => setForm({ ...form, category: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border-2 border-[#87b0b6] bg-[#f5f0e1] font-[Amiri] text-sm text-[#455a5d] focus:outline-none focus:border-[#87b0b6] appearance-none cursor-pointer transition-colors"
-            >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Excerpt */}
-          <div>
-            <label className="block font-[Amiri] text-sm font-medium text-[#455a5d] mb-1.5">
-              المقتطف{" "}
-              <span className="text-[#455a5d] font-normal">(اختياري — يُولّد تلقائياً)</span>
-            </label>
-            <textarea
-              value={form.excerpt}
-              onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
-              placeholder="ملخص قصير للمقال يظهر في بطاقة المقال"
-              rows={2}
-              className="w-full px-4 py-2.5 rounded-xl border-2 border-[#87b0b6] bg-[#f5f0e1] font-[Amiri] text-sm text-[#455a5d] placeholder:text-[#455a5d] focus:outline-none focus:border-[#87b0b6] transition-colors resize-none"
-            />
-          </div>
-
-          {/* Content */}
-          <div>
-            <label className="block font-[Amiri] text-sm font-medium text-[#455a5d] mb-1.5">
-              نص المقال <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              value={form.content}
-              onChange={(e) => setForm({ ...form, content: e.target.value })}
-              placeholder="اكتب نص المقال الكامل هنا..."
-              rows={10}
-              className="w-full px-4 py-2.5 rounded-xl border-2 border-[#87b0b6] bg-[#f5f0e1] font-[Amiri] text-sm text-[#455a5d] placeholder:text-[#455a5d] focus:outline-none focus:border-[#87b0b6] transition-colors resize-y leading-relaxed"
-            />
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="flex items-center justify-end gap-3 p-5 border-t border-[#87b0b6]">
-          <button
-            onClick={onClose}
-            className="px-5 py-2.5 rounded-xl border-2 border-[#87b0b6] text-[#455a5d] font-[Amiri] text-sm font-medium hover:bg-[#f5f0e1] transition-colors"
-          >
-            إلغاء
-          </button>
-          <button
-            onClick={onSave}
-            disabled={!isValid || saving}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#455a5d] text-white font-[Amiri] text-sm font-medium hover:bg-[#87b0b6] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md"
-          >
-            {saving ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <Save size={16} />
-            )}
-            <span>{saving ? "جاري الحفظ..." : isEditing ? "تحديث" : "حفظ"}</span>
-          </button>
-        </div>
-      </div>
+    <div>
+      <label className="mb-2 block text-sm font-bold" htmlFor={id}>
+        {label}
+      </label>
+      {children}
     </div>
   );
 }
