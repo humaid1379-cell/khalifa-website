@@ -27,7 +27,9 @@ Open the localhost URL Wrangler reports. Secure session cookies work on localhos
 
 ## Deployment of the security upgrade
 
-Production is the existing Cloudflare Pages project serving `khaleefa-alromaithi11.ae`. Keep its current Git integration, domain, and `DB` binding. `wrangler.toml` is **local-only**, intentionally without `pages_build_output_dir`. Do not add that key with the local database settings: Cloudflare would use the file as production configuration.
+Production is the existing Cloudflare Pages project serving `khaleefa-alromaithi11.ae`. Keep its Git integration, domain, and dashboard-managed `DB` binding. `wrangler.toml` is **local-only**, intentionally without `pages_build_output_dir`. Do not add that key with the local database settings: Cloudflare would use the file as production configuration.
+
+The November 2026 rollout uses `khalifa-articles-production` for production and `khalifa-articles-preview` for preview. The original `khalifa-articles` database was empty and is retained as a legacy backup. This separation prevents historical deployments containing the exposed credential from modifying new production content. Those old deployments still exist and can access their legacy database; do not retry, roll back to, or redeploy their vulnerable source against the new production binding. Deploy only reviewed upgraded revisions.
 
 Before merging the upgrade into the production branch:
 
