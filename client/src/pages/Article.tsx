@@ -12,8 +12,15 @@ import Footer from "@/components/Footer";
 import { fetchArticle, type StoredArticle } from "@/lib/articleStorage";
 import { articleDate, readingLabel } from "@/lib/articlePresentation";
 import { SITE } from "@/config/site";
+import type { ReaderMetadataState } from "@/lib/routeMetadata";
 
-export default function Article({ params }: { params: { id: string } }) {
+export default function Article({
+  params,
+  onMetadata,
+}: {
+  params: { id: string };
+  onMetadata: (state: ReaderMetadataState) => void;
+}) {
   const [article, setArticle] = useState<StoredArticle | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -44,34 +51,18 @@ export default function Article({ params }: { params: { id: string } }) {
   }, [params.id, attempt]);
 
   useEffect(() => {
-    if (!article) {
-      if (!loading && !error) {
-        document.title = "المقال غير موجود | خارج النص";
-        document
-          .querySelector('meta[name="robots"]')
-          ?.setAttribute("content", "noindex,follow");
-      }
-      return;
-    }
-    document
-      .querySelector('meta[name="robots"]')
-      ?.setAttribute("content", "index,follow");
-    document.title = `${article.title} | ${SITE.name}`;
-    document
-      .querySelector('meta[property="og:title"]')
-      ?.setAttribute("content", document.title);
-    document
-      .querySelector('meta[property="og:description"]')
-      ?.setAttribute(
-        "content",
-        article.excerpt || article.content.slice(0, 160)
-      );
-    const description = document.querySelector('meta[name="description"]');
-    description?.setAttribute(
-      "content",
-      article.excerpt || article.content.slice(0, 160)
-    );
-  }, [article, loading, error]);
+    onMetadata({
+      id: params.id,
+      status: loading
+        ? "loading"
+        : error
+          ? "error"
+          : article
+            ? "ready"
+            : "missing",
+      article: article || undefined,
+    });
+  }, [params.id, article, loading, error, onMetadata]);
 
   async function copyLink() {
     try {

@@ -11,7 +11,7 @@ export async function onRequestGet(context) {
   try {
     const { results } = await requireDatabase(context.env)
       .prepare(
-        "SELECT id, title, excerpt, content, date, category, newspaper, created_at, updated_at FROM articles ORDER BY date DESC, created_at DESC"
+        "SELECT id, title, excerpt, content, date, category, newspaper, created_at, updated_at, revision FROM articles ORDER BY date DESC, created_at DESC"
       )
       .all();
     return json({ success: true, articles: (results || []).map(withYear) });
@@ -40,9 +40,10 @@ export async function onRequestPost(context) {
         article.newspaper
       )
       .run();
-    if (result.meta.changes) return json({ success: true }, 201);
+    if (result.meta.changes)
+      return json({ success: true, id, revision: 1 }, 201);
     const exists = await context.env.DB.prepare(
-      "SELECT title, excerpt, content, date, category, newspaper FROM articles WHERE id = ?"
+      "SELECT title, excerpt, content, date, category, newspaper, revision FROM articles WHERE id = ?"
     )
       .bind(id)
       .first();
@@ -50,7 +51,7 @@ export async function onRequestPost(context) {
       exists &&
       Object.keys(article).every(key => (exists[key] || "") === article[key]);
     return unchanged
-      ? json({ success: true })
+      ? json({ success: true, id, revision: exists.revision })
       : json({ success: false, error: "يوجد مقال بهذا المعرّف بالفعل." }, 409);
   } catch (error) {
     return errorResponse(error);

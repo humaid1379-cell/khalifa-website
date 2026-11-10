@@ -1,11 +1,21 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch, useLocation } from "wouter";
+import { Route, Switch, useLocation, useSearch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
-import { lazy, Suspense, useEffect } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  applyPageMetadata,
+  getPageMetadata,
+  type ReaderMetadataState,
+} from "@/lib/routeMetadata";
 import "./article.css";
 
 const Admin = lazy(() => import("./pages/Admin"));
@@ -13,56 +23,60 @@ const Archive = lazy(() => import("./pages/Archive"));
 const Podcast = lazy(() => import("./pages/Podcast"));
 const Article = lazy(() => import("./pages/Article"));
 
-function RouteMetadata() {
+function RouteMetadata({ reader }: { reader?: ReaderMetadataState }) {
   const [location] = useLocation();
+  const search = useSearch();
+  useLayoutEffect(() => {
+    applyPageMetadata(getPageMetadata(location, search, reader));
+  }, [location, search, reader]);
+  return null;
+}
+
+function RouteScroll() {
+  const [location] = useLocation();
+  const restoredUrl = useRef("");
   useEffect(() => {
-    const titles: Record<string, string> = {
-      "/": "خليفة جمعة الرميثي | خارج النص",
-      "/archive": "أرشيف المقالات | خارج النص",
-      "/podcast": "البودكاست | خارج النص",
-      "/admin": "إدارة الموقع | خارج النص",
+    const rememberHistoryNavigation = () => {
+      restoredUrl.current = window.location.href;
     };
-    document.title =
-      titles[location] ||
-      (location.startsWith("/articles/")
-        ? "المقال | خارج النص"
-        : "الصفحة غير موجودة | خارج النص");
-    const url = `https://khaleefa-alromaithi11.ae${location === "/" ? "/" : location}`;
-    document.querySelector('link[rel="canonical"]')?.setAttribute("href", url);
-    document
-      .querySelector('meta[property="og:url"]')
-      ?.setAttribute("content", url);
-    document
-      .querySelector('meta[property="og:title"]')
-      ?.setAttribute("content", document.title);
-    document
-      .querySelector('meta[property="og:type"]')
-      ?.setAttribute(
-        "content",
-        location.startsWith("/articles/") ? "article" : "website"
-      );
-    document
-      .querySelector('meta[name="robots"]')
-      ?.setAttribute(
-        "content",
-        location === "/admin" ||
-          (!titles[location] && !location.startsWith("/articles/"))
-          ? "noindex,nofollow"
-          : "index,follow"
-      );
-    document
-      .querySelector('meta[name="description"]')
-      ?.setAttribute(
-        "content",
-        "قراءات في السياسة والاقتصاد والمجتمع بقلم خليفة جمعة الرميثي."
-      );
-    document
-      .querySelector('meta[property="og:description"]')
-      ?.setAttribute(
-        "content",
-        "قراءات في السياسة والاقتصاد والمجتمع بقلم خليفة جمعة الرميثي."
-      );
-    if (!window.location.hash) window.scrollTo({ top: 0, behavior: "instant" });
+    window.addEventListener("popstate", rememberHistoryNavigation, true);
+    return () =>
+      window.removeEventListener("popstate", rememberHistoryNavigation, true);
+  }, []);
+  useEffect(() => {
+    let observer: MutationObserver | undefined;
+    const scrollToHash = () => {
+      observer?.disconnect();
+      if (!window.location.hash) return false;
+      let id: string;
+      try {
+        id = decodeURIComponent(window.location.hash.slice(1));
+      } catch {
+        return false;
+      }
+      const revealTarget = () => {
+        const target = document.getElementById(id);
+        if (!target) return false;
+        target.scrollIntoView({ behavior: "instant", block: "start" });
+        observer?.disconnect();
+        return true;
+      };
+      if (!revealTarget()) {
+        observer = new MutationObserver(revealTarget);
+        observer.observe(document.getElementById("root") || document.body, {
+          childList: true,
+          subtree: true,
+        });
+      }
+      return true;
+    };
+    if (!scrollToHash() && restoredUrl.current !== window.location.href)
+      window.scrollTo({ top: 0, behavior: "instant" });
+    window.addEventListener("hashchange", scrollToHash);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("hashchange", scrollToHash);
+    };
   }, [location]);
   return null;
 }
@@ -80,7 +94,11 @@ function PageLoader() {
   );
 }
 
-function Router() {
+function Router({
+  onReaderState,
+}: {
+  onReaderState: (state: ReaderMetadataState) => void;
+}) {
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -97,7 +115,11 @@ function Router() {
       <Route path="/articles/:id">
         {params => (
           <Suspense fallback={<PageLoader />}>
-            <Article params={params} />
+            <Article
+              key={params.id}
+              params={params}
+              onMetadata={onReaderState}
+            />
           </Suspense>
         )}
       </Route>
@@ -113,14 +135,13 @@ function Router() {
 }
 
 function App() {
+  const [reader, setReader] = useState<ReaderMetadataState>();
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
-        <TooltipProvider>
-          <Toaster />
-          <RouteMetadata />
-          <Router />
-        </TooltipProvider>
+        <RouteMetadata reader={reader} />
+        <RouteScroll />
+        <Router onReaderState={setReader} />
       </ThemeProvider>
     </ErrorBoundary>
   );

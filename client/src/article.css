@@ -105,6 +105,9 @@
   }
 }
 @media print {
+  @page {
+    margin: 18mm;
+  }
   nav,
   footer,
   .reader-actions,
@@ -113,7 +116,21 @@
     display: none !important;
   }
   .page-intro {
-    padding-top: 2rem !important;
+    padding-block: 0 1.5rem !important;
+    background: white !important;
+    border-bottom: 1px solid #666;
+  }
+  .page-intro,
+  .page-intro * {
+    color: black !important;
+    border-color: #666 !important;
+  }
+  .page-intro a {
+    display: none !important;
+  }
+  .container {
+    max-width: none;
+    padding-inline: 0;
   }
   body {
     background: white !important;
@@ -122,5 +139,19 @@
   .reader-content,
   .reader-title {
     color: black !important;
+  }
+  .reader-content {
+    padding-block: 0 !important;
+  }
+  main > .container.section-spacing {
+    padding-block: 1.5rem !important;
+  }
+  .reader-content p {
+    orphans: 3;
+    widows: 3;
+  }
+  .reader-title {
+    font-size: 28pt;
+    break-after: avoid;
   }
 }

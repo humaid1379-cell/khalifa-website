@@ -372,6 +372,7 @@ test("article CRUD validates input, preserves Arabic, and parameterizes text", a
         context(env, "/api/articles/test-article", {
           method: "PUT",
           cookie,
+          headers: { "If-Match": '"1"' },
           body: { ...record, title: "تحديث" },
         })
       )
@@ -408,7 +409,11 @@ test("article CRUD validates input, preserves Arabic, and parameterizes text", a
   assert.equal(
     (
       await article.onRequestDelete(
-        context(env, "/api/articles/test-article", { method: "DELETE", cookie })
+        context(env, "/api/articles/test-article", {
+          method: "DELETE",
+          cookie,
+          headers: { "If-Match": '"2"' },
+        })
       )
     ).status,
     200
@@ -416,7 +421,11 @@ test("article CRUD validates input, preserves Arabic, and parameterizes text", a
   assert.equal(
     (
       await article.onRequestDelete(
-        context(env, "/api/articles/test-article", { method: "DELETE", cookie })
+        context(env, "/api/articles/test-article", {
+          method: "DELETE",
+          cookie,
+          headers: { "If-Match": '"2"' },
+        })
       )
     ).status,
     404
@@ -536,6 +545,13 @@ test("simultaneous identical creates are idempotent and conflicting creates retu
     responses.filter(response => response.status === 200).length,
     11
   );
+  for (const response of responses) {
+    assert.deepEqual(await response.json(), {
+      success: true,
+      id: sample.id,
+      revision: 1,
+    });
+  }
   assert.equal(
     env.DB.db.prepare("SELECT COUNT(*) AS total FROM articles").get().total,
     1
@@ -554,4 +570,212 @@ test("simultaneous identical creates are idempotent and conflicting creates retu
       .get("competing").total,
     1
   );
+});
+
+test("created articles expose a server-controlled revision through public reads", async () => {
+  const env = environment();
+  const cookie = await login(env);
+  const created = await articles.onRequestPost(
+    context(env, "/api/articles", {
+      method: "POST",
+      cookie,
+      body: { ...sample, revision: 99 },
+    })
+  );
+  assert.equal(created.status, 201);
+  assert.deepEqual(await created.json(), {
+    success: true,
+    id: sample.id,
+    revision: 1,
+  });
+  const found = await article.onRequestGet(
+    context(env, `/api/articles/${sample.id}`)
+  );
+  assert.equal(found.headers.get("ETag"), '"1"');
+  assert.equal((await found.json()).article.revision, 1);
+  const list = await articles.onRequestGet(context(env, "/api/articles"));
+  assert.equal((await list.json()).articles[0].revision, 1);
+});
+
+test("concurrent edits of the same revision cannot silently overwrite each other", async () => {
+  const env = environment();
+  const cookie = await login(env);
+  await articles.onRequestPost(
+    context(env, "/api/articles", { method: "POST", cookie, body: sample })
+  );
+  const edits = [
+    { ...sample, title: "عنوان المحرر الأول" },
+    { ...sample, content: "محتوى المحرر الثاني" },
+  ];
+  const responses = await Promise.all(
+    edits.map(body =>
+      article.onRequestPut(
+        context(env, `/api/articles/${sample.id}`, {
+          method: "PUT",
+          cookie,
+          body,
+          headers: { "If-Match": '"1"' },
+        })
+      )
+    )
+  );
+  assert.deepEqual(
+    responses.map(response => response.status).sort(),
+    [200, 409]
+  );
+  const winner = responses.findIndex(response => response.status === 200);
+  const conflict = responses[1 - winner];
+  assert.equal((await conflict.json()).currentRevision, 2);
+  assert.equal(responses[winner].headers.get("ETag"), '"2"');
+  assert.equal((await responses[winner].json()).revision, 2);
+  const saved = (
+    await (
+      await article.onRequestGet(context(env, `/api/articles/${sample.id}`))
+    ).json()
+  ).article;
+  assert.equal(saved.title, edits[winner].title);
+  assert.equal(saved.content, edits[winner].content);
+  assert.equal(saved.revision, 2);
+
+  const nextEdit = await article.onRequestPut(
+    context(env, `/api/articles/${sample.id}`, {
+      method: "PUT",
+      cookie,
+      body: { ...saved, title: "تحديث بعد مراجعة النسخة الأحدث" },
+      headers: { "If-Match": '"2"' },
+    })
+  );
+  assert.equal(nextEdit.status, 200);
+  assert.equal((await nextEdit.json()).revision, 3);
+});
+
+test("stale deletion preserves a newer edit and deletion of the current revision succeeds", async () => {
+  const env = environment();
+  const cookie = await login(env);
+  await articles.onRequestPost(
+    context(env, "/api/articles", { method: "POST", cookie, body: sample })
+  );
+  await article.onRequestPut(
+    context(env, `/api/articles/${sample.id}`, {
+      method: "PUT",
+      cookie,
+      body: { ...sample, title: "تحديث يجب الحفاظ عليه" },
+      headers: { "If-Match": '"1"' },
+    })
+  );
+  const remove = revision =>
+    article.onRequestDelete(
+      context(env, `/api/articles/${sample.id}`, {
+        method: "DELETE",
+        cookie,
+        headers: { "If-Match": `"${revision}"` },
+      })
+    );
+  const stale = await remove(1);
+  assert.equal(stale.status, 409);
+  assert.equal((await stale.json()).currentRevision, 2);
+  assert.equal(
+    env.DB.db.prepare("SELECT title FROM articles WHERE id = ?").get(sample.id)
+      .title,
+    "تحديث يجب الحفاظ عليه"
+  );
+  assert.equal((await remove(2)).status, 200);
+  assert.equal((await remove(2)).status, 404);
+});
+
+test("update and delete require a valid revision after authenticating the request", async () => {
+  const env = environment();
+  const cookie = await login(env);
+  await articles.onRequestPost(
+    context(env, "/api/articles", { method: "POST", cookie, body: sample })
+  );
+  for (const [method, handler] of [
+    ["PUT", article.onRequestPut],
+    ["DELETE", article.onRequestDelete],
+  ]) {
+    const request = (id, options = {}) =>
+      handler(
+        context(env, `/api/articles/${id}`, {
+          method,
+          cookie,
+          ...(method === "PUT" ? { body: sample } : {}),
+          ...options,
+        })
+      );
+    assert.equal((await request(sample.id, { cookie: undefined })).status, 401);
+    assert.equal((await request(sample.id)).status, 428);
+    for (const invalid of [
+      "1",
+      '"0"',
+      '"-1"',
+      "*",
+      'W/"1"',
+      '"1", "2"',
+      '"9007199254740991"',
+    ]) {
+      assert.equal(
+        (await request(sample.id, { headers: { "If-Match": invalid } })).status,
+        400
+      );
+    }
+    assert.equal(
+      (await request("missing", { headers: { "If-Match": '"1"' } })).status,
+      404
+    );
+  }
+  const saved = env.DB.db
+    .prepare("SELECT title, revision FROM articles WHERE id = ?")
+    .get(sample.id);
+  assert.equal(saved.title, sample.title);
+  assert.equal(saved.revision, 1);
+});
+
+test("revision migration preserves existing articles and initializes old and new rows at one", () => {
+  const db = new DatabaseSync(":memory:");
+  db.exec(`CREATE TABLE articles (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    excerpt TEXT NOT NULL DEFAULT '',
+    content TEXT NOT NULL,
+    date TEXT NOT NULL,
+    category TEXT NOT NULL DEFAULT 'رأي',
+    newspaper TEXT DEFAULT '',
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+  )`);
+  db.prepare(
+    "INSERT INTO articles (id, title, excerpt, content, date, category, newspaper, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+  ).run(
+    sample.id,
+    sample.title,
+    sample.excerpt,
+    sample.content,
+    sample.date,
+    sample.category,
+    sample.newspaper,
+    "2026-01-01 00:00:00",
+    "2026-11-01 12:00:00"
+  );
+  const before = db.prepare("SELECT * FROM articles").get();
+  db.exec(
+    readFileSync(
+      new URL("../migrations/0002_article_revision.sql", import.meta.url),
+      "utf8"
+    )
+  );
+  assert.deepEqual(
+    { ...db.prepare("SELECT * FROM articles WHERE id = ?").get(sample.id) },
+    { ...before, revision: 1 }
+  );
+  db.prepare(
+    "INSERT INTO articles (id, title, content, date) VALUES (?, ?, ?, ?)"
+  ).run("new", "جديد", "نص", "2026-11-10");
+  assert.equal(
+    db.prepare("SELECT revision FROM articles WHERE id = 'new'").get().revision,
+    1
+  );
+  assert.throws(() =>
+    db.prepare("UPDATE articles SET revision = 0 WHERE id = ?").run(sample.id)
+  );
+  db.close();
 });

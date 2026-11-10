@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import {
@@ -10,22 +10,35 @@ import {
 } from "@/components/ArticleList";
 import { useArticles } from "@/hooks/useArticles";
 import { filterArticles } from "@/lib/articlePresentation";
+import {
+  archiveHref,
+  parseArchiveState,
+  type ArchiveState,
+} from "@/lib/archiveState";
 
 const PAGE_SIZE = 9;
 
 export default function Archive() {
   const { articles, loading, error, retry } = useArticles();
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("");
-  const [year, setYear] = useState("");
-  const [page, setPage] = useState(1);
+  const search = useSearch();
+  const [, navigate] = useLocation();
+  const state = parseArchiveState(search);
+  const { query, category, year, page } = state;
+  const paginationClicked = useRef(false);
   const categories = useMemo(
-    () => Array.from(new Set(articles.map(a => a.category))),
-    [articles]
+    () =>
+      Array.from(new Set([category, ...articles.map(a => a.category)])).filter(
+        Boolean
+      ),
+    [articles, category]
   );
   const years = useMemo(
-    () => Array.from(new Set(articles.map(a => a.date.slice(0, 4)))).sort().reverse(),
-    [articles]
+    () =>
+      Array.from(new Set([year, ...articles.map(a => a.date.slice(0, 4))]))
+        .filter(Boolean)
+        .sort()
+        .reverse(),
+    [articles, year]
   );
   const filtered = useMemo(
     () => filterArticles(articles, query, category, year),
@@ -33,18 +46,33 @@ export default function Archive() {
   );
   const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, pages);
-  const clear = () => {
-    setQuery("");
-    setCategory("");
-    setYear("");
-    setPage(1);
+  const updateFilters = (updates: Partial<ArchiveState>) => {
+    navigate(archiveHref({ ...state, ...updates, page: 1 }), { replace: true });
   };
-  const changePage = (next: number) => {
-    setPage(next);
-    document
-      .getElementById("archive-results")
-      ?.scrollIntoView({ behavior: "instant", block: "start" });
-    document.getElementById("archive-results")?.focus({ preventScroll: true });
+  const clear = () => updateFilters({ query: "", category: "", year: "" });
+  useEffect(() => {
+    // Replace impossible page numbers only after a successful load.
+    if (!loading && !error && page !== currentPage)
+      navigate(archiveHref({ query, category, year, page: currentPage }), {
+        replace: true,
+      });
+  }, [loading, error, page, currentPage, query, category, year, navigate]);
+  useEffect(() => {
+    if (!paginationClicked.current) return;
+    paginationClicked.current = false;
+    const results = document.getElementById("archive-results");
+    results?.scrollIntoView({ behavior: "instant", block: "start" });
+    results?.focus({ preventScroll: true });
+  }, [currentPage]);
+  const onPaginationClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (
+      !event.ctrlKey &&
+      !event.metaKey &&
+      !event.shiftKey &&
+      !event.altKey &&
+      event.button === 0
+    )
+      paginationClicked.current = true;
   };
   return (
     <div className="min-h-screen">
@@ -89,10 +117,7 @@ export default function Archive() {
                   id="article-search"
                   type="search"
                   value={query}
-                  onChange={e => {
-                    setQuery(e.target.value);
-                    setPage(1);
-                  }}
+                  onChange={e => updateFilters({ query: e.target.value })}
                   placeholder="عنوان، موضوع، أو كلمة…"
                   className="archive-input article-search"
                 />
@@ -109,10 +134,7 @@ export default function Archive() {
                 id="article-category"
                 value={category}
                 className="archive-input"
-                onChange={e => {
-                  setCategory(e.target.value);
-                  setPage(1);
-                }}
+                onChange={e => updateFilters({ category: e.target.value })}
               >
                 <option value="">كل الموضوعات</option>
                 {categories.map(value => (
@@ -131,10 +153,7 @@ export default function Archive() {
                 id="article-year"
                 value={year}
                 className="archive-input"
-                onChange={e => {
-                  setYear(e.target.value);
-                  setPage(1);
-                }}
+                onChange={e => updateFilters({ year: e.target.value })}
               >
                 <option value="">كل السنوات</option>
                 {years.map(value => (
@@ -188,26 +207,44 @@ export default function Archive() {
               aria-label="صفحات المقالات"
               className="mt-12 flex flex-wrap items-center justify-center gap-4"
             >
-              <button
-                type="button"
-                className="editorial-button editorial-button--outline"
-                disabled={currentPage === 1}
-                onClick={() => changePage(currentPage - 1)}
-              >
-                <ChevronRight size={18} aria-hidden="true" /> السابقة
-              </button>
+              {currentPage > 1 ? (
+                <Link
+                  href={archiveHref({ ...state, page: currentPage - 1 })}
+                  rel="prev"
+                  onClick={onPaginationClick}
+                  className="editorial-button editorial-button--outline"
+                >
+                  <ChevronRight size={18} aria-hidden="true" /> السابقة
+                </Link>
+              ) : (
+                <span
+                  aria-disabled="true"
+                  className="editorial-button editorial-button--outline opacity-50"
+                >
+                  <ChevronRight size={18} aria-hidden="true" /> السابقة
+                </span>
+              )}
               <span aria-live="polite">
                 {currentPage.toLocaleString("ar-AE")} /{" "}
                 {pages.toLocaleString("ar-AE")}
               </span>
-              <button
-                type="button"
-                className="editorial-button editorial-button--outline"
-                disabled={currentPage === pages}
-                onClick={() => changePage(currentPage + 1)}
-              >
-                التالية <ChevronLeft size={18} aria-hidden="true" />
-              </button>
+              {currentPage < pages ? (
+                <Link
+                  href={archiveHref({ ...state, page: currentPage + 1 })}
+                  rel="next"
+                  onClick={onPaginationClick}
+                  className="editorial-button editorial-button--outline"
+                >
+                  التالية <ChevronLeft size={18} aria-hidden="true" />
+                </Link>
+              ) : (
+                <span
+                  aria-disabled="true"
+                  className="editorial-button editorial-button--outline opacity-50"
+                >
+                  التالية <ChevronLeft size={18} aria-hidden="true" />
+                </span>
+              )}
             </nav>
           )}
         </div>

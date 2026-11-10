@@ -38,11 +38,7 @@ export default function AdminLogin({ onSuccess, initialError = "" }: Props) {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4"
-      style={{
-        background:
-          "linear-gradient(135deg, #87b0b6 0%, #87b0b6 50%, #87b0b6 100%)",
-      }}
+      className="min-h-screen flex items-center justify-center px-4 py-10 bg-[#304649]"
     >
       {/* Decorative pattern overlay */}
       <div
@@ -56,7 +52,7 @@ export default function AdminLogin({ onSuccess, initialError = "" }: Props) {
         {/* Back to site link */}
         <a
           href="/"
-          className="inline-flex items-center gap-2 text-[#f1efd6] hover:text-white font-[Amiri] text-sm mb-6 transition-colors"
+          className="inline-flex min-h-11 items-center gap-2 text-[#f1efd6] hover:text-white font-[Amiri] text-base mb-6 transition-colors [--focus-ring:#f1efd6]"
         >
           <ArrowRight size={16} />
           <span>العودة إلى الموقع</span>
@@ -96,7 +92,7 @@ export default function AdminLogin({ onSuccess, initialError = "" }: Props) {
                     setError("");
                   }}
                   placeholder="أدخل كلمة المرور"
-                  className="w-full pr-4 pl-12 py-3 rounded-xl border-2 border-[#87b0b6] bg-[#f1efd6] font-[Amiri] text-[#455a5d] placeholder:text-[#455a5d] focus:outline-none focus:border-[#87b0b6] transition-colors text-base"
+                  className="w-full pr-4 pl-14 py-3 rounded-xl border-2 border-[#455a5d] bg-[#f1efd6] font-[Amiri] text-[#455a5d] placeholder:text-[#455a5d] focus-visible:border-[#a33432] transition-colors text-base"
                   autoComplete="current-password"
                   required
                   maxLength={1024}
@@ -112,7 +108,7 @@ export default function AdminLogin({ onSuccess, initialError = "" }: Props) {
                   }
                   aria-pressed={showPassword}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#455a5d] hover:text-[#455a5d] transition-colors"
+                  className="absolute left-1 top-1/2 -translate-y-1/2 flex size-11 items-center justify-center rounded-md text-[#455a5d] hover:bg-[#455a5d]/10 transition-colors"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -123,7 +119,7 @@ export default function AdminLogin({ onSuccess, initialError = "" }: Props) {
                 <p
                   id="login-error"
                   role="alert"
-                  className="mt-2 font-[Amiri] text-sm text-[#bf4240] flex items-center gap-1"
+                  className="mt-2 font-[Amiri] text-sm text-[#a33432] flex items-center gap-1"
                 >
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#bf4240]" />
                   {error}
@@ -134,7 +130,7 @@ export default function AdminLogin({ onSuccess, initialError = "" }: Props) {
             <button
               type="submit"
               disabled={loading || !password}
-              className="w-full py-3 rounded-xl bg-[#87b0b6] text-white font-[Amiri] font-medium text-base hover:bg-[#87b0b6] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="w-full min-h-12 py-3 rounded-xl bg-[#455a5d] text-white font-[Amiri] font-medium text-base hover:bg-[#304649] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
             >
               {loading ? (
                 <span className="inline-flex items-center gap-2">
@@ -149,7 +145,7 @@ export default function AdminLogin({ onSuccess, initialError = "" }: Props) {
         </div>
 
         {/* Footer */}
-        <p className="text-center mt-6 font-[Amiri] text-xs text-[#455a5d]">
+        <p className="text-center mt-6 font-[Amiri] text-sm text-[#f1efd6]">
           خليفة جمعة الرميثي — لوحة إدارة المقالات
         </p>
       </div>

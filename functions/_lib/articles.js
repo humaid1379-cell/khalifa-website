@@ -6,6 +6,21 @@ export function validId(id) {
   return id;
 }
 
+/** Only the exact revision the editor loaded may be changed or deleted. */
+export function requireRevision(request) {
+  const condition = request.headers.get("If-Match");
+  if (condition === null)
+    throw new HttpError(
+      428,
+      "يرجى إعادة تحميل المقال قبل حفظ التغييرات أو حذفه."
+    );
+  const match = /^"([1-9]\d*)"$/.exec(condition);
+  const revision = match ? Number(match[1]) : NaN;
+  if (!Number.isSafeInteger(revision) || revision >= Number.MAX_SAFE_INTEGER)
+    throw new HttpError(400, "نسخة المقال غير صالحة.");
+  return revision;
+}
+
 export function validateArticle(body) {
   const limits = {
     title: 300,

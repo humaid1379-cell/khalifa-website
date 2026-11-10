@@ -27,6 +27,7 @@ import {
   adminLogin,
   adminLogout,
   deleteArticle,
+  fetchArticle,
   fetchArticles,
   generateId,
   getAllCategories,
@@ -76,6 +77,8 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [page, setPage] = useState(1);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingRevision, setEditingRevision] = useState(0);
+  const [conflict, setConflict] = useState(false);
   const [draftId, setDraftId] = useState(generateId);
   const [form, setForm] = useState<ArticleForm>(createEmptyForm);
   const [initialForm, setInitialForm] = useState<ArticleForm>(createEmptyForm);
@@ -142,6 +145,8 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     setForm(next);
     setInitialForm(next);
     setEditingId(article?.id || null);
+    setEditingRevision(article?.revision || 0);
+    setConflict(false);
     setDraftId(generateId());
     setError("");
     setShowForm(true);
@@ -164,7 +169,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   };
   const handleSave = async (event: FormEvent) => {
     event.preventDefault();
-    if (saving) return;
+    if (saving || conflict) return;
     setSaving(true);
     setError("");
     setNotice("");
@@ -177,10 +182,15 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     };
     try {
       const result = editingId
-        ? await updateArticle(editingId, value)
+        ? await updateArticle(editingId, value, editingRevision)
         : await addArticle({ ...value, id: draftId });
       if (!result.success) {
-        mutationFailed(result);
+        if (result.status === 409 || result.status === 428) {
+          setConflict(true);
+          setError(
+            "تغيّرت نسخة المقال على الخادم. نصك باقٍ في المحرر ولم يُستبدل. انسخ التغييرات التي تريد الاحتفاظ بها، ثم حمّل أحدث نسخة وادمجها قبل الحفظ."
+          );
+        } else mutationFailed(result);
         return;
       }
       setShowForm(false);
@@ -191,13 +201,52 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       setSaving(false);
     }
   };
+  const loadLatestVersion = async () => {
+    if (
+      saving ||
+      !window.confirm(
+        "تحميل أحدث نسخة سيستبدل النص الحالي في المحرر. تأكد من نسخ تغييراتك أولاً. هل تريد المتابعة؟"
+      )
+    )
+      return;
+    setSaving(true);
+    try {
+      const latest = await fetchArticle(editingId || draftId);
+      if (!latest) {
+        setError("لم يعد المقال متاحاً. نصك باقٍ في المحرر؛ انسخه قبل إغلاقه.");
+        return;
+      }
+      openEditor(latest);
+    } catch (reason) {
+      setError(
+        reason instanceof Error
+          ? reason.message
+          : "تعذّر تحميل أحدث نسخة. نصك باقٍ في المحرر."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
   const handleDelete = async () => {
     if (!deleteTarget || saving) return;
     setSaving(true);
     setError("");
     try {
-      const result = await deleteArticle(deleteTarget.id);
+      const result = await deleteArticle(
+        deleteTarget.id,
+        deleteTarget.revision
+      );
       if (!result.success) {
+        if ([404, 409, 428].includes(result.status || 0)) {
+          setDeleteTarget(null);
+          setError(
+            result.status === 404
+              ? "لم يعد المقال موجوداً. تم تحديث المكتبة."
+              : "تغيّر المقال ولم يُحذف. تم تحديث المكتبة؛ راجع أحدث نسخة قبل محاولة الحذف مجدداً."
+          );
+          await loadArticles();
+          return;
+        }
         mutationFailed(result);
         return;
       }
@@ -451,114 +500,132 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           <DialogDescription className="text-[#455a5d]">
             سيظهر المقال للقراء بعد الحفظ. الحقول المعلّمة بنجمة مطلوبة.
           </DialogDescription>
-          <form onSubmit={handleSave} className="space-y-5">
+          <form onSubmit={handleSave} className="space-y-5" aria-busy={saving}>
             {error && (
               <p role="alert" className="rounded-xl bg-red-50 p-3 text-red-800">
                 {error}
               </p>
             )}
-            <Field label="عنوان المقال *" id="article-title">
-              <input
-                id="article-title"
-                className={fieldClass}
-                required
-                maxLength={300}
-                value={form.title}
-                onChange={event =>
-                  setForm({ ...form, title: event.target.value })
-                }
-              />
-            </Field>
-            <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="الصحيفة أو المجلة" id="article-newspaper">
-                <input
-                  id="article-newspaper"
-                  className={fieldClass}
-                  maxLength={300}
-                  value={form.newspaper}
-                  onChange={event =>
-                    setForm({ ...form, newspaper: event.target.value })
-                  }
-                />
-              </Field>
-              <Field label="تاريخ النشر *" id="article-date">
-                <input
-                  id="article-date"
-                  type="date"
-                  dir="ltr"
-                  className={fieldClass}
-                  required
-                  value={form.date}
-                  onChange={event =>
-                    setForm({ ...form, date: event.target.value })
-                  }
-                />
-              </Field>
-            </div>
-            <Field label="التصنيف *" id="article-category">
-              <select
-                id="article-category"
-                className={fieldClass}
-                required
-                value={form.category}
-                onChange={event =>
-                  setForm({ ...form, category: event.target.value })
-                }
-              >
-                {Array.from(new Set([form.category, ...categories]))
-                  .filter(Boolean)
-                  .map(category => (
-                    <option key={category}>{category}</option>
-                  ))}
-              </select>
-            </Field>
-            <Field label="مقتطف قصير (اختياري)" id="article-excerpt">
-              <textarea
-                id="article-excerpt"
-                className={fieldClass}
-                rows={3}
-                maxLength={1500}
-                value={form.excerpt}
-                onChange={event =>
-                  setForm({ ...form, excerpt: event.target.value })
-                }
-              />
-            </Field>
-            <Field label="نص المقال *" id="article-content">
-              <textarea
-                id="article-content"
-                className={`${fieldClass} leading-loose`}
-                rows={12}
-                required
-                maxLength={100000}
-                value={form.content}
-                onChange={event =>
-                  setForm({ ...form, content: event.target.value })
-                }
-              />
-            </Field>
-            <div className="flex flex-wrap gap-3 border-t border-[#455a5d]/20 pt-5">
-              <button
-                type="submit"
-                disabled={saving || !form.title.trim() || !form.content.trim()}
-                className={`${actionClass} bg-[#455a5d] text-white`}
-              >
-                {saving && <Loader2 size={16} className="animate-spin" />}
-                {saving
-                  ? "جاري الحفظ…"
-                  : editingId
-                    ? "حفظ التعديلات"
-                    : "نشر المقال"}
-              </button>
+            {conflict && (
               <button
                 type="button"
                 disabled={saving}
-                onClick={closeEditor}
+                onClick={loadLatestVersion}
                 className={`${actionClass} border border-[#455a5d]/30`}
               >
-                إلغاء
+                تحميل أحدث نسخة
               </button>
-            </div>
+            )}
+            <fieldset disabled={saving} className="min-w-0 space-y-5">
+              <legend className="sr-only">بيانات المقال</legend>
+              <Field label="عنوان المقال *" id="article-title">
+                <input
+                  id="article-title"
+                  className={fieldClass}
+                  required
+                  maxLength={300}
+                  value={form.title}
+                  onChange={event =>
+                    setForm({ ...form, title: event.target.value })
+                  }
+                />
+              </Field>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <Field label="الصحيفة أو المجلة" id="article-newspaper">
+                  <input
+                    id="article-newspaper"
+                    className={fieldClass}
+                    maxLength={300}
+                    value={form.newspaper}
+                    onChange={event =>
+                      setForm({ ...form, newspaper: event.target.value })
+                    }
+                  />
+                </Field>
+                <Field label="تاريخ النشر *" id="article-date">
+                  <input
+                    id="article-date"
+                    type="date"
+                    dir="ltr"
+                    className={fieldClass}
+                    required
+                    value={form.date}
+                    onChange={event =>
+                      setForm({ ...form, date: event.target.value })
+                    }
+                  />
+                </Field>
+              </div>
+              <Field label="التصنيف *" id="article-category">
+                <select
+                  id="article-category"
+                  className={fieldClass}
+                  required
+                  value={form.category}
+                  onChange={event =>
+                    setForm({ ...form, category: event.target.value })
+                  }
+                >
+                  {Array.from(new Set([form.category, ...categories]))
+                    .filter(Boolean)
+                    .map(category => (
+                      <option key={category}>{category}</option>
+                    ))}
+                </select>
+              </Field>
+              <Field label="مقتطف قصير (اختياري)" id="article-excerpt">
+                <textarea
+                  id="article-excerpt"
+                  className={fieldClass}
+                  rows={3}
+                  maxLength={1500}
+                  value={form.excerpt}
+                  onChange={event =>
+                    setForm({ ...form, excerpt: event.target.value })
+                  }
+                />
+              </Field>
+              <Field label="نص المقال *" id="article-content">
+                <textarea
+                  id="article-content"
+                  className={`${fieldClass} leading-loose`}
+                  rows={12}
+                  required
+                  maxLength={100000}
+                  value={form.content}
+                  onChange={event =>
+                    setForm({ ...form, content: event.target.value })
+                  }
+                />
+              </Field>
+              <div className="flex flex-wrap gap-3 border-t border-[#455a5d]/20 pt-5">
+                <button
+                  type="submit"
+                  disabled={
+                    saving ||
+                    conflict ||
+                    !form.title.trim() ||
+                    !form.content.trim()
+                  }
+                  className={`${actionClass} bg-[#455a5d] text-white`}
+                >
+                  {saving && <Loader2 size={16} className="animate-spin" />}
+                  {saving
+                    ? "جاري الحفظ…"
+                    : editingId
+                      ? "حفظ التعديلات"
+                      : "نشر المقال"}
+                </button>
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={closeEditor}
+                  className={`${actionClass} border border-[#455a5d]/30`}
+                >
+                  إلغاء
+                </button>
+              </div>
+            </fieldset>
           </form>
         </DialogContent>
       </Dialog>
