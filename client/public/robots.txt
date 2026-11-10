@@ -2,4 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /api/
+Allow: /api/articles$
+Allow: /api/articles?
+Allow: /api/articles/
 Sitemap: https://khaleefa-alromaithi11.ae/sitemap.xml

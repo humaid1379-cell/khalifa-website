@@ -2,6 +2,7 @@
 import { categories as defaultCategories, type Article } from "@/data/articles";
 
 export interface StoredArticle extends Article {
+  revision: number;
   newspaper?: string;
   created_at?: string;
   updated_at?: string;
@@ -154,7 +155,9 @@ async function mutate(
   }
 }
 
-export function addArticle(article: StoredArticle): Promise<MutationResult> {
+export function addArticle(
+  article: Omit<StoredArticle, "revision">
+): Promise<MutationResult> {
   return mutate("/api/articles", {
     method: "POST",
     body: JSON.stringify(article),
@@ -162,16 +165,34 @@ export function addArticle(article: StoredArticle): Promise<MutationResult> {
 }
 export function updateArticle(
   id: string,
-  updates: Partial<StoredArticle>
+  updates: Partial<StoredArticle>,
+  revision: number
 ): Promise<MutationResult> {
+  if (!Number.isSafeInteger(revision) || revision < 1)
+    return Promise.resolve({
+      success: false,
+      status: 428,
+      error: "تعذّر تحديد نسخة المقال. حمّل أحدث نسخة قبل الحفظ.",
+    });
   return mutate(`/api/articles/${encodeURIComponent(id)}`, {
     method: "PUT",
+    headers: { "If-Match": `"${revision}"` },
     body: JSON.stringify(updates),
   });
 }
-export function deleteArticle(id: string): Promise<MutationResult> {
+export function deleteArticle(
+  id: string,
+  revision: number
+): Promise<MutationResult> {
+  if (!Number.isSafeInteger(revision) || revision < 1)
+    return Promise.resolve({
+      success: false,
+      status: 428,
+      error: "تعذّر تحديد نسخة المقال. حدّث المكتبة قبل الحذف.",
+    });
   return mutate(`/api/articles/${encodeURIComponent(id)}`, {
     method: "DELETE",
+    headers: { "If-Match": `"${revision}"` },
   });
 }
 export function getAllCategories(): string[] {

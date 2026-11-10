@@ -14,10 +14,10 @@
  *   "red"   → red accent logo
  */
 
-const LOGO_URLS = {
-  blue: "/media/logo-blue_092e7b72.png",
-  beige: "/media/logo-beige_856df9a8.png",
-  red: "/media/logo-red_c0b78c3b.png",
+const LOGO_BASES = {
+  blue: "/media/logo-blue_092e7b72",
+  beige: "/media/logo-beige_856df9a8",
+  red: "/media/logo-red_c0b78c3b",
 };
 
 interface KharijLogoProps {
@@ -34,15 +34,24 @@ export default function KharijLogo({ variant = "navbar", color = "blue", classNa
   };
 
   const size = sizeMap[variant];
+  const sizes = {
+    navbar: "48px",
+    hero: "75px",
+    podcast: "(min-width: 768px) 176px, 144px",
+  }[variant];
 
   return (
     <img
-      src={LOGO_URLS[color]}
+      src={`${LOGO_BASES[color]}-192.webp`}
+      srcSet={[96, 192, 384, 528]
+        .map(width => `${LOGO_BASES[color]}-${width}.webp ${width}w`)
+        .join(", ")}
+      sizes={sizes}
       alt="خارج النص"
       className={`${size} object-contain ${className}`}
       loading={variant === "navbar" ? "eager" : "lazy"}
-      width={1300}
-      height={1000}
+      width={4898}
+      height={3317}
       decoding="async"
     />
   );

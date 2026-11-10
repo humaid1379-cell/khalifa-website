@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS articles (
   category TEXT NOT NULL DEFAULT 'رأي',
   newspaper TEXT DEFAULT '',
   created_at TEXT DEFAULT (datetime('now')),
-  updated_at TEXT DEFAULT (datetime('now'))
+  updated_at TEXT DEFAULT (datetime('now')),
+  revision INTEGER NOT NULL DEFAULT 1 CHECK (revision >= 1)
 );
 
 -- Article years are computed from date by the API; no year column is required.
